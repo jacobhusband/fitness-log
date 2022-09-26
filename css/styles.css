@@ -64,8 +64,16 @@ input:focus {
   padding: 1rem;
 }
 
+.nav-1 h1 {
+  letter-spacing: 0.5px;
+}
+
 .nav-1 .plus-icon-container {
   margin-left: auto;
+}
+
+.nav-1 img:hover {
+  filter: brightness(120%);
 }
 
 .nav-2 {
@@ -106,6 +114,7 @@ input:focus {
 
 .modal-content h2 {
   margin: 1rem;
+  font-weight: 500;
 }
 
 .modal-search-container {
@@ -129,4 +138,8 @@ input:focus {
 
 .text-align-center {
   text-align: center;
+}
+
+.hidden {
+  display: none;
 }
