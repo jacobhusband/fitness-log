@@ -1,20 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AJAX Project</title>
-  <link rel="icon" href="images/favicon.ico">
-  <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/layout.css">
-  <link rel="stylesheet" href="css/styles.css">
-</head>
-<body>
-  <header>
-  </header>
-  <main>
-  </main>
-  <script src="js/data.js"></script>
-  <script src="js/main.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AJAX Project</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Source+Sans+Pro:wght@200;300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="images/favicon.ico" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/layout.css" />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header>
+      <div class="nav-1">
+        <div class="container margin-auto row">
+          <h1 class="no-user-select">FITNESS LOG</h1>
+          <div class="nav-1-search-container ml-auto hidden">
+            <button class="search-button">Search</button>
+            <input
+              type="text"
+              name="workoutSearch"
+              id="workout-search-desktop"
+              placeholder="legs, chest, arms"
+            />
+          </div>
+          <div class="plus-icon-container pointer-cursor bright-hover ml-auto">
+            <img src="images/plus.png" alt="plus icon" />
+          </div>
+        </div>
+      </div>
+      <div class="nav-2">
+        <div class="container margin-auto row">
+          <h2
+            data-text="upcoming-workouts"
+            class="upcoming-workouts-text pointer-cursor dark-bg"
+          >
+            UPCOMING WORKOUTS
+          </h2>
+          <h2
+            data-text="new-exercises"
+            class="new-exercises-text pointer-cursor bright-hover"
+          >
+            NEW EXERCISES
+          </h2>
+        </div>
+      </div>
+    </header>
+    <main>
+      <div
+        data-view="upcoming-workouts"
+        class="container margin-auto upcoming-workouts-container"
+      >
+        <div class="no-content row row-lr-center">
+          <p class="no-user-select">No exercises upcoming...</p>
+        </div>
+      </div>
+      <div
+        data-view="new-exercises"
+        class="container margin-auto new-exercises-container hidden"
+      ></div>
+      <div class="workout-modal modal hidden">
+        <div class="modal-layout row row-lr-center">
+          <div class="modal-content text-align-center">
+            <h2>WORKOUT</h2>
+            <div class="modal-search-container">
+              <input
+                type="text"
+                name="workoutSearch"
+                id="workout-search"
+                placeholder="legs, chest, arms"
+              />
+              <button class="search-button">SEARCH</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+  </body>
 </html>

@@ -1,0 +1,250 @@
+/* Element styling */
+
+body,
+form,
+button,
+input,
+p {
+  font-family:
+    "Source Sans Pro",
+    sans-serif;
+}
+
+body {
+  background-color: #0a0e11;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+label {
+  font-family: Oswald, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  line-height: 1;
+  margin: 0;
+  color: #eaeaea;
+}
+
+button {
+  border: none;
+  background-color: #343a40;
+  font-size: 0.9rem;
+  color: #d9d9d9;
+  padding: 0.25rem 0.9rem;
+  border-radius: 0.2rem;
+}
+
+input {
+  border: 1px solid #ced4da;
+  border-radius: 0.2rem;
+  padding: 0.2rem;
+  padding-left: 0.5rem;
+}
+
+input:focus {
+  outline: none;
+}
+
+/* Non-semantic classes */
+
+/* Mobile basic styling */
+
+.nav-1 {
+  background-color: #222f3b;
+}
+
+.nav-1 h1 {
+  font-size: 1.5rem;
+  letter-spacing: 0.5px;
+  padding: 1rem;
+}
+
+.nav-1 .plus-icon-container {
+  padding: 12px;
+}
+
+.nav-2 {
+  background-color: #5e503f;
+}
+
+.nav-2 h2 {
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+}
+
+.nav-2 .new-exercises-text {
+  display: none;
+}
+
+.no-content {
+  margin: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.no-content p {
+  color: #b7b7b7;
+}
+
+.dark-bg {
+  background-color: inherit;
+}
+
+/* Mobile modal styling */
+
+.modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: #000000a7;
+}
+
+.modal-layout {
+  margin-top: 7rem;
+}
+
+.modal-content {
+  width: 90%;
+  background-color: #0a0e11;
+  border-radius: 0.5rem;
+  border: 0.4rem solid #5e503f;
+}
+
+.modal-content h2 {
+  margin: 0.7rem 0 0.9rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.modal-search-container {
+  margin-bottom: 1.75rem;
+}
+
+.modal-search-container input {
+  width: 12rem;
+  margin-right: 0.3rem;
+}
+
+/* Desktop content background */
+
+.new-exercises-container {
+  min-height: 100vh;
+  background-color: #2d2c30;
+}
+
+/* Desktop search container */
+
+.nav-1-search-container {
+  margin-top: 1rem;
+}
+
+.nav-1-search-container button {
+  font-size: 1rem;
+  margin-right: 0.3rem;
+}
+
+.nav-1-search-container input {
+  font-size: 1rem;
+  width: 13rem;
+}
+
+/* Semantic classes */
+.flex-col {
+  flex-direction: column;
+}
+
+.row-lr-center,
+.col-ud-center {
+  justify-content: center;
+}
+
+.col-lr-center,
+.row-ud-center {
+  align-items: center;
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
+.margin-auto {
+  margin: auto;
+}
+
+.gap-1r {
+  gap: 1rem;
+}
+
+.pointer-cursor {
+  cursor: pointer;
+}
+
+.bright-hover:hover {
+  filter: brightness(120%);
+}
+
+.no-user-select {
+  user-select: none;
+}
+
+.ml-auto {
+  margin-left: auto;
+}
+
+/* Mobile and desktop differences */
+
+@media only screen and (min-width: 768px) {
+  .container {
+    max-width: 545px;
+  }
+
+  .nav-2 .new-exercises-text {
+    display: block;
+  }
+
+  .dark-bg {
+    background-color: #383027;
+  }
+
+  .nav-1 h1 {
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+    padding: 1.25rem 0.75rem;
+  }
+
+  .nav-1 .plus-icon-container {
+    padding: 1rem 0.8rem 0.5rem 0;
+  }
+
+  .nav-2 h2 {
+    font-weight: 500;
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
+
+  .no-content {
+    margin: 1.75rem;
+    font-size: 1.25rem;
+  }
+
+  .no-content p {
+    color: #ced4da;
+  }
+}
