@@ -1,0 +1,75 @@
+/* Element styling */
+
+body,
+form,
+p {
+  font-family:
+    "Source Sans Pro",
+    sans-serif;
+}
+
+body {
+  background-color: #0a0e11;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: Oswald, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  line-height: 1;
+  margin: 0;
+  color: #eaeaea;
+}
+
+/* Non-semantic classes */
+
+/* Mobile basic styling */
+
+.nav-1 {
+  background-color: #222f3b;
+  padding: 1rem;
+}
+
+.nav-1 .plus-icon-container {
+  margin-left: auto;
+}
+
+.nav-2 {
+  background-color: #5e503f;
+  padding: 0.75rem 1rem;
+}
+
+.nav-2 > h2 {
+  font-weight: 500;
+}
+
+.no-content {
+  margin: 2rem;
+  font-size: 1.25rem;
+}
+
+/* Semantic classes */
+
+.flex-col {
+  flex-direction: column;
+}
+
+.row-lr-center {
+  justify-content: center;
+}
+
+.col-center {
+  align-items: center;
+}
