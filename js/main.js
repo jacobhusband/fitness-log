@@ -1,19 +1,43 @@
 var $modalContent = document.querySelector('.workout-modal');
 var $plusIcon = document.querySelector('.plus-icon-container');
 var $nav2 = document.querySelector('.nav-2');
+var $emptyContent = document.querySelector('.no-content');
+var $newExercisesContainer = document.querySelector('.new-exercises-container');
+var $upcomingWorkoutsContainer = document.querySelector(
+  '.upcoming-workouts-container'
+);
+var $nav1SearchContainer = document.querySelector('.nav-1-search-container');
 
 $plusIcon.addEventListener('click', showWorkoutModal);
 $nav2.addEventListener('click', changeViews);
 
 function changeViews(event) {
-  if (
-    event.target.dataset.text === 'new-exercises' ||
-    event.target.dataset.text === 'upcoming-workouts'
-  ) {
-    removeCurrentNavView();
-    data.view = event.target.dataset.text;
-    addCurrentNavView(event);
+  if (event.target.dataset.text === 'new-exercises') {
+    changeView(event);
+    newExercisesViewChanges();
   }
+  if (event.target.dataset.text === 'upcoming-workouts') {
+    changeView(event);
+    $emptyContent.classList.remove('hidden');
+    $plusIcon.classList.remove('hidden');
+    $newExercisesContainer.classList.add('hidden');
+    $upcomingWorkoutsContainer.classList.remove('hidden');
+    $nav1SearchContainer.classList.add('hidden');
+  }
+}
+
+function newExercisesViewChanges() {
+  $emptyContent.classList.add('hidden');
+  $plusIcon.classList.add('hidden');
+  $newExercisesContainer.classList.remove('hidden');
+  $upcomingWorkoutsContainer.classList.add('hidden');
+  $nav1SearchContainer.classList.remove('hidden');
+}
+
+function changeView(event) {
+  removeCurrentNavView();
+  data.view = event.target.dataset.text;
+  addCurrentNavView(event);
 }
 
 function showWorkoutModal(event) {
@@ -24,6 +48,7 @@ function showWorkoutModal(event) {
     removeCurrentNavView();
     data.view = 'new-exercises';
     addCurrentNavView();
+    newExercisesViewChanges();
   }
 }
 

@@ -20,7 +20,16 @@
       <div class="nav-1">
         <div class="container margin-auto row">
           <h1 class="no-user-select">FITNESS LOG</h1>
-          <div class="plus-icon-container pointer-cursor bright-hover">
+          <div class="nav-1-search-container ml-auto hidden">
+            <button class="search-button">Search</button>
+            <input
+              type="text"
+              name="workoutSearch"
+              id="workout-search-desktop"
+              placeholder="legs, chest, arms"
+            />
+          </div>
+          <div class="plus-icon-container pointer-cursor bright-hover ml-auto">
             <img src="images/plus.png" alt="plus icon" />
           </div>
         </div>
@@ -43,12 +52,18 @@
       </div>
     </header>
     <main>
-      <div data-view="upcoming-workouts" class="container margin-auto">
+      <div
+        data-view="upcoming-workouts"
+        class="container margin-auto upcoming-workouts-container"
+      >
         <div class="no-content row row-lr-center">
           <p class="no-user-select">No exercises upcoming...</p>
         </div>
       </div>
-      <div data-view="new-exercises" class="container margin-auto"></div>
+      <div
+        data-view="new-exercises"
+        class="container margin-auto new-exercises-container hidden"
+      ></div>
       <div class="workout-modal modal hidden">
         <div class="modal-layout row row-lr-center">
           <div class="modal-content text-align-center">
@@ -58,7 +73,7 @@
                 type="text"
                 name="workoutSearch"
                 id="workout-search"
-                placeholder="Search"
+                placeholder="legs, chest, arms"
               />
               <button class="search-button">SEARCH</button>
             </div>
