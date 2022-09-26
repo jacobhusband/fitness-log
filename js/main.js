@@ -32,6 +32,7 @@ function newExercisesViewChanges() {
   $newExercisesContainer.classList.remove('hidden');
   $upcomingWorkoutsContainer.classList.add('hidden');
   $nav1SearchContainer.classList.remove('hidden');
+  $nav1SearchContainer.lastElementChild.focus();
 }
 
 function changeView(event) {
