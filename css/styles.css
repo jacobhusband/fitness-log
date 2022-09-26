@@ -2,6 +2,8 @@
 
 body,
 form,
+button,
+input,
 p {
   font-family:
     "Source Sans Pro",
@@ -17,7 +19,8 @@ h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+label {
   font-family: Oswald, sans-serif;
 }
 
@@ -31,6 +34,25 @@ p {
   line-height: 1;
   margin: 0;
   color: #eaeaea;
+}
+
+button {
+  border: none;
+  background-color: #343a40;
+  color: #d9d9d9;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.2rem;
+}
+
+input {
+  border: 1px solid #ced4da;
+  border-radius: 0.2rem;
+  padding: 0.2rem;
+  padding-left: 0.5rem;
+}
+
+input:focus {
+  outline: none;
 }
 
 /* Non-semantic classes */
@@ -60,16 +82,51 @@ p {
   font-size: 1.25rem;
 }
 
-/* Semantic classes */
+/* Mobile modal styling */
 
+.modal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background-color: #000000a7;
+}
+
+.modal-layout {
+  margin-top: 8rem;
+}
+
+.modal-content {
+  width: 75%;
+  background-color: #0a0e11;
+  border-radius: 0.2rem;
+  border: 3px solid #5e503f;
+}
+
+.modal-content h2 {
+  margin: 1rem;
+}
+
+.modal-search-container {
+  margin: 1rem;
+}
+
+/* Semantic classes */
 .flex-col {
   flex-direction: column;
 }
 
-.row-lr-center {
+.row-lr-center,
+.col-ud-center {
   justify-content: center;
 }
 
-.col-center {
+.col-lr-center,
+.row-ud-center {
   align-items: center;
+}
+
+.text-align-center {
+  text-align: center;
 }
