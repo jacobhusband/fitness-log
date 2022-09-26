@@ -7,9 +7,29 @@ var $upcomingWorkoutsContainer = document.querySelector(
   '.upcoming-workouts-container'
 );
 var $nav1SearchContainer = document.querySelector('.nav-1-search-container');
+var $modalSearchContainer = document.querySelector('.modal-search-container');
+// var searchString = null;
 
 $plusIcon.addEventListener('click', showWorkoutModal);
 $nav2.addEventListener('click', changeViews);
+$nav1SearchContainer.lastElementChild.addEventListener(
+  'keydown',
+  searchForExercise
+);
+$modalSearchContainer.firstElementChild.addEventListener(
+  'keydown',
+  searchForExercise
+);
+
+function getExercises() {}
+
+function searchForExercise(event) {
+  if (event.key === 'Enter') {
+    // searchString = event.target.value;
+    event.target.value = '';
+    getExercises();
+  }
+}
 
 function changeViews(event) {
   if (event.target.dataset.text === 'new-exercises') {
