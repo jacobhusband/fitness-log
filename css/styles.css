@@ -39,8 +39,9 @@ p {
 button {
   border: none;
   background-color: #343a40;
+  font-size: 0.9rem;
   color: #d9d9d9;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 0.9rem;
   border-radius: 0.2rem;
 }
 
@@ -61,33 +62,44 @@ input:focus {
 
 .nav-1 {
   background-color: #222f3b;
-  padding: 1rem;
 }
 
 .nav-1 h1 {
+  font-size: 1.5rem;
   letter-spacing: 0.5px;
+  padding: 1rem;
 }
 
 .nav-1 .plus-icon-container {
   margin-left: auto;
-}
-
-.nav-1 img:hover {
-  filter: brightness(120%);
+  padding: 12px;
 }
 
 .nav-2 {
   background-color: #5e503f;
-  padding: 0.75rem 1rem;
 }
 
-.nav-2 > h2 {
+.nav-2 h2 {
   font-weight: 500;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+}
+
+.nav-2 .new-exercises-text {
+  display: none;
 }
 
 .no-content {
-  margin: 2rem;
-  font-size: 1.25rem;
+  margin: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.no-content p {
+  color: #b7b7b7;
+}
+
+.dark-bg {
+  background-color: inherit;
 }
 
 /* Mobile modal styling */
@@ -102,23 +114,29 @@ input:focus {
 }
 
 .modal-layout {
-  margin-top: 8rem;
+  margin-top: 7rem;
 }
 
 .modal-content {
-  width: 75%;
+  width: 90%;
   background-color: #0a0e11;
-  border-radius: 0.2rem;
-  border: 3px solid #5e503f;
+  border-radius: 0.5rem;
+  border: 0.4rem solid #5e503f;
 }
 
 .modal-content h2 {
-  margin: 1rem;
+  margin: 0.7rem 0 0.9rem;
+  font-size: 1.25rem;
   font-weight: 500;
 }
 
 .modal-search-container {
-  margin: 1rem;
+  margin-bottom: 1.75rem;
+}
+
+.modal-search-container input {
+  width: 12rem;
+  margin-right: 0.3rem;
 }
 
 /* Semantic classes */
@@ -142,4 +160,65 @@ input:focus {
 
 .hidden {
   display: none;
+}
+
+.margin-auto {
+  margin: auto;
+}
+
+.gap-1r {
+  gap: 1rem;
+}
+
+.pointer-cursor {
+  cursor: pointer;
+}
+
+.bright-hover:hover {
+  filter: brightness(120%);
+}
+
+.no-user-select {
+  user-select: none;
+}
+
+/* Mobile and desktop differences */
+
+@media only screen and (min-width: 768px) {
+  .container {
+    max-width: 545px;
+  }
+
+  .nav-2 .new-exercises-text {
+    display: block;
+  }
+
+  .dark-bg {
+    background-color: #383027;
+  }
+
+  .nav-1 h1 {
+    font-size: 1.2rem;
+    letter-spacing: 0.5px;
+    padding: 1.25rem 0.75rem;
+  }
+
+  .nav-1 .plus-icon-container {
+    padding: 1rem 0.8rem 0.5rem 0;
+  }
+
+  .nav-2 h2 {
+    font-weight: 500;
+    padding: 0.75rem;
+    font-size: 1rem;
+  }
+
+  .no-content {
+    margin: 1.75rem;
+    font-size: 1.25rem;
+  }
+
+  .no-content p {
+    color: #ced4da;
+  }
 }

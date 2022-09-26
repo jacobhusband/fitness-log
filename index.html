@@ -17,24 +17,38 @@
   </head>
   <body>
     <header>
-      <div class="container">
-        <div class="nav-1 row">
-          <h1>FITNESS LOG</h1>
-          <div class="plus-icon-container">
+      <div class="nav-1">
+        <div class="container margin-auto row">
+          <h1 class="no-user-select">FITNESS LOG</h1>
+          <div class="plus-icon-container pointer-cursor bright-hover">
             <img src="images/plus.png" alt="plus icon" />
           </div>
         </div>
-        <div class="nav-2 row">
-          <h2>UPCOMING WORKOUTS</h2>
+      </div>
+      <div class="nav-2">
+        <div class="container margin-auto row">
+          <h2
+            data-text="upcoming-workouts"
+            class="upcoming-workouts-text pointer-cursor dark-bg"
+          >
+            UPCOMING WORKOUTS
+          </h2>
+          <h2
+            data-text="new-exercises"
+            class="new-exercises-text pointer-cursor bright-hover"
+          >
+            NEW EXERCISES
+          </h2>
         </div>
       </div>
     </header>
     <main>
-      <div class="container">
+      <div data-view="upcoming-workouts" class="container margin-auto">
         <div class="no-content row row-lr-center">
-          <p>No exercises upcoming...</p>
+          <p class="no-user-select">No exercises upcoming...</p>
         </div>
       </div>
+      <div data-view="new-exercises" class="container margin-auto"></div>
       <div class="workout-modal modal hidden">
         <div class="modal-layout row row-lr-center">
           <div class="modal-content text-align-center">
