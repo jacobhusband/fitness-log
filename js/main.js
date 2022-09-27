@@ -8,7 +8,23 @@ var $upcomingWorkoutsContainer = document.querySelector(
 );
 var $nav1SearchContainer = document.querySelector('.nav-1-search-container');
 var $modalSearchContainer = document.querySelector('.modal-search-container');
-// var searchString = null;
+var searchString = null;
+
+var muscleObj = {
+  biceps: 1,
+  shoulders: 2,
+  chest: 4,
+  triceps: 5,
+  abs: 6,
+  calves: 7,
+  glutes: 8,
+  traps: 9,
+  quads: 10,
+  hamstrings: 11,
+  lats: 12,
+  legs: '10,11,8,7',
+  arms: '1,5,2'
+};
 
 $plusIcon.addEventListener('click', showWorkoutModal);
 $nav2.addEventListener('click', changeViews);
@@ -21,11 +37,51 @@ $modalSearchContainer.firstElementChild.addEventListener(
   searchForExercise
 );
 
-function getExercises() {}
+function getExercises() {
+  var xhr = new XMLHttpRequest();
+
+  var targetUrl = encodeURIComponent(
+    `https://wger.de/api/v2/exercise/?language=2&muscles=${
+      muscleObj[searchString.toLowerCase()]
+    }`
+  );
+
+  xhr.open('GET', 'https://lfz-cors.herokuapp.com/?url=' + targetUrl);
+  xhr.responseType = 'json';
+
+  xhr.setRequestHeader(
+    'Authorizaton',
+    'Token 06533782073ec64f0c174e13f52373d8f19c0ae5'
+  );
+  xhr.setRequestHeader('Accept', 'application/json');
+
+  xhr.addEventListener('load', function () {
+    // console.log(`response: `, xhr.response);
+    // console.log(`status: `, xhr.status);
+    getImages();
+  });
+
+  xhr.send();
+}
+
+function getImages(exercise) {
+  var xhr = new XMLHttpRequest();
+  var workoutQuery = exercise.split(' ').join('_');
+
+  xhr.open('GET', `https://imsea.herokuapp.com/api/1?q=${workoutQuery}`);
+  xhr.responseType = 'json';
+
+  xhr.addEventListener('load', function () {
+    // console.log(`response: `, xhr.response);
+    // console.log(`status: `, xhr.status);
+  });
+
+  xhr.send();
+}
 
 function searchForExercise(event) {
   if (event.key === 'Enter') {
-    // searchString = event.target.value;
+    searchString = event.target.value;
     event.target.value = '';
     getExercises();
   }
