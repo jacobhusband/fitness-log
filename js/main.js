@@ -96,10 +96,69 @@ $newExercisesContainer.addEventListener(
 );
 // #endregion
 
+modifyData();
 loadDataFromLocal();
 
+function modifyData() {
+  data.exercises.forEach((exercise, ind) => {
+    exercise.whenDo = giveDateDifferenceInDays(exercise.date);
+    if (exercise.whenDo.time < 0) {
+      delete data.exercises[ind];
+    }
+  });
+}
+
 function loadDataFromLocal() {
-  data.exercises.forEach(exercise => {});
+  var organizedExercises = {};
+  var imgURL = null;
+  var title = null;
+  var tag1 = null;
+  var tag2 = null;
+
+  data.exercises.forEach(e => {
+    if (!organizedExercises[e.whenDo.when]) {
+      organizedExercises[e.whenDo.when] = [e];
+    } else {
+      organizedExercises[e.whenDo.when].push(e);
+    }
+  });
+  for (var key in organizedExercises) {
+    upcomingWorkoutsContent.appendChild(createElementForDaySeparator(key));
+    for (var i = 0; i < organizedExercises[key].length; i++) {
+      imgURL = organizedExercises[key][i].imgURL;
+      title = organizedExercises[key][i].title;
+      tag1 = organizedExercises[key][i].tag1;
+      tag2 = organizedExercises[key][i].tag2;
+      upcomingWorkoutsContent.appendChild(
+        createElementForMobileUpcomingWorkouts(imgURL, title, tag1, tag2)
+      );
+    }
+  }
+}
+
+function giveDateDifferenceInDays(date) {
+  var today = new Date().toLocaleDateString().split('/');
+  today = [today[2], today[0], today[1]]
+    .map(x => {
+      if (x.length < 2) {
+        x = '0' + x[0];
+      }
+      return x;
+    })
+    .join('-');
+  date = date.join('-');
+  today += 'T00:00:00';
+  date += 'T00:00:00';
+  today = Math.trunc(Date.parse(today) / 86400000);
+  date = Math.trunc(Date.parse(date) / 86400000);
+
+  if (date - today === 0) {
+    return { when: 'TODAY', time: 0 };
+  } else if (date - today === 1) {
+    return { when: 'TOMORROW', time: 1 };
+  } else {
+    return { when: `IN ${date - today} DAYS`, time: date - today };
+  }
 }
 
 function handleNewExerciseContainerClicks(event) {
