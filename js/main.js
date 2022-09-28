@@ -104,7 +104,6 @@ function handleModalContentClicks(event) {
   var year = null;
   var month = null;
   var day = null;
-  var min = null;
   var userYearMonthDay = null;
 
   if (event.target.matches('.info-icon')) {
@@ -123,10 +122,8 @@ function handleModalContentClicks(event) {
     dateButtonDefaultTextContent = dateButton.textContent;
     date = new Date();
     year = date.getFullYear();
-    month = date.getMonth();
+    month = date.getMonth() + 1;
     day = date.getDate();
-    min = `${month}-${day}-${year}`;
-    dateInput.setAttribute('min', min);
     dateInput.click();
     dateInput.showPicker();
     dateInput.addEventListener('change', function change(e) {
