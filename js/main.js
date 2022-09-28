@@ -422,17 +422,73 @@ function checkIfUserCanNoLongerAddExercise() {
 }
 
 function addExercises(event) {
+  var tempData = null;
+  var tagContainer = null;
   for (var key in tempSelection) {
     tempSelection[key].classList.remove('green-border');
-    tempSelection[key].dataset.id = data.nextExerciseId;
-    data.exercises.push(tempSelection[key]);
+    tagContainer = tempSelection[key].querySelector('.muscle-tag-container');
+
+    tempData = {
+      id: data.nextExerciseId,
+      title: tempSelection[key].querySelector('h3').textContent,
+      tag1: tagContainer.children[0].textContent,
+      tag2: tagContainer.children[1].textContent
+    };
+
+    data.exercises.push(tempData);
     data.nextExerciseId++;
   }
   $workoutModal.classList.add('hidden');
   populateUpcomingWorkouts();
 }
 
-function populateUpcomingWorkouts() {}
+function populateUpcomingWorkouts() {
+  createElementForDaySeparator('TODAY');
+  createElementForMobileUpcomingWorkouts();
+}
+
+function createElementForDaySeparator(text) {
+  return createElements('div', { class: 'day-separator' }, [
+    createElements('h3', { textContent: text })
+  ]);
+}
+
+function createElementForMobileUpcomingWorkouts(imgURL, title, tag1, tag2) {
+  // <div class="upcoming-workout-entry row">
+  //   <div class="image-container col">
+  //     <img src="images/loading.png" alt="loading" />
+  //   </div>
+  //   <div class="row flex-col space-between w-100">
+  //     <div class="row title-and-buttons pos-rel">
+  //       <h3>BARBELL BENCHPRESS</h3>
+  //       <img src="images/info.png" alt="info" class="info-icon" />
+  //     </div>
+  //     <div class="muscle-tag-container row">
+  //       <p>Triceps</p>
+  //       <p>Shoulders</p>
+  //     </div>
+  //   </div>
+  // </div>;
+  return createElements('div', { class: 'upcoming-workout-entry row' }, [
+    createElements('div', { class: 'image-container col' }, [
+      createElements('img', { src: imgURL, alt: 'exercise image' })
+    ]),
+    createElements('div', { class: 'row flex-col space-between w-100' }, [
+      createElements('div', { class: 'row title-and-buttons pos-rel' }, [
+        createElements('h3', { textContent: title }),
+        createElements('img', {
+          src: 'images/info.png',
+          alt: 'info',
+          class: 'info-icon'
+        })
+      ]),
+      createElements('div', { class: 'muscle-tag-container row' }, [
+        createElements('p', { textContent: tag1 }),
+        createElements('p', { textContent: tag2 })
+      ])
+    ])
+  ]);
+}
 
 function changeViews(event) {
   if (event.target.dataset.text === 'new-exercises') {

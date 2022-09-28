@@ -255,6 +255,47 @@ input[type="date"] {
   right: 10px;
 }
 
+/* Mobile upcoming workouts styling */
+
+.day-separator {
+  padding: 0.5rem 1rem;
+  background-color: #2d2c30;
+}
+
+.day-separator > h3 {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.upcoming-workout-entry {
+  padding: 1rem;
+}
+
+.upcoming-workout-entry > .image-container > img {
+  width: 72px;
+  height: 75px;
+  border: 1px solid #5e503f;
+  margin-right: 1rem;
+}
+
+.upcoming-workout-entry > .flex-col > .title-and-buttons > h3 {
+  font-size: 0.75rem;
+  font-weight: 400;
+  margin-top: 0.25rem;
+}
+
+.upcoming-workout-entry > .flex-col > .title-and-buttons > img {
+  margin-left: auto;
+}
+
+.upcoming-workout-entry > .flex-col > .muscle-tag-container {
+  margin-bottom: 0.25rem;
+}
+
+.upcoming-workout-entry > .flex-col > .muscle-tag-container > p {
+  padding: 0.1rem 0.75rem;
+}
+
 /* Desktop content background */
 
 .new-exercises-container {
@@ -361,6 +402,10 @@ input[type="date"] {
 
 .low-brightness {
   filter: brightness(50%);
+}
+
+.w-100 {
+  width: 100%;
 }
 
 /* Mobile and desktop differences */
