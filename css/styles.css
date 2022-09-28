@@ -162,12 +162,20 @@ img {
 }
 
 .modal-result-content {
+  flex-grow: 2;
   margin: 0.4rem 0 0.4rem 0.1rem;
 }
 
-.modal-result-content > h3 {
+.title-and-buttons > h3 {
   font-size: 0.75rem;
   font-weight: 500;
+  padding-right: 0.25rem;
+}
+
+.info-button {
+  margin-left: auto;
+  font-size: 1.5rem;
+  margin-right: 0.1rem;
 }
 
 .modal-result-content > p {
@@ -193,6 +201,18 @@ img {
 .modal-result-content > p,
 .muscle-tag-container p {
   letter-spacing: 0.02rem;
+}
+
+.info-icon,
+.modal-x-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 0.2rem;
+}
+
+.modal-x-icon {
+  position: absolute;
+  right: 10px;
 }
 
 /* Desktop content background */
@@ -283,6 +303,14 @@ img {
   text-align: left;
 }
 
+.pos-rel {
+  position: relative;
+}
+
+.p-1r {
+  padding: 1rem;
+}
+
 /* Mobile and desktop differences */
 
 @media only screen and (min-width: 768px) {
@@ -341,7 +369,7 @@ img {
     margin-right: 1.5rem;
   }
 
-  .modal-result-content > h3 {
+  .title-and-buttons > h3 {
     font-size: 2rem;
   }
 
@@ -354,6 +382,21 @@ img {
     font-size: 1rem;
     font-weight: 300;
     padding: 0.25rem 1rem;
+    margin-right: 1rem;
+  }
+
+  .modal-content {
+    width: 725px;
+    margin-top: 7rem;
+  }
+
+  .modal-content h2 {
+    margin: 1.5rem 0 0.9rem;
+    font-size: 1.75rem;
+    font-weight: 500;
+  }
+
+  .modal-x-icon {
     margin-right: 1rem;
   }
 }
