@@ -17,7 +17,7 @@ var $modalSearchContainer = $modalContent.querySelector(
   '.modal-search-container'
 );
 var $modalSearchResultContainer = $modalSearchContainer.nextElementSibling;
-var upcomingWorkoutsContent = document.querySelector(
+var $upcomingWorkoutsContent = document.querySelector(
   '.upcoming-workouts-content'
 );
 
@@ -29,7 +29,6 @@ var dateInput = null;
 var dateButton = null;
 var addButton = null;
 var userYearMonthDay = null;
-var organizedDate = null;
 var searched = false;
 var dateValid = false;
 var searchResultSelectionCount = 0;
@@ -123,13 +122,13 @@ function loadDataFromLocal() {
     }
   });
   for (var key in organizedExercises) {
-    upcomingWorkoutsContent.appendChild(createElementForDaySeparator(key));
+    $upcomingWorkoutsContent.appendChild(createElementForDaySeparator(key));
     for (var i = 0; i < organizedExercises[key].length; i++) {
       imgURL = organizedExercises[key][i].imgURL;
       title = organizedExercises[key][i].title;
       tag1 = organizedExercises[key][i].tag1;
       tag2 = organizedExercises[key][i].tag2;
-      upcomingWorkoutsContent.appendChild(
+      $upcomingWorkoutsContent.appendChild(
         createElementForMobileUpcomingWorkouts(imgURL, title, tag1, tag2)
       );
     }
@@ -219,21 +218,6 @@ function checkDateIsValid(userYearMonthDay) {
   var month = null;
   var day = null;
 
-  var months = {
-    1: 'Jan',
-    2: 'Feb',
-    3: 'Mar',
-    4: 'Apr',
-    5: 'May',
-    6: 'Jun',
-    7: 'Jul',
-    8: 'Aug',
-    9: 'Sep',
-    10: 'Oct',
-    11: 'Nov',
-    12: 'Dec'
-  };
-
   date = new Date();
   year = date.getFullYear();
   month = date.getMonth() + 1;
@@ -242,8 +226,6 @@ function checkDateIsValid(userYearMonthDay) {
   var userYear = parseInt(userYearMonthDay[0]);
   var userMonth = parseInt(userYearMonthDay[1]);
   var userDay = parseInt(userYearMonthDay[2]);
-
-  organizedDate = `${months[userMonth]} ${userDay}, ${userYear}`;
 
   if (userYear > year) {
     validDate();
@@ -515,8 +497,7 @@ function checkIfUserCanNoLongerAddExercise() {
 function addExercises(event) {
   var tempData = null;
   var tagContainer = null;
-  var daySeparator = createElementForDaySeparator(organizedDate);
-  upcomingWorkoutsContent.appendChild(daySeparator);
+
   for (var key in tempSelection) {
     tempSelection[key].classList.remove('green-border');
     tagContainer = tempSelection[key].querySelector('.muscle-tag-container');
@@ -532,19 +513,19 @@ function addExercises(event) {
 
     data.exercises.push(tempData);
     data.nextExerciseId++;
-    appendWorkout(tempData);
   }
+  removeData();
+  modifyData();
+  loadDataFromLocal();
   $workoutModal.classList.add('hidden');
 }
 
-function appendWorkout(exerciseData) {
-  var upcomingWorkoutLi = createElementForMobileUpcomingWorkouts(
-    exerciseData.imgURL,
-    exerciseData.title,
-    exerciseData.tag1,
-    exerciseData.tag2
-  );
-  upcomingWorkoutsContent.appendChild(upcomingWorkoutLi);
+function removeData() {
+  var content = $upcomingWorkoutsContent.lastElementChild;
+  while (content) {
+    $upcomingWorkoutsContent.removeChild(content);
+    content = $upcomingWorkoutsContent.lastElementChild;
+  }
 }
 
 function createElementForDaySeparator(text) {
