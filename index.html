@@ -68,14 +68,21 @@
         <div class="modal-layout row row-lr-center">
           <div class="modal-content text-align-center">
             <h2>WORKOUT</h2>
-            <div class="modal-search-container">
-              <input
-                type="text"
-                name="workoutSearch"
-                id="workout-search"
-                placeholder="legs, chest, arms"
-              />
-              <button class="search-button">SEARCH</button>
+            <div class="row row-lr-center">
+              <div class="col modal-search-and-result">
+                <div class="modal-search-container">
+                  <input
+                    type="text"
+                    name="workoutSearch"
+                    id="workout-search"
+                    placeholder="legs, chest, arms"
+                  />
+                </div>
+                <div class="modal-search-results-container row flex-col"></div>
+              </div>
+              <div class="col">
+                <button class="search-button">SEARCH</button>
+              </div>
             </div>
           </div>
         </div>
