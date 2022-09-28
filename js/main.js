@@ -86,6 +86,7 @@ function handleNewExerciseContainerClicks(event) {
 
 function handleInfoModalEvents(event) {
   if (
+    event.target.matches('.modal-layout') ||
     event.target.matches('.modal-x-icon') ||
     event.target.matches('.info-modal')
   ) {
