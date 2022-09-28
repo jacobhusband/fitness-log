@@ -2,5 +2,6 @@
 
 var data = {
   view: 'upcoming-workouts',
-  exercises: []
+  exercises: [],
+  nextExerciseId: 1
 };

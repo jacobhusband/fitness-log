@@ -9,6 +9,7 @@ var $upcomingWorkoutsContainer = document.querySelector(
 );
 var $nav1SearchContainer = document.querySelector('.nav-1-search-container');
 var $modalContent = document.querySelector('.workout-modal-content');
+var $searchButton = $modalContent.querySelector('.search-button');
 var $modalSearchAndResultContainer = $modalContent.querySelector(
   '.modal-search-and-result'
 );
@@ -81,6 +82,7 @@ $modalSearchContainer.firstElementChild.addEventListener(
   'keydown',
   searchForExercise
 );
+$searchButton.addEventListener('click', searchForExercise);
 $modalContent.addEventListener('click', handleModalContentClicks);
 $infoModal.addEventListener('click', handleInfoModalEvents);
 $newExercisesContainer.addEventListener(
