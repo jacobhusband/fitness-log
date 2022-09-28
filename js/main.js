@@ -27,6 +27,7 @@ var addButton = null;
 var searched = false;
 var dateValid = false;
 var searchResultSelectionCount = 0;
+var tempSelection = {};
 var tempSearchResults = [];
 var muscleObj = {
   biceps: 1,
@@ -168,10 +169,6 @@ function hideModal(event) {
     event.target.matches('.workout-modal')
   ) {
     $workoutModal.classList.add('hidden');
-    // if (dateButton) {
-    //   dateButton.textContent = dateButtonDefaultTextContent;
-    //   dateButton.appendChild(datePolygon);
-    // }
 
     window.removeEventListener('click', hideModal);
   }
@@ -394,10 +391,12 @@ function listenForSearchResultClicks() {
       searchResultSelectionCount--;
       li.classList.remove('green-border');
       li.classList.add('normal-border');
+      delete tempSelection[li.dataset.id];
     } else {
       searchResultSelectionCount++;
       li.classList.add('green-border');
       li.classList.remove('normal-border');
+      tempSelection[li.dataset.id] = li;
     }
     checkIfUserCanAddExercise();
     checkIfUserCanNoLongerAddExercise();
@@ -420,7 +419,18 @@ function checkIfUserCanNoLongerAddExercise() {
   }
 }
 
-function addExercises(event) {}
+function addExercises(event) {
+  for (var key in tempSelection) {
+    tempSelection[key].classList.remove('green-border');
+    tempSelection[key].dataset.id = data.nextExerciseId;
+    data.exercises.push(tempSelection[key]);
+    data.nextExerciseId++;
+  }
+  $workoutModal.classList.add('hidden');
+  populateUpcomingWorkouts();
+}
+
+function populateUpcomingWorkouts() {}
 
 function changeViews(event) {
   if (event.target.dataset.text === 'new-exercises') {
