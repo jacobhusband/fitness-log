@@ -535,21 +535,6 @@ function createElementForDaySeparator(text) {
 }
 
 function createElementForMobileUpcomingWorkouts(imgURL, title, tag1, tag2) {
-  // <div class="upcoming-workout-entry row">
-  //   <div class="image-container col">
-  //     <img src="images/loading.png" alt="loading" />
-  //   </div>
-  //   <div class="row flex-col space-between w-100">
-  //     <div class="row title-and-buttons pos-rel">
-  //       <h3>BARBELL BENCHPRESS</h3>
-  //       <img src="images/info.png" alt="info" class="info-icon" />
-  //     </div>
-  //     <div class="muscle-tag-container row">
-  //       <p>Triceps</p>
-  //       <p>Shoulders</p>
-  //     </div>
-  //   </div>
-  // </div>;
   return createElements('div', { class: 'upcoming-workout-entry row' }, [
     createElements('div', { class: 'image-container col' }, [
       createElements('img', { src: imgURL, alt: 'exercise image' })
