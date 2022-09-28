@@ -355,6 +355,14 @@ input[type="date"] {
   padding: 1rem;
 }
 
+.green-border {
+  border-color: green;
+}
+
+.normal-border {
+  border-color: #263238;
+}
+
 /* Mobile and desktop differences */
 
 @media only screen and (min-width: 768px) {

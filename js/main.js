@@ -22,6 +22,7 @@ var datePolygon = null;
 var dateButton = null;
 var dateButtonDefaultTextContent = null;
 var addButton = null;
+var searched = false;
 var tempSearchResults = [];
 var muscleObj = {
   biceps: 1,
@@ -318,6 +319,9 @@ function getImages(exercise, el) {
   xhr.responseType = 'json';
 
   xhr.addEventListener('load', function () {
+    if (xhr.status !== 200) {
+      return;
+    }
     imageCount++;
     if (imageCount % 5 === 0) {
       document.documentElement.classList.remove('wait-cursor');
@@ -365,11 +369,30 @@ function setImgOfEl(url, el) {
 
 function searchForExercise(event) {
   if (event.key === 'Enter' || event.target.matches('.search-button')) {
+    if (searched) {
+      $modalContent.removeEventListener('click', listenForSearchResultClicks);
+    }
+    searched = true;
     removeSearchResults();
     searchString = event.target.value;
     event.target.value = '';
     getExercises();
     document.documentElement.classList.add('wait-cursor');
+    $modalContent.addEventListener('click', listenForSearchResultClicks);
+  }
+}
+
+function listenForSearchResultClicks() {
+  var li;
+  if (!event.target.matches('input#workout-search')) {
+    li = event.target.closest('li');
+    if (li.classList.contains('green-border')) {
+      li.classList.remove('green-border');
+      li.classList.add('normal-border');
+    } else {
+      li.classList.add('green-border');
+      li.classList.remove('normal-border');
+    }
   }
 }
 
