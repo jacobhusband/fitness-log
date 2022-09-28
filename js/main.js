@@ -107,7 +107,7 @@ function showInfoModal(event) {
     .join('')
     .split('</p>')
     .join('');
-  $descriptionTitle.textContent = tempSearchResults[index].name;
+  $descriptionTitle.textContent = tempSearchResults[index].name.toUpperCase();
   $infoModal.classList.remove('hidden');
 }
 
