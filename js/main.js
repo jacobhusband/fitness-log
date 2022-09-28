@@ -96,6 +96,12 @@ $newExercisesContainer.addEventListener(
 );
 // #endregion
 
+loadDataFromLocal();
+
+function loadDataFromLocal() {
+  data.exercises.forEach(exercise => {});
+}
+
 function handleNewExerciseContainerClicks(event) {
   if (event.target.matches('.info-button')) {
     showInfoModal(event);
@@ -453,7 +459,7 @@ function addExercises(event) {
 
     tempData = {
       id: data.nextExerciseId,
-      imgURL: tempSelection[key].querySelector('img').src,
+      imgURL: tempSelection[key].querySelector('img').getAttribute('src'),
       title: tempSelection[key].querySelector('h3').textContent,
       tag1: tagContainer.children[0].textContent,
       tag2: tagContainer.children[1].textContent,
