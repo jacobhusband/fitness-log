@@ -65,6 +65,11 @@ img {
   width: 100%;
 }
 
+input[type="date"] {
+  width: 50px;
+  height: 20px;
+}
+
 /* Non-semantic classes */
 
 /* Mobile basic styling */
@@ -112,7 +117,7 @@ img {
   background-color: inherit;
 }
 
-/* Mobile modal styling */
+/* Mobile workout modal styling */
 
 .modal {
   position: absolute;
@@ -133,6 +138,7 @@ img {
   border-radius: 0.5rem;
   border: 0.4rem solid #5e503f;
   min-height: 6rem;
+  padding-bottom: 1rem;
 }
 
 .modal-content h2 {
@@ -145,6 +151,29 @@ img {
 .modal-search-container input {
   width: 12rem;
 }
+
+.search-button {
+  margin-bottom: 0.2rem;
+}
+
+.date-button {
+  position: absolute;
+  left: 0;
+}
+
+.date-polygon {
+  margin-left: 0.2rem;
+  width: 8px;
+  height: 8px;
+  position: relative;
+  top: -1px;
+}
+
+.workout-modal-content button {
+  width: 80px;
+}
+
+/* Mobile modal search styling */
 
 .modal-search-result {
   width: 12rem;
@@ -205,6 +234,8 @@ img {
 .muscle-tag-container p {
   letter-spacing: 0.02rem;
 }
+
+/* Mobile info modal styling */
 
 .info-icon,
 .modal-x-icon {
