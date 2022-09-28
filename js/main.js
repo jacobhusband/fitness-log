@@ -119,11 +119,6 @@ function handleInfoModalEvents(event) {
 }
 
 function handleModalContentClicks(event) {
-  var date = null;
-  var year = null;
-  var month = null;
-  var day = null;
-
   if (event.target.matches('.info-icon')) {
     showInfoModal(event);
   }
@@ -136,59 +131,69 @@ function handleModalContentClicks(event) {
       dateButton = $workoutModal.querySelector('.date-button');
       addButton = $workoutModal.querySelector('.add-button');
     }
-    var months = {
-      1: 'Jan',
-      2: 'Feb',
-      3: 'Mar',
-      4: 'Apr',
-      5: 'May',
-      6: 'Jun',
-      7: 'Jul',
-      8: 'Aug',
-      9: 'Sep',
-      10: 'Oct',
-      11: 'Nov',
-      12: 'Dec'
-    };
-    date = new Date();
-    year = date.getFullYear();
-    month = date.getMonth() + 1;
-    day = date.getDate();
     dateInput.click();
     dateInput.showPicker();
     dateInput.addEventListener('change', function change(e) {
       userYearMonthDay = e.target.value.split('-');
-      var userYear = parseInt(userYearMonthDay[0]);
-      var userMonth = parseInt(userYearMonthDay[1]);
-      var userDay = parseInt(userYearMonthDay[2]);
-
-      organizedDate = `${months[userMonth]} ${userDay}, ${userYear}`;
-
-      if (userYear > year) {
-        validDate();
-      } else if (userYear === year && userMonth > month) {
-        validDate();
-      } else if (userYear === year && userMonth === month && userDay >= day) {
-        validDate();
-      } else {
-        invalidDate();
-      }
-
+      checkDateIsValid(userYearMonthDay);
       dateButton.textContent = userYearMonthDay
         .filter((item, ind) => ind > 0)
         .join('/');
       dateInput.removeEventListener('change', change);
     });
   }
+}
 
-  function invalidDate() {
-    dateValid = false;
-    checkIfUserCanNoLongerAddExercise();
-  }
+function invalidDate() {
+  dateValid = false;
+  checkIfUserCanNoLongerAddExercise();
+}
 
-  function validDate() {
-    dateValid = true;
-    checkIfUserCanAddExercise();
+function validDate() {
+  dateValid = true;
+  checkIfUserCanAddExercise();
+}
+
+function checkDateIsValid(userYearMonthDay) {
+  var date = null;
+  var year = null;
+  var month = null;
+  var day = null;
+
+  var months = {
+    1: 'Jan',
+    2: 'Feb',
+    3: 'Mar',
+    4: 'Apr',
+    5: 'May',
+    6: 'Jun',
+    7: 'Jul',
+    8: 'Aug',
+    9: 'Sep',
+    10: 'Oct',
+    11: 'Nov',
+    12: 'Dec'
+  };
+
+  date = new Date();
+  year = date.getFullYear();
+  month = date.getMonth() + 1;
+  day = date.getDate();
+
+  var userYear = parseInt(userYearMonthDay[0]);
+  var userMonth = parseInt(userYearMonthDay[1]);
+  var userDay = parseInt(userYearMonthDay[2]);
+
+  organizedDate = `${months[userMonth]} ${userDay}, ${userYear}`;
+
+  if (userYear > year) {
+    validDate();
+  } else if (userYear === year && userMonth > month) {
+    validDate();
+  } else if (userYear === year && userMonth === month && userDay >= day) {
+    validDate();
+  } else {
+    invalidDate();
   }
 }
 
