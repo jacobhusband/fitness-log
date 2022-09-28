@@ -17,6 +17,11 @@ var $infoModal = document.querySelector('.info-modal');
 var $descriptionTitle = $infoModal.querySelector('.description-title');
 var $descriptionText = $infoModal.querySelector('.description-text');
 var searchString = null;
+var dateInput = null;
+var datePolygon = null;
+var dateButton = null;
+var dateButtonDefaultTextContent = null;
+var addButton = null;
 var tempSearchResults = [];
 var muscleObj = {
   biceps: 1,
@@ -95,8 +100,84 @@ function handleInfoModalEvents(event) {
 }
 
 function handleModalContentClicks(event) {
+  var date = null;
+  var year = null;
+  var month = null;
+  var day = null;
+  var min = null;
+  var userYearMonthDay = null;
+
   if (event.target.matches('.info-icon')) {
     showInfoModal(event);
+  }
+  if (
+    event.target.matches('.date-button') ||
+    event.target.matches('.date-polygon')
+  ) {
+    if (!dateInput) {
+      dateInput = $workoutModal.querySelector('input[type="date"]');
+      dateButton = $workoutModal.querySelector('.date-button');
+      addButton = $workoutModal.querySelector('.add-button');
+      datePolygon = $workoutModal.querySelector('.date-polygon');
+    }
+    dateButtonDefaultTextContent = dateButton.textContent;
+    date = new Date();
+    year = date.getFullYear();
+    month = date.getMonth();
+    day = date.getDate();
+    min = `${month}-${day}-${year}`;
+    dateInput.setAttribute('min', min);
+    dateInput.click();
+    dateInput.showPicker();
+    dateInput.addEventListener('change', function change(e) {
+      userYearMonthDay = e.target.value.split('-');
+      if (parseInt(userYearMonthDay[0]) >= year) {
+        if (parseInt(userYearMonthDay[1]) >= month) {
+          if (parseInt(userYearMonthDay[2]) >= day) {
+            validDate();
+          } else {
+            invalidDate();
+          }
+        } else {
+          invalidDate();
+        }
+      } else {
+        invalidDate();
+      }
+      dateButton.textContent = userYearMonthDay
+        .filter((item, ind) => ind > 0)
+        .join('/');
+      dateInput.removeEventListener('change', change);
+    });
+  }
+
+  function invalidDate() {
+    dateButton.style.borderColor = 'red';
+    addButton.style.borderColor = 'red';
+    addButton.style.filter = 'brightness(50%)';
+    addButton.setAttribute('disabled', 'true');
+  }
+
+  function validDate() {
+    dateButton.style.borderColor = '#5e503f';
+    addButton.style.borderColor = 'green';
+    addButton.style.filter = 'brightness(100%)';
+    addButton.setAttribute('disabled', '');
+  }
+}
+
+function hideModal(event) {
+  if (
+    event.target.matches('.modal-layout') ||
+    event.target.matches('.workout-modal')
+  ) {
+    $workoutModal.classList.add('hidden');
+    if (dateButton) {
+      dateButton.textContent = dateButtonDefaultTextContent;
+      dateButton.appendChild(datePolygon);
+    }
+
+    window.removeEventListener('click', hideModal);
   }
 }
 
@@ -352,16 +433,5 @@ function addCurrentNavView(event = false) {
     navItem = $nav2.querySelector(`[data-text="${data.view}"`);
     navItem.classList.remove('bright-hover');
     navItem.classList.add('dark-bg');
-  }
-}
-
-function hideModal(event) {
-  if (
-    event.target.matches('.modal-layout') ||
-    event.target.matches('.workout-modal')
-  ) {
-    $workoutModal.classList.add('hidden');
-
-    window.removeEventListener('click', hideModal);
   }
 }
