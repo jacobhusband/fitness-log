@@ -9,20 +9,24 @@ var $upcomingWorkoutsContainer = document.querySelector(
 );
 var $nav1SearchContainer = document.querySelector('.nav-1-search-container');
 var $modalContent = document.querySelector('.workout-modal-content');
+var $modalSearchAndResultContainer = $modalContent.querySelector(
+  '.modal-search-and-result'
+);
 var $modalSearchContainer = $modalContent.querySelector(
   '.modal-search-container'
 );
 var $modalSearchResultContainer = $modalSearchContainer.nextElementSibling;
+
 var $infoModal = document.querySelector('.info-modal');
 var $descriptionTitle = $infoModal.querySelector('.description-title');
 var $descriptionText = $infoModal.querySelector('.description-text');
 var searchString = null;
 var dateInput = null;
-var datePolygon = null;
 var dateButton = null;
-var dateButtonDefaultTextContent = null;
 var addButton = null;
 var searched = false;
+var dateValid = false;
+var searchResultSelectionCount = 0;
 var tempSearchResults = [];
 var muscleObj = {
   biceps: 1,
@@ -118,9 +122,7 @@ function handleModalContentClicks(event) {
       dateInput = $workoutModal.querySelector('input[type="date"]');
       dateButton = $workoutModal.querySelector('.date-button');
       addButton = $workoutModal.querySelector('.add-button');
-      datePolygon = $workoutModal.querySelector('.date-polygon');
     }
-    dateButtonDefaultTextContent = dateButton.textContent;
     date = new Date();
     year = date.getFullYear();
     month = date.getMonth() + 1;
@@ -150,17 +152,13 @@ function handleModalContentClicks(event) {
   }
 
   function invalidDate() {
-    dateButton.style.borderColor = 'red';
-    addButton.style.borderColor = 'red';
-    addButton.style.filter = 'brightness(50%)';
-    addButton.setAttribute('disabled', 'true');
+    dateValid = false;
+    checkIfUserCanNoLongerAddExercise();
   }
 
   function validDate() {
-    dateButton.style.borderColor = '#5e503f';
-    addButton.style.borderColor = 'green';
-    addButton.style.filter = 'brightness(100%)';
-    addButton.setAttribute('disabled', '');
+    dateValid = true;
+    checkIfUserCanAddExercise();
   }
 }
 
@@ -170,10 +168,10 @@ function hideModal(event) {
     event.target.matches('.workout-modal')
   ) {
     $workoutModal.classList.add('hidden');
-    if (dateButton) {
-      dateButton.textContent = dateButtonDefaultTextContent;
-      dateButton.appendChild(datePolygon);
-    }
+    // if (dateButton) {
+    //   dateButton.textContent = dateButtonDefaultTextContent;
+    //   dateButton.appendChild(datePolygon);
+    // }
 
     window.removeEventListener('click', hideModal);
   }
@@ -370,7 +368,10 @@ function setImgOfEl(url, el) {
 function searchForExercise(event) {
   if (event.key === 'Enter' || event.target.matches('.search-button')) {
     if (searched) {
-      $modalContent.removeEventListener('click', listenForSearchResultClicks);
+      $modalSearchAndResultContainer.removeEventListener(
+        'click',
+        listenForSearchResultClicks
+      );
     }
     searched = true;
     removeSearchResults();
@@ -378,7 +379,10 @@ function searchForExercise(event) {
     event.target.value = '';
     getExercises();
     document.documentElement.classList.add('wait-cursor');
-    $modalContent.addEventListener('click', listenForSearchResultClicks);
+    $modalSearchAndResultContainer.addEventListener(
+      'click',
+      listenForSearchResultClicks
+    );
   }
 }
 
@@ -387,14 +391,36 @@ function listenForSearchResultClicks() {
   if (!event.target.matches('input#workout-search')) {
     li = event.target.closest('li');
     if (li.classList.contains('green-border')) {
+      searchResultSelectionCount--;
       li.classList.remove('green-border');
       li.classList.add('normal-border');
     } else {
+      searchResultSelectionCount++;
       li.classList.add('green-border');
       li.classList.remove('normal-border');
     }
+    checkIfUserCanAddExercise();
+    checkIfUserCanNoLongerAddExercise();
   }
 }
+
+function checkIfUserCanAddExercise() {
+  if (searchResultSelectionCount > 0 && dateValid && addButton) {
+    addButton.classList.remove('low-brightness');
+    addButton.removeAttribute('disabled');
+    addButton.addEventListener('click', addExercises);
+  }
+}
+
+function checkIfUserCanNoLongerAddExercise() {
+  if (addButton && (searchResultSelectionCount === 0 || !dateValid)) {
+    addButton.classList.add('low-brightness');
+    addButton.setAttribute('disabled', 'true');
+    addButton.removeEventListener('click', addExercises);
+  }
+}
+
+function addExercises(event) {}
 
 function changeViews(event) {
   if (event.target.dataset.text === 'new-exercises') {

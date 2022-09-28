@@ -46,10 +46,6 @@ button {
   border-radius: 0.2rem;
 }
 
-button:hover {
-  filter: brightness(120%);
-}
-
 input {
   border: 1px solid #ced4da;
   border-radius: 0.2rem;
@@ -363,9 +359,17 @@ input[type="date"] {
   border-color: #263238;
 }
 
+.low-brightness {
+  filter: brightness(50%);
+}
+
 /* Mobile and desktop differences */
 
 @media only screen and (min-width: 768px) {
+  button:hover {
+    filter: brightness(120%);
+  }
+
   .container {
     max-width: 720px;
   }
