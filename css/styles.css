@@ -37,11 +37,12 @@ p {
 }
 
 button {
-  border: none;
-  background-color: #343a40;
+  background-color: #222f3b;
+  border: 1px solid #5e503f;
   font-size: 0.9rem;
   color: #d9d9d9;
-  padding: 0.25rem 0.9rem;
+  padding: 0.17rem 0.9rem;
+  margin-left: 0.4rem;
   border-radius: 0.2rem;
 }
 
@@ -70,6 +71,7 @@ img {
 
 .nav-1 {
   background-color: #222f3b;
+  filter: drop-shadow(0 0 0.1rem rgb(53, 53, 53));
 }
 
 .nav-1 h1 {
@@ -84,6 +86,7 @@ img {
 
 .nav-2 {
   background-color: #5e503f;
+  border-bottom: 1px solid #334b61;
 }
 
 .nav-2 h2 {
@@ -162,12 +165,20 @@ img {
 }
 
 .modal-result-content {
+  flex-grow: 2;
   margin: 0.4rem 0 0.4rem 0.1rem;
 }
 
-.modal-result-content > h3 {
+.title-and-buttons > h3 {
   font-size: 0.75rem;
   font-weight: 500;
+  padding-right: 0.25rem;
+}
+
+.info-button {
+  margin-left: auto;
+  font-size: 1.5rem;
+  margin-right: 0.1rem;
 }
 
 .modal-result-content > p {
@@ -195,6 +206,18 @@ img {
   letter-spacing: 0.02rem;
 }
 
+.info-icon,
+.modal-x-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 0.2rem;
+}
+
+.modal-x-icon {
+  position: absolute;
+  right: 10px;
+}
+
 /* Desktop content background */
 
 .new-exercises-container {
@@ -206,7 +229,7 @@ img {
 /* Desktop search container */
 
 .nav-1-search-container {
-  margin-top: 1.25rem;
+  margin: 1.25rem 0;
 }
 
 .nav-1-search-container button {
@@ -283,6 +306,14 @@ img {
   text-align: left;
 }
 
+.pos-rel {
+  position: relative;
+}
+
+.p-1r {
+  padding: 1rem;
+}
+
 /* Mobile and desktop differences */
 
 @media only screen and (min-width: 768px) {
@@ -295,7 +326,7 @@ img {
   }
 
   .dark-bg {
-    background-color: #383027;
+    background-color: #514536;
   }
 
   .nav-1 h1 {
@@ -305,7 +336,7 @@ img {
   }
 
   .nav-1 .plus-icon-container {
-    padding: 1rem 0.8rem 0.5rem 0;
+    padding: 1.4rem 0.8rem 0.5rem 0;
   }
 
   .nav-2 h2 {
@@ -341,7 +372,7 @@ img {
     margin-right: 1.5rem;
   }
 
-  .modal-result-content > h3 {
+  .title-and-buttons > h3 {
     font-size: 2rem;
   }
 
@@ -354,6 +385,21 @@ img {
     font-size: 1rem;
     font-weight: 300;
     padding: 0.25rem 1rem;
+    margin-right: 1rem;
+  }
+
+  .modal-content {
+    width: 725px;
+    margin-top: 7rem;
+  }
+
+  .modal-content h2 {
+    margin: 1.5rem 0 0.9rem;
+    font-size: 1.75rem;
+    font-weight: 500;
+  }
+
+  .modal-x-icon {
     margin-right: 1rem;
   }
 }

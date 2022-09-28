@@ -1,5 +1,5 @@
 // #region variable initialization
-var $modalContent = document.querySelector('.workout-modal');
+var $workoutModal = document.querySelector('.workout-modal');
 var $plusIcon = document.querySelector('.plus-icon-container');
 var $nav2 = document.querySelector('.nav-2');
 var $emptyContent = document.querySelector('.no-content');
@@ -8,9 +8,16 @@ var $upcomingWorkoutsContainer = document.querySelector(
   '.upcoming-workouts-container'
 );
 var $nav1SearchContainer = document.querySelector('.nav-1-search-container');
-var $modalSearchContainer = document.querySelector('.modal-search-container');
+var $modalContent = document.querySelector('.workout-modal-content');
+var $modalSearchContainer = $modalContent.querySelector(
+  '.modal-search-container'
+);
 var $modalSearchResultContainer = $modalSearchContainer.nextElementSibling;
+var $infoModal = document.querySelector('.info-modal');
+var $descriptionTitle = $infoModal.querySelector('.description-title');
+var $descriptionText = $infoModal.querySelector('.description-text');
 var searchString = null;
+var tempSearchResults = [];
 var muscleObj = {
   biceps: 1,
   shoulders: 2,
@@ -63,7 +70,46 @@ $modalSearchContainer.firstElementChild.addEventListener(
   'keydown',
   searchForExercise
 );
+$modalContent.addEventListener('click', handleModalContentClicks);
+$infoModal.addEventListener('click', handleInfoModalEvents);
+$newExercisesContainer.addEventListener(
+  'click',
+  handleNewExerciseContainerClicks
+);
 // #endregion
+
+function handleNewExerciseContainerClicks(event) {
+  if (event.target.matches('.info-button')) {
+    showInfoModal(event);
+  }
+}
+
+function handleInfoModalEvents(event) {
+  if (
+    event.target.matches('.modal-layout') ||
+    event.target.matches('.modal-x-icon') ||
+    event.target.matches('.info-modal')
+  ) {
+    $infoModal.classList.add('hidden');
+  }
+}
+
+function handleModalContentClicks(event) {
+  if (event.target.matches('.info-icon')) {
+    showInfoModal(event);
+  }
+}
+
+function showInfoModal(event) {
+  var index = event.target.closest('.modal-search-result').dataset.id;
+  $descriptionText.textContent = tempSearchResults[index].description
+    .split('<p>')
+    .join('')
+    .split('</p>')
+    .join('');
+  $descriptionTitle.textContent = tempSearchResults[index].name.toUpperCase();
+  $infoModal.classList.remove('hidden');
+}
 
 function pushWorkoutElement(el) {
   if (window.innerWidth < 768) {
@@ -76,6 +122,19 @@ function pushWorkoutElement(el) {
 }
 
 function createWorkoutElement(title, tag1, tag2, img = 'images/loading.png') {
+  var buttonVersusImage = null;
+
+  if (window.innerWidth < 768) {
+    buttonVersusImage = createElements('img', {
+      src: 'images/info.png',
+      class: 'info-icon'
+    });
+  } else {
+    buttonVersusImage = createElements('button', {
+      textContent: 'INFO',
+      class: 'info-button'
+    });
+  }
   return createElements(
     'li',
     {
@@ -92,7 +151,11 @@ function createWorkoutElement(title, tag1, tag2, img = 'images/loading.png') {
             'row flex-col space-between modal-result-content text-align-left'
         },
         [
-          createElements('h3', { textContent: title }),
+          createElements(
+            'div',
+            { class: 'row space-between title-and-buttons' },
+            [createElements('h3', { textContent: title }), buttonVersusImage]
+          ),
           createElements('div', { class: 'muscle-tag-container row' }, [
             createElements('p', { textContent: tag1 }),
             createElements('p', { textContent: tag2 })
@@ -145,6 +208,8 @@ function getExercises() {
     var tag2 = null;
     var el;
 
+    tempSearchResults = results;
+
     for (var i = 0; i < results.length; i++) {
       title = results[i].name.toUpperCase();
       tag1 = muscleObjReverse[results[i].muscles[0]];
@@ -153,6 +218,7 @@ function getExercises() {
         tag2 = muscleObjReverse[results[i].muscles[1]];
       }
       el = createWorkoutElement(title, tag1, tag2);
+      el.dataset.id = i;
       pushWorkoutElement(el);
       getImages(results[i].name, el);
     }
@@ -162,7 +228,6 @@ function getExercises() {
 }
 
 function getImages(exercise, el) {
-  imageCount++;
   var xhr = new XMLHttpRequest();
   var workoutQuery = exercise.split(' ').join('_');
   var resultingImgURL = null;
@@ -175,6 +240,7 @@ function getImages(exercise, el) {
   xhr.responseType = 'json';
 
   xhr.addEventListener('load', function () {
+    imageCount++;
     if (imageCount % 5 === 0) {
       document.documentElement.classList.remove('wait-cursor');
     }
@@ -261,7 +327,7 @@ function changeView(event) {
 
 function showWorkoutModal(event) {
   if (window.innerWidth < 768) {
-    $modalContent.classList.remove('hidden');
+    $workoutModal.classList.remove('hidden');
     window.addEventListener('click', hideModal);
   } else {
     removeCurrentNavView();
@@ -294,7 +360,7 @@ function hideModal(event) {
     event.target.matches('.modal-layout') ||
     event.target.matches('.workout-modal')
   ) {
-    $modalContent.classList.add('hidden');
+    $workoutModal.classList.add('hidden');
 
     window.removeEventListener('click', hideModal);
   }
