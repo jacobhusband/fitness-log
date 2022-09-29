@@ -52,12 +52,7 @@
             <label for="nav-2-date" class="nav-2-date-text">
               DATE TO WORKOUT:
             </label>
-            <input
-              class="nav-2-date"
-              type="text"
-              name="nav-2-date"
-              placeholder="mm/dd/yyyy"
-            />
+            <input class="nav-2-date" type="date" name="nav-2-date" />
           </div>
         </div>
       </div>
@@ -95,7 +90,11 @@
               <div class="col row flex-col">
                 <button class="search-button">SEARCH</button>
                 <div class="date-wrapper pos-rel">
-                  <input type="date" name="exercise-date" />
+                  <input
+                    type="date"
+                    name="exercise-date"
+                    class="modal-date-picker"
+                  />
                   <button class="date-button">
                     DATE
                     <img

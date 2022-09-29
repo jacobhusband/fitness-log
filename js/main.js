@@ -629,6 +629,9 @@ function changeViews(event) {
     $nav1SearchContainer.classList.add('hidden');
     $nav2.querySelector('.date-to-workout').classList.add('hidden');
   }
+  if (event.target.matches('.nav-2-date')) {
+    event.target.showPicker();
+  }
 }
 
 function newExercisesViewChanges() {
