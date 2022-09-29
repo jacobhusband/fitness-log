@@ -97,6 +97,13 @@ $upcomingWorkoutsContent.addEventListener('click', handleUpcomingWorkoutClicks);
 window.addEventListener('resize', handleChangesToWindow);
 // #endregion
 
+modifyData();
+if (window.innerWidth < 768) {
+  loadDataFromLocalMobile();
+} else {
+  loadDataFromLocalDesktop();
+}
+
 function handleChangesToWindow(event) {
   if (event.target.innerWidth > 768) {
     removeData();
@@ -106,13 +113,6 @@ function handleChangesToWindow(event) {
     removeData();
     loadDataFromLocalMobile();
   }
-}
-
-modifyData();
-if (window.innerWidth < 768) {
-  loadDataFromLocalMobile();
-} else {
-  loadDataFromLocalDesktop();
 }
 
 function modifyData() {
@@ -207,6 +207,28 @@ function handleNewExerciseContainerClicks(event) {
   if (event.target.matches('.info-button')) {
     showInfoModal(event);
   }
+  if (event.target.matches("img[src='images/plus.png']")) {
+    tryToAddWorkoutDesktop(event);
+  }
+}
+
+function tryToAddWorkoutDesktop(event) {
+  var $date = $nav2.querySelector('.nav-2-date');
+  var validDate = checkDateIsValid($date.value.split('-'));
+  var li = event.target.closest('li');
+
+  if (!validDate) {
+    $date.classList.add('red-border');
+    $date.classList.remove('green-border');
+  } else if (validDate) {
+    $date.classList.remove('red-border');
+    $date.classList.add('green-border');
+    if (li.classList.contains('green-border')) {
+      li.classList.remove('green-border');
+    } else {
+      li.classList.add('green-border');
+    }
+  }
 }
 
 function handleInfoModalEvents(event) {
@@ -236,7 +258,12 @@ function handleModalContentClicks(event) {
     dateInput.showPicker();
     dateInput.addEventListener('change', function change(e) {
       userYearMonthDay = e.target.value.split('-');
-      checkDateIsValid(userYearMonthDay);
+      var date = checkDateIsValid(userYearMonthDay);
+      if (date) {
+        validDate();
+      } else {
+        invalidDate();
+      }
       dateButton.textContent = userYearMonthDay
         .filter((item, ind) => ind > 0)
         .join('/');
@@ -271,13 +298,13 @@ function checkDateIsValid(userYearMonthDay) {
   var userDay = parseInt(userYearMonthDay[2]);
 
   if (userYear > year) {
-    validDate();
+    return true;
   } else if (userYear === year && userMonth > month) {
-    validDate();
+    return true;
   } else if (userYear === year && userMonth === month && userDay >= day) {
-    validDate();
+    return true;
   } else {
-    invalidDate();
+    return false;
   }
 }
 
@@ -313,19 +340,44 @@ function pushWorkoutElement(el) {
   }
 }
 
-function createWorkoutElement(title, tag1, tag2, img = 'images/loading.png') {
+function createSearchElement(title, tag1, tag2, img = 'images/loading.png') {
   var buttonVersusImage = null;
+  var tagContainer = null;
 
   if (window.innerWidth < 768) {
     buttonVersusImage = createElements('img', {
       src: 'images/info.png',
       class: 'info-icon'
     });
+    tagContainer = createElements(
+      'div',
+      { class: 'muscle-tag-container row' },
+      [
+        createElements('p', { textContent: tag1 }),
+        createElements('p', { textContent: tag2 })
+      ]
+    );
   } else {
     buttonVersusImage = createElements('button', {
       textContent: 'INFO',
       class: 'info-button'
     });
+    tagContainer = createElements(
+      'div',
+      { class: 'muscle-tag-container row' },
+      [
+        createElements('p', { textContent: tag1 }),
+        createElements('p', { textContent: tag2 }),
+        createElements(
+          'div',
+          {
+            class:
+              'plus-icon-container pointer-cursor bright-hover ml-auto additional-workout'
+          },
+          [createElements('img', { src: 'images/plus.png', alt: 'plus icon' })]
+        )
+      ]
+    );
   }
   return createElements(
     'li',
@@ -348,10 +400,7 @@ function createWorkoutElement(title, tag1, tag2, img = 'images/loading.png') {
             { class: 'row space-between title-and-buttons' },
             [createElements('h3', { textContent: title }), buttonVersusImage]
           ),
-          createElements('div', { class: 'muscle-tag-container row' }, [
-            createElements('p', { textContent: tag1 }),
-            createElements('p', { textContent: tag2 })
-          ])
+          tagContainer
         ]
       )
     ]
@@ -411,7 +460,7 @@ function getExercises() {
       if (!tag2) {
         tag2 = muscleObjReverse[results[i].muscles[1]];
       }
-      el = createWorkoutElement(title, tag1, tag2);
+      el = createSearchElement(title, tag1, tag2);
       el.dataset.id = i;
       pushWorkoutElement(el);
       getImages(results[i].name, el);

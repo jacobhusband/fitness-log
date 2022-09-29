@@ -214,7 +214,7 @@ input[type="date"].modal-date-picker {
 .info-button {
   margin-left: auto;
   font-size: 1.5rem;
-  margin-right: 0.1rem;
+  height: 2.35rem;
 }
 
 .modal-result-content > p {
@@ -254,6 +254,11 @@ input[type="date"].modal-date-picker {
 .modal-x-icon {
   position: absolute;
   right: 10px;
+}
+
+.info-modal,
+.workout-modal {
+  position: fixed;
 }
 
 /* Mobile upcoming workouts styling */
@@ -338,6 +343,7 @@ input[type="date"].modal-date-picker {
   width: 8rem;
   height: 30px;
   cursor: pointer;
+  border: 3px solid #5e503f;
 }
 
 .nav-2-date-text {
@@ -415,6 +421,10 @@ input[type="date"].modal-date-picker {
 
 .green-border {
   border-color: green;
+}
+
+.red-border {
+  border-color: red;
 }
 
 .normal-border {
@@ -501,9 +511,14 @@ input[type="date"].modal-date-picker {
   }
 
   .muscle-tag-container p {
+    position: relative;
+    top: 3px;
+    align-self: center;
     font-size: 1rem;
     font-weight: 300;
-    padding: 0.25rem 1rem;
+    height: 1.25rem;
+    padding: 0 1rem;
+    padding-top: 0.1rem;
     margin-right: 1rem;
   }
 
@@ -520,5 +535,11 @@ input[type="date"].modal-date-picker {
 
   .modal-x-icon {
     margin-right: 1rem;
+  }
+
+  /* Semantic desktop specific classes */
+
+  .green-border {
+    border-color: green;
   }
 }
