@@ -1,6 +1,7 @@
 // #region variable initialization
 var $workoutModal = document.querySelector('.workout-modal');
-var $plusIcon = document.querySelector('.plus-icon-container');
+var $plusIconDesktop = document.querySelector('.plus-icon-container-desktop');
+var $plusIconMobile = document.querySelector('.plus-icon-container-mobile');
 var $nav2 = document.querySelector('.nav-2');
 var $emptyContent = document.querySelector('.no-content');
 var $newExercisesContainer = document.querySelector('.new-exercises-container');
@@ -17,8 +18,11 @@ var $modalSearchContainer = $modalContent.querySelector(
   '.modal-search-container'
 );
 var $modalSearchResultContainer = $modalSearchContainer.nextElementSibling;
-var $upcomingWorkoutsContent = document.querySelector(
-  '.upcoming-workouts-content'
+var $upcomingWorkoutsContentDesktop = document.querySelector(
+  '.upcoming-workouts-content-desktop'
+);
+var $upcomingWorkoutsContentMobile = document.querySelector(
+  '.upcoming-workouts-content-mobile'
 );
 
 var $infoModal = document.querySelector('.info-modal');
@@ -73,7 +77,8 @@ var muscleObjReverse = {
 var imageCount = 0;
 // #endregion
 // #region event listeners
-$plusIcon.addEventListener('click', showWorkoutModal);
+$plusIconDesktop.addEventListener('click', showWorkoutModalDesktop);
+$plusIconMobile.addEventListener('click', showWorkoutModalMobile);
 $nav2.addEventListener('click', changeViews);
 $nav1SearchContainer.lastElementChild.addEventListener(
   'keydown',
@@ -94,27 +99,21 @@ $newExercisesContainer.addEventListener(
   'click',
   handleNewExerciseContainerClicks
 );
-$upcomingWorkoutsContent.addEventListener('click', handleUpcomingWorkoutClicks);
-window.addEventListener('resize', handleChangesToWindow);
+$upcomingWorkoutsContentMobile.addEventListener(
+  'click',
+  handleUpcomingWorkoutClicks
+);
+$upcomingWorkoutsContentDesktop.addEventListener(
+  'click',
+  handleUpcomingWorkoutClicks
+);
 // #endregion
 
-modifyData();
-if (window.innerWidth < 768) {
-  loadDataFromLocalMobile();
-} else {
-  loadDataFromLocalDesktop();
-}
+// split up the upcoming workouts views into desktop and mobile
 
-function handleChangesToWindow(event) {
-  if (event.target.innerWidth > 768) {
-    removeData();
-    loadDataFromLocalDesktop();
-  }
-  if (event.target.innerWidth < 768) {
-    removeData();
-    loadDataFromLocalMobile();
-  }
-}
+modifyData();
+loadDataFromLocalMobile();
+loadDataFromLocalDesktop();
 
 function modifyData() {
   var newData = Object.assign({}, data);
@@ -130,11 +129,13 @@ function modifyData() {
 
 function loadDataFromLocalMobile() {
   data.organizedExercises.forEach(e => {
-    $upcomingWorkoutsContent.appendChild(
+    // mobile
+    $upcomingWorkoutsContentMobile.appendChild(
       createElementForDaySeparator(e[0].whenDo.when)
     );
     e.forEach(item => {
-      $upcomingWorkoutsContent.appendChild(
+      // mobile
+      $upcomingWorkoutsContentMobile.appendChild(
         createElementForMobileUpcomingWorkouts(
           item.imgURL,
           item.title,
@@ -169,14 +170,16 @@ function organizeExercisesByDay() {
 
 function loadDataFromLocalDesktop() {
   if (data.organizedExercises.length) {
-    $upcomingWorkoutsContent.appendChild(
+    // desktop
+    $upcomingWorkoutsContentDesktop.appendChild(
       createElementForDaySeparatorDesktop(
         data.organizedExercises[data.desktopCurrentDayView][0].whenDo.when
       )
     );
     data.organizedExercises[data.desktopCurrentDayView].forEach(item => {
-      $upcomingWorkoutsContent.appendChild(
-        createSearchElement(
+      // desktop
+      $upcomingWorkoutsContentDesktop.appendChild(
+        createUpcomingWorkoutElementDesktop(
           item.title,
           item.tag1,
           item.tag2,
@@ -209,13 +212,15 @@ function createElementForDaySeparatorDesktop(text) {
 }
 
 function handleUpcomingWorkoutClicks(event) {
+  // both desktop and mobile
   if (
     event.target.matches('.info-icon') ||
     event.target.matches('.info-button')
   ) {
-    showInfoModalDesktop(event);
+    showUpcomingWorkoutInfoModal(event);
   }
 
+  // desktop
   if (event.target.matches('.separator-polygon')) {
     if (event.target.getAttribute('alt') === 'polygon right') {
       showNextDay();
@@ -245,7 +250,7 @@ function showPreviousDay() {
   }
 }
 
-function showInfoModalDesktop(event) {
+function showUpcomingWorkoutInfoModal(event) {
   var id = event.target.closest('li').dataset.id;
   var exercise = getExerciseObjectGivenId(id);
   $descriptionTitle.textContent = exercise.title;
@@ -288,7 +293,7 @@ function giveDateDifferenceInDays(date) {
 
 function handleNewExerciseContainerClicks(event) {
   if (event.target.matches('.info-button')) {
-    showInfoModal(event);
+    showNewExerciseInfoModal(event);
   }
   if (event.target.matches("img[src='images/plus.png']")) {
     tryToAddWorkoutDesktop(event);
@@ -334,7 +339,7 @@ function handleInfoModalEvents(event) {
 
 function handleModalContentClicks(event) {
   if (event.target.matches('.info-icon')) {
-    showInfoModal(event);
+    showNewExerciseInfoModal(event);
   }
   if (
     event.target.matches('.date-button') ||
@@ -410,7 +415,7 @@ function hideModal(event) {
   }
 }
 
-function showInfoModal(event) {
+function showNewExerciseInfoModal(event) {
   var index = event.target.closest('.modal-search-result').dataset.id;
   $descriptionText.textContent = tempSearchResults[index].description
     .split('<p>')
@@ -421,74 +426,118 @@ function showInfoModal(event) {
   $infoModal.classList.remove('hidden');
 }
 
-function pushWorkoutElement(el) {
-  if (window.innerWidth < 768) {
-    // mobile
-    $modalSearchResultContainer.appendChild(el);
-  } else {
-    // desktop
-    $newExercisesContainer.appendChild(el);
-  }
+function pushWorkoutElement(el, el2) {
+  $modalSearchResultContainer.appendChild(el2);
+  $newExercisesContainer.appendChild(el);
 }
 
-function createSearchElement(
+function createUpcomingWorkoutElementDesktop(
   title,
   tag1,
   tag2,
   img = 'images/loading.png',
   id = false
 ) {
-  var buttonVersusImage = null;
-  var tagContainer = null;
+  var buttonVersusImage = createElements('button', {
+    textContent: 'INFO',
+    class: 'info-button'
+  });
+  var tagContainer = createElements(
+    'div',
+    { class: 'muscle-tag-container row' },
+    [
+      createElements('p', { textContent: tag1 }),
+      createElements('p', { textContent: tag2 })
+    ]
+  );
+  return createVariedElements(
+    title,
+    tag1,
+    tag2,
+    tagContainer,
+    buttonVersusImage,
+    img,
+    id
+  );
+}
 
-  if (window.innerWidth < 768) {
-    buttonVersusImage = createElements('img', {
-      src: 'images/info.png',
-      class: 'info-icon'
-    });
-    tagContainer = createElements(
-      'div',
-      { class: 'muscle-tag-container row' },
-      [
-        createElements('p', { textContent: tag1 }),
-        createElements('p', { textContent: tag2 })
-      ]
-    );
-  } else if (data.view === 'upcoming-workouts') {
-    buttonVersusImage = createElements('button', {
-      textContent: 'INFO',
-      class: 'info-button'
-    });
-    tagContainer = createElements(
-      'div',
-      { class: 'muscle-tag-container row' },
-      [
-        createElements('p', { textContent: tag1 }),
-        createElements('p', { textContent: tag2 })
-      ]
-    );
-  } else {
-    buttonVersusImage = createElements('button', {
-      textContent: 'INFO',
-      class: 'info-button'
-    });
-    tagContainer = createElements(
-      'div',
-      { class: 'muscle-tag-container row' },
-      [
-        createElements('p', { textContent: tag1 }),
-        createElements('p', { textContent: tag2 }),
-        createElements(
-          'div',
-          {
-            class:
-              'plus-icon-container pointer-cursor bright-hover ml-auto additional-workout'
-          },
-          [createElements('img', { src: 'images/plus.png', alt: 'plus icon' })]
-        )
-      ]
-    );
-  }
+function createSearchElementDesktop(
+  title,
+  tag1,
+  tag2,
+  img = 'images/loading.png',
+  id = false
+) {
+  var buttonVersusImage = createElements('button', {
+    textContent: 'INFO',
+    class: 'info-button'
+  });
+  var tagContainer = createElements(
+    'div',
+    { class: 'muscle-tag-container row' },
+    [
+      createElements('p', { textContent: tag1 }),
+      createElements('p', { textContent: tag2 }),
+      createElements(
+        'div',
+        {
+          class:
+            'plus-icon-container pointer-cursor bright-hover ml-auto additional-workout'
+        },
+        [createElements('img', { src: 'images/plus.png', alt: 'plus icon' })]
+      )
+    ]
+  );
+  return createVariedElements(
+    title,
+    tag1,
+    tag2,
+    tagContainer,
+    buttonVersusImage,
+    img,
+    id
+  );
+}
+
+function createSearchElementMobile(
+  title,
+  tag1,
+  tag2,
+  img = 'images/loading.png',
+  id = false
+) {
+  var buttonVersusImage = createElements('img', {
+    src: 'images/info.png',
+    class: 'info-icon'
+  });
+  var tagContainer = createElements(
+    'div',
+    { class: 'muscle-tag-container row' },
+    [
+      createElements('p', { textContent: tag1 }),
+      createElements('p', { textContent: tag2 })
+    ]
+  );
+  return createVariedElements(
+    title,
+    tag1,
+    tag2,
+    tagContainer,
+    buttonVersusImage,
+    img,
+    id
+  );
+}
+
+function createVariedElements(
+  title,
+  tag1,
+  tag2,
+  tagContainer,
+  buttonVersusImage,
+  img = 'images/loading.png',
+  id = false
+) {
   return createElements(
     'li',
     {
@@ -561,6 +610,7 @@ function getExercises() {
     var tag1 = null;
     var tag2 = null;
     var el;
+    var el2;
 
     tempSearchResults = results;
 
@@ -571,10 +621,13 @@ function getExercises() {
       if (!tag2) {
         tag2 = muscleObjReverse[results[i].muscles[1]];
       }
-      el = createSearchElement(title, tag1, tag2);
+      el = createSearchElementDesktop(title, tag1, tag2);
+      el2 = createSearchElementMobile(title, tag1, tag2);
       el.dataset.id = i;
-      pushWorkoutElement(el);
+      el2.dataset.id = i;
+      pushWorkoutElement(el, el2);
       getImages(results[i].name, el);
+      getImages(results[i].name, el2);
     }
   });
 
@@ -610,33 +663,42 @@ function getImages(exercise, el) {
 
 function removeSearchResults() {
   var lastChild = null;
-  var parentContainer = null;
-  if (window.innerWidth < 768) {
-    // mobile
-    parentContainer = $modalSearchResultContainer;
-  } else {
-    // desktop
-    parentContainer = $newExercisesContainer;
-  }
-  lastChild = parentContainer.lastElementChild;
+  var parentContainerMobile = null;
+  var parentContainerDesktop = null;
+
+  parentContainerMobile = $modalSearchResultContainer;
+  parentContainerDesktop = $newExercisesContainer;
+
+  lastChild = parentContainerMobile.lastElementChild;
   while (lastChild) {
-    parentContainer.removeChild(lastChild);
-    lastChild = parentContainer.lastElementChild;
+    parentContainerMobile.removeChild(lastChild);
+    lastChild = parentContainerMobile.lastElementChild;
+  }
+
+  lastChild = parentContainerDesktop.lastElementChild;
+  while (lastChild) {
+    parentContainerDesktop.removeChild(lastChild);
+    lastChild = parentContainerDesktop.lastElementChild;
   }
 }
 
 function setImgOfEl(url, el) {
-  var searchEntries = null;
-  if (window.innerWidth < 768) {
-    // mobile
-    searchEntries = $modalSearchResultContainer.children;
-  } else {
-    // desktop
-    searchEntries = $newExercisesContainer.children;
+  var searchEntriesMobile = null;
+  var searchEntriesDesktop = null;
+
+  searchEntriesMobile = $modalSearchResultContainer.children;
+  searchEntriesDesktop = $newExercisesContainer.children;
+
+  for (var i = 0; i < searchEntriesMobile.length; i++) {
+    if (searchEntriesMobile[i] === el) {
+      searchEntriesMobile[i].firstElementChild.firstElementChild.src = url;
+      break;
+    }
   }
-  for (var i = 0; i < searchEntries.length; i++) {
-    if (searchEntries[i] === el) {
-      searchEntries[i].firstElementChild.firstElementChild.src = url;
+
+  for (var j = 0; j < searchEntriesDesktop.length; j++) {
+    if (searchEntriesDesktop[j] === el) {
+      searchEntriesDesktop[j].firstElementChild.firstElementChild.src = url;
       break;
     }
   }
@@ -727,19 +789,24 @@ function addExercises(event) {
   removeData();
   modifyData();
   organizeExercisesByDay();
-  if (window.innerWidth < 768) {
-    loadDataFromLocalMobile();
-    $workoutModal.classList.add('hidden');
-  } else {
-    loadDataFromLocalDesktop();
-  }
+  loadDataFromLocalMobile();
+  $workoutModal.classList.add('hidden');
+  loadDataFromLocalDesktop();
 }
 
 function removeData() {
-  var content = $upcomingWorkoutsContent.lastElementChild;
-  while (content) {
-    $upcomingWorkoutsContent.removeChild(content);
-    content = $upcomingWorkoutsContent.lastElementChild;
+  // both mobile and desktop
+  var mobileContent = $upcomingWorkoutsContentMobile.lastElementChild;
+  var desktopContent = $upcomingWorkoutsContentDesktop.lastElementChild;
+
+  while (mobileContent) {
+    $upcomingWorkoutsContentMobile.removeChild(mobileContent);
+    mobileContent = $upcomingWorkoutsContentMobile.lastElementChild;
+  }
+
+  while (desktopContent) {
+    $upcomingWorkoutsContentDesktop.removeChild(desktopContent);
+    desktopContent = $upcomingWorkoutsContentDesktop.lastElementChild;
   }
 }
 
@@ -788,7 +855,7 @@ function changeViews(event) {
   }
   if (event.target.dataset.text === 'upcoming-workouts') {
     changeView(event);
-    $plusIcon.classList.remove('hidden');
+    $plusIconDesktop.classList.remove('hidden');
     $newExercisesContainer.classList.add('hidden');
     $upcomingWorkoutsContainer.classList.remove('hidden');
     $nav1SearchContainer.classList.add('hidden');
@@ -841,7 +908,7 @@ function saveChosenExercises() {
 
 function newExercisesViewChanges() {
   $emptyContent.classList.add('hidden');
-  $plusIcon.classList.add('hidden');
+  $plusIconDesktop.classList.add('hidden');
   $newExercisesContainer.classList.remove('hidden');
   $upcomingWorkoutsContainer.classList.add('hidden');
   $nav1SearchContainer.classList.remove('hidden');
@@ -858,16 +925,16 @@ function changeView(event) {
   addCurrentNavView(event);
 }
 
-function showWorkoutModal(event) {
-  if (window.innerWidth < 768) {
-    $workoutModal.classList.remove('hidden');
-    window.addEventListener('click', hideModal);
-  } else {
-    removeCurrentNavView();
-    data.view = 'new-exercises';
-    addCurrentNavView();
-    newExercisesViewChanges();
-  }
+function showWorkoutModalMobile(event) {
+  $workoutModal.classList.remove('hidden');
+  window.addEventListener('click', hideModal);
+}
+
+function showWorkoutModalDesktop(event) {
+  removeCurrentNavView();
+  data.view = 'new-exercises';
+  addCurrentNavView();
+  newExercisesViewChanges();
 }
 
 function removeCurrentNavView() {
