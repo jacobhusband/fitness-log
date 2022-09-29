@@ -170,14 +170,12 @@ function organizeExercisesByDay() {
 
 function loadDataFromLocalDesktop() {
   if (data.organizedExercises.length) {
-    // desktop
     $upcomingWorkoutsContentDesktop.appendChild(
       createElementForDaySeparatorDesktop(
         data.organizedExercises[data.desktopCurrentDayView][0].whenDo.when
       )
     );
     data.organizedExercises[data.desktopCurrentDayView].forEach(item => {
-      // desktop
       $upcomingWorkoutsContentDesktop.appendChild(
         createUpcomingWorkoutElementDesktop(
           item.title,
