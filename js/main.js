@@ -627,6 +627,7 @@ function changeViews(event) {
     $newExercisesContainer.classList.add('hidden');
     $upcomingWorkoutsContainer.classList.remove('hidden');
     $nav1SearchContainer.classList.add('hidden');
+    $nav2.querySelector('.date-to-workout').classList.add('hidden');
   }
 }
 
@@ -640,6 +641,7 @@ function newExercisesViewChanges() {
   $nav2
     .querySelector('[data-text="upcoming-workouts"]')
     .classList.remove('dark-bg');
+  $nav2.querySelector('.date-to-workout').classList.remove('hidden');
 }
 
 function changeView(event) {

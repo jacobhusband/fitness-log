@@ -30,7 +30,8 @@ h3,
 h4,
 h5,
 h6,
-p {
+p,
+label {
   line-height: 1;
   margin: 0;
   color: #eaeaea;
@@ -323,6 +324,23 @@ input[type="date"] {
   font-size: 1.25rem;
   width: 17.5rem;
   border-radius: 0.3rem;
+}
+
+/* Desktop nav-2 date */
+
+.date-to-workout {
+  align-self: center;
+  margin-left: auto;
+}
+
+.nav-2-date {
+  font-size: 1rem;
+  width: 6.5rem;
+  height: 30px;
+}
+
+.nav-2-date-text {
+  margin-right: 0.5rem;
 }
 
 /* Semantic classes */
