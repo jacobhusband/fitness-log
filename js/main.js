@@ -685,9 +685,23 @@ function changeViews(event) {
     $nav1SearchContainer.classList.add('hidden');
     $nav2.querySelector('.date-to-workout').classList.add('hidden');
     saveChosenExercises();
+    modifyNoContent();
   }
   if (event.target.matches('.nav-2-date')) {
     event.target.showPicker();
+  }
+}
+
+function modifyNoContent() {
+  if (data.exercises.length === 0) {
+    $upcomingWorkoutsContainer
+      .querySelector('.no-content')
+      .classList.remove('hidden');
+  }
+  if (data.exercises.length > 0) {
+    $upcomingWorkoutsContainer
+      .querySelector('.no-content')
+      .classList.add('hidden');
   }
 }
 

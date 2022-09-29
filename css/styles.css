@@ -304,7 +304,7 @@ input[type="date"].modal-date-picker {
 
 /* Desktop content background */
 
-.new-exercises-container {
+.new-exercises-container, {
   min-height: 100vh;
   padding-top: 2rem;
   background-color: #2d2c30;
@@ -313,7 +313,7 @@ input[type="date"].modal-date-picker {
 /* Desktop search container */
 
 .nav-1-search-container {
-  margin: 1.25rem 0;
+  margin: 1.2rem 0;
 }
 
 .nav-1-search-container button {
@@ -535,6 +535,13 @@ input[type="date"].modal-date-picker {
 
   .modal-x-icon {
     margin-right: 1rem;
+  }
+
+  .new-exercises-container,
+  .upcoming-workouts-container {
+    min-height: 100vh;
+    padding-top: 2rem;
+    background-color: #2d2c30;
   }
 
   /* Semantic desktop specific classes */
