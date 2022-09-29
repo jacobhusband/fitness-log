@@ -30,7 +30,8 @@ h3,
 h4,
 h5,
 h6,
-p {
+p,
+label {
   line-height: 1;
   margin: 0;
   color: #eaeaea;
@@ -46,10 +47,6 @@ button {
   border-radius: 0.2rem;
 }
 
-button:hover {
-  filter: brightness(120%);
-}
-
 input {
   border: 1px solid #ced4da;
   border-radius: 0.2rem;
@@ -63,6 +60,15 @@ input:focus {
 
 img {
   width: 100%;
+}
+
+input[type="date"].modal-date-picker {
+  width: 50px;
+  height: 20px;
+  position: relative;
+  visibility: hidden;
+  right: 12.1rem;
+  top: 0.25rem;
 }
 
 /* Non-semantic classes */
@@ -112,7 +118,7 @@ img {
   background-color: inherit;
 }
 
-/* Mobile modal styling */
+/* Mobile workout modal styling */
 
 .modal {
   position: absolute;
@@ -133,6 +139,7 @@ img {
   border-radius: 0.5rem;
   border: 0.4rem solid #5e503f;
   min-height: 6rem;
+  padding-bottom: 1rem;
 }
 
 .modal-content h2 {
@@ -145,6 +152,35 @@ img {
 .modal-search-container input {
   width: 12rem;
 }
+
+.search-button {
+  margin-bottom: 0.2rem;
+}
+
+.date-button {
+  position: absolute;
+  left: 0;
+}
+
+.add-button {
+  margin-top: 0.48rem;
+}
+
+.date-polygon {
+  margin-left: 0.2rem;
+  width: 8px;
+  height: 8px;
+  position: relative;
+  top: -1px;
+}
+
+.workout-modal-content button {
+  width: 80px;
+  height: 25px;
+  padding: 0;
+}
+
+/* Mobile modal search styling */
 
 .modal-search-result {
   width: 12rem;
@@ -178,7 +214,7 @@ img {
 .info-button {
   margin-left: auto;
   font-size: 1.5rem;
-  margin-right: 0.1rem;
+  height: 2.35rem;
 }
 
 .modal-result-content > p {
@@ -206,6 +242,8 @@ img {
   letter-spacing: 0.02rem;
 }
 
+/* Mobile info modal styling */
+
 .info-icon,
 .modal-x-icon {
   width: 16px;
@@ -218,9 +256,70 @@ img {
   right: 10px;
 }
 
+.info-modal,
+.workout-modal {
+  position: fixed;
+}
+
+/* Desktop user message */
+
+.user-message > p {
+  background-color: rgb(17, 60, 100);
+  padding: 0.2rem;
+  border-radius: 0.1rem;
+}
+
+.user-message {
+  position: absolute;
+  display: flex;
+  top: 0;
+  left: 0;
+}
+
+/* Mobile upcoming workouts styling */
+
+.day-separator {
+  padding: 0.5rem 1rem;
+  background-color: #2d2c30;
+}
+
+.day-separator > h3 {
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.upcoming-workout-entry {
+  padding: 1rem;
+}
+
+.upcoming-workout-entry > .image-container > img {
+  width: 72px;
+  height: 75px;
+  border: 1px solid #5e503f;
+  margin-right: 1rem;
+}
+
+.upcoming-workout-entry > .flex-col > .title-and-buttons > h3 {
+  font-size: 0.75rem;
+  font-weight: 400;
+  margin-top: 0.25rem;
+}
+
+.upcoming-workout-entry > .flex-col > .title-and-buttons > img {
+  margin-left: auto;
+}
+
+.upcoming-workout-entry > .flex-col > .muscle-tag-container {
+  margin-bottom: 0.25rem;
+}
+
+.upcoming-workout-entry > .flex-col > .muscle-tag-container > p {
+  padding: 0.1rem 0.75rem;
+}
+
 /* Desktop content background */
 
-.new-exercises-container {
+.new-exercises-container, {
   min-height: 100vh;
   padding-top: 2rem;
   background-color: #2d2c30;
@@ -229,7 +328,7 @@ img {
 /* Desktop search container */
 
 .nav-1-search-container {
-  margin: 1.25rem 0;
+  margin: 1.2rem 0;
 }
 
 .nav-1-search-container button {
@@ -245,6 +344,27 @@ img {
   font-size: 1.25rem;
   width: 17.5rem;
   border-radius: 0.3rem;
+}
+
+/* Desktop nav-2 date */
+
+.date-to-workout {
+  align-self: center;
+  margin-left: auto;
+}
+
+.nav-2-date {
+  font-size: 1rem;
+  width: 8rem;
+  height: 30px;
+  cursor: pointer;
+  border: 3px solid #5e503f;
+}
+
+.nav-2-date-text {
+  position: relative;
+  top: 1px;
+  margin-right: 0.5rem;
 }
 
 /* Semantic classes */
@@ -314,9 +434,33 @@ img {
   padding: 1rem;
 }
 
+.green-border {
+  border-color: green;
+}
+
+.red-border {
+  border-color: red;
+}
+
+.normal-border {
+  border-color: #263238;
+}
+
+.low-brightness {
+  filter: brightness(50%);
+}
+
+.w-100 {
+  width: 100%;
+}
+
 /* Mobile and desktop differences */
 
 @media only screen and (min-width: 768px) {
+  button:hover {
+    filter: brightness(120%);
+  }
+
   .container {
     max-width: 720px;
   }
@@ -382,9 +526,14 @@ img {
   }
 
   .muscle-tag-container p {
+    position: relative;
+    top: 3px;
+    align-self: center;
     font-size: 1rem;
     font-weight: 300;
-    padding: 0.25rem 1rem;
+    height: 1.25rem;
+    padding: 0 1rem;
+    padding-top: 0.1rem;
     margin-right: 1rem;
   }
 
@@ -401,5 +550,39 @@ img {
 
   .modal-x-icon {
     margin-right: 1rem;
+  }
+
+  /* Desktop upcoming workouts content */
+
+  .new-exercises-container,
+  .upcoming-workouts-container {
+    min-height: 100vh;
+    padding-top: 2rem;
+    background-color: #2d2c30;
+  }
+
+  .upcoming-workouts-container {
+    padding-top: 1rem;
+  }
+
+  .desktop-day-separator {
+    margin-bottom: 1rem;
+  }
+
+  .separator-polygon {
+    width: 1rem;
+    height: 1rem;
+    align-self: center;
+    margin: 0 1rem;
+  }
+
+  .separator-polygon:hover {
+    cursor: pointer;
+  }
+
+  /* Semantic desktop specific classes */
+
+  .green-border {
+    border-color: green;
   }
 }

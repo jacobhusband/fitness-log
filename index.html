@@ -21,7 +21,7 @@
         <div class="container margin-auto row">
           <h1 class="no-user-select">FITNESS LOG</h1>
           <div class="nav-1-search-container row ml-auto hidden">
-            <button class="search-button">Search</button>
+            <button class="">Search</button>
             <input
               type="text"
               name="workoutSearch"
@@ -48,6 +48,12 @@
           >
             NEW EXERCISES
           </h2>
+          <div class="date-to-workout hidden">
+            <label for="nav-2-date" class="nav-2-date-text">
+              DATE TO WORKOUT:
+            </label>
+            <input class="nav-2-date" type="date" name="nav-2-date" />
+          </div>
         </div>
       </div>
     </header>
@@ -56,14 +62,18 @@
         data-view="upcoming-workouts"
         class="container margin-auto upcoming-workouts-container"
       >
-        <div class="no-content row row-lr-center">
+        <div class="no-content row row-lr-center hidden">
           <p class="no-user-select">No exercises upcoming...</p>
         </div>
+        <div class="upcoming-workouts-content"></div>
       </div>
       <div
         data-view="new-exercises"
         class="container margin-auto new-exercises-container hidden"
       ></div>
+      <div class="user-message hidden">
+        <p>Select a valid date</p>
+      </div>
       <div class="workout-modal modal hidden">
         <div class="modal-layout row row-lr-center">
           <div class="modal-content workout-modal-content text-align-center">
@@ -80,8 +90,26 @@
                 </div>
                 <div class="modal-search-results-container row flex-col"></div>
               </div>
-              <div class="col">
+              <div class="col row flex-col">
                 <button class="search-button">SEARCH</button>
+                <div class="date-wrapper pos-rel">
+                  <input
+                    type="date"
+                    name="exercise-date"
+                    class="modal-date-picker"
+                  />
+                  <button class="date-button">
+                    DATE
+                    <img
+                      class="date-polygon"
+                      src="images/polygon.png"
+                      alt="polygon"
+                    />
+                  </button>
+                </div>
+                <button disabled="true" class="add-button low-brightness">
+                  ADD
+                </button>
               </div>
             </div>
           </div>
