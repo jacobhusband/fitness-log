@@ -94,7 +94,19 @@ $newExercisesContainer.addEventListener(
   handleNewExerciseContainerClicks
 );
 $upcomingWorkoutsContent.addEventListener('click', handleUpcomingWorkoutClicks);
+window.addEventListener('resize', handleChangesToWindow);
 // #endregion
+
+function handleChangesToWindow(event) {
+  if (event.target.innerWidth > 768) {
+    removeData();
+    loadDataFromLocalDesktop();
+  }
+  if (event.target.innerWidth < 768) {
+    removeData();
+    loadDataFromLocalMobile();
+  }
+}
 
 modifyData();
 if (window.innerWidth < 768) {
@@ -104,7 +116,8 @@ if (window.innerWidth < 768) {
 }
 
 function modifyData() {
-  data.exercises.forEach((exercise, ind) => {
+  var newData = Object.assign({}, data);
+  newData.exercises.forEach((exercise, ind) => {
     exercise.whenDo = giveDateDifferenceInDays(exercise.date);
     if (exercise.whenDo.time < 0) {
       delete data.exercises[ind];
