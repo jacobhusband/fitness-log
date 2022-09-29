@@ -128,17 +128,7 @@ function modifyData() {
 }
 
 function loadDataFromLocalMobile() {
-  var organizedExercises = [];
-
-  data.exercises.forEach(e => {
-    if (!organizedExercises[e.whenDo.time]) {
-      organizedExercises[e.whenDo.time] = [e];
-    } else {
-      organizedExercises[e.whenDo.time].push(e);
-    }
-  });
-
-  organizedExercises.forEach(e => {
+  data.organizedExercises.forEach(e => {
     $upcomingWorkoutsContent.appendChild(
       createElementForDaySeparator(e[0].whenDo.when)
     );
@@ -156,7 +146,54 @@ function loadDataFromLocalMobile() {
   });
 }
 
-function loadDataFromLocalDesktop() {}
+function organizeExercisesByDay() {
+  var organizedExercises = [];
+
+  data.exercises.forEach(e => {
+    if (!organizedExercises[e.whenDo.time]) {
+      organizedExercises[e.whenDo.time] = [e];
+    } else {
+      organizedExercises[e.whenDo.time].push(e);
+    }
+  });
+
+  data.organizedExercises = organizedExercises;
+}
+
+function loadDataFromLocalDesktop() {
+  if (data.organizedExercises.length) {
+    $upcomingWorkoutsContent.appendChild(
+      createElementForDaySeparatorDesktop(
+        data.organizedExercises[0][0].whenDo.when
+      )
+    );
+    data.organizedExercises[0].forEach(item => {
+      $upcomingWorkoutsContent.appendChild(
+        createSearchElement(item.title, item.tag1, item.tag2, item.imgURL)
+      );
+    });
+  }
+}
+
+function createElementForDaySeparatorDesktop(text) {
+  return createElements(
+    'div',
+    { class: 'row desktop-day-separator space-between' },
+    [
+      createElements('img', {
+        class: 'separator-polygon',
+        src: 'images/polygon_left.png',
+        alt: 'polygon left'
+      }),
+      createElements('h1', { textContent: text }),
+      createElements('img', {
+        class: 'separator-polygon',
+        src: 'images/polygon-right.png',
+        alt: 'polygon right'
+      })
+    ]
+  );
+}
 
 function handleUpcomingWorkoutClicks(event) {
   if (event.target.matches('.info-icon')) {
@@ -347,7 +384,7 @@ function createSearchElement(title, tag1, tag2, img = 'images/loading.png') {
   var buttonVersusImage = null;
   var tagContainer = null;
 
-  if (window.innerWidth < 768) {
+  if (window.innerWidth < 768 || data.view === 'upcoming-workouts') {
     buttonVersusImage = createElements('img', {
       src: 'images/info.png',
       class: 'info-icon'
@@ -618,6 +655,7 @@ function addExercises(event) {
   }
   removeData();
   modifyData();
+  organizeExercisesByDay();
   if (window.innerWidth < 768) {
     loadDataFromLocalMobile();
     $workoutModal.classList.add('hidden');

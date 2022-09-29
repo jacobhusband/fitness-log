@@ -537,11 +537,32 @@ input[type="date"].modal-date-picker {
     margin-right: 1rem;
   }
 
+  /* Desktop upcoming workouts content */
+
   .new-exercises-container,
   .upcoming-workouts-container {
     min-height: 100vh;
     padding-top: 2rem;
     background-color: #2d2c30;
+  }
+
+  .upcoming-workouts-container {
+    padding-top: 1rem;
+  }
+
+  .desktop-day-separator {
+    margin-bottom: 1rem;
+  }
+
+  .separator-polygon {
+    width: 1rem;
+    height: 1rem;
+    align-self: center;
+    margin: 0 1rem;
+  }
+
+  .separator-polygon:hover {
+    cursor: pointer;
   }
 
   /* Semantic desktop specific classes */
