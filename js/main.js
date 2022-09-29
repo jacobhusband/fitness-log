@@ -176,7 +176,13 @@ function loadDataFromLocalDesktop() {
     );
     data.organizedExercises[data.desktopCurrentDayView].forEach(item => {
       $upcomingWorkoutsContent.appendChild(
-        createSearchElement(item.title, item.tag1, item.tag2, item.imgURL)
+        createSearchElement(
+          item.title,
+          item.tag1,
+          item.tag2,
+          item.imgURL,
+          item.id
+        )
       );
     });
   }
@@ -203,7 +209,10 @@ function createElementForDaySeparatorDesktop(text) {
 }
 
 function handleUpcomingWorkoutClicks(event) {
-  if (event.target.matches('.info-icon')) {
+  if (
+    event.target.matches('.info-icon') ||
+    event.target.matches('.info-button')
+  ) {
     showInfoModalDesktop(event);
   }
 
@@ -422,14 +431,33 @@ function pushWorkoutElement(el) {
   }
 }
 
-function createSearchElement(title, tag1, tag2, img = 'images/loading.png') {
+function createSearchElement(
+  title,
+  tag1,
+  tag2,
+  img = 'images/loading.png',
+  id = false
+) {
   var buttonVersusImage = null;
   var tagContainer = null;
 
-  if (window.innerWidth < 768 || data.view === 'upcoming-workouts') {
+  if (window.innerWidth < 768) {
     buttonVersusImage = createElements('img', {
       src: 'images/info.png',
       class: 'info-icon'
+    });
+    tagContainer = createElements(
+      'div',
+      { class: 'muscle-tag-container row' },
+      [
+        createElements('p', { textContent: tag1 }),
+        createElements('p', { textContent: tag2 })
+      ]
+    );
+  } else if (data.view === 'upcoming-workouts') {
+    buttonVersusImage = createElements('button', {
+      textContent: 'INFO',
+      class: 'info-button'
     });
     tagContainer = createElements(
       'div',
@@ -464,7 +492,8 @@ function createSearchElement(title, tag1, tag2, img = 'images/loading.png') {
   return createElements(
     'li',
     {
-      class: 'modal-search-result margin-auto row'
+      class: 'modal-search-result margin-auto row',
+      'dataset-id': id
     },
     [
       createElements('div', { class: 'col modal-img-alignment' }, [
