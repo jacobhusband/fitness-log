@@ -117,12 +117,14 @@ function handleChangesToWindow(event) {
 
 function modifyData() {
   var newData = Object.assign({}, data);
-  newData.exercises.forEach((exercise, ind) => {
+  newData.exercises = [];
+  data.exercises.forEach((exercise, ind) => {
     exercise.whenDo = giveDateDifferenceInDays(exercise.date);
-    if (exercise.whenDo.time < 0) {
-      delete data.exercises[ind];
+    if (exercise.whenDo.time >= 0) {
+      newData.exercises.push(exercise);
     }
   });
+  data.exercises = newData.exercises;
 }
 
 function loadDataFromLocalMobile() {
@@ -214,7 +216,8 @@ function handleNewExerciseContainerClicks(event) {
 
 function tryToAddWorkoutDesktop(event) {
   var $date = $nav2.querySelector('.nav-2-date');
-  var validDate = checkDateIsValid($date.value.split('-'));
+  userYearMonthDay = $date.value.split('-');
+  var validDate = checkDateIsValid(userYearMonthDay);
   var li = event.target.closest('li');
 
   if (!validDate) {
@@ -615,8 +618,12 @@ function addExercises(event) {
   }
   removeData();
   modifyData();
-  loadDataFromLocalMobile();
-  $workoutModal.classList.add('hidden');
+  if (window.innerWidth < 768) {
+    loadDataFromLocalMobile();
+    $workoutModal.classList.add('hidden');
+  } else {
+    loadDataFromLocalDesktop();
+  }
 }
 
 function removeData() {
@@ -677,10 +684,23 @@ function changeViews(event) {
     $upcomingWorkoutsContainer.classList.remove('hidden');
     $nav1SearchContainer.classList.add('hidden');
     $nav2.querySelector('.date-to-workout').classList.add('hidden');
+    saveChosenExercises();
   }
   if (event.target.matches('.nav-2-date')) {
     event.target.showPicker();
   }
+}
+
+function saveChosenExercises() {
+  var searchResults = $newExercisesContainer.children;
+
+  for (var i = 0; i < searchResults.length; i++) {
+    if (searchResults[i].classList.contains('green-border')) {
+      tempSelection[searchResults[i].dataset.id] = searchResults[i];
+    }
+  }
+
+  addExercises(null);
 }
 
 function newExercisesViewChanges() {
