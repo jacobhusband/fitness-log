@@ -157,17 +157,23 @@ function organizeExercisesByDay() {
     }
   });
 
-  data.organizedExercises = organizedExercises;
+  data.organizedExercises = [];
+
+  for (var i = 0; i < organizedExercises.length; i++) {
+    if (organizedExercises[i]) {
+      data.organizedExercises.push(organizedExercises[i]);
+    }
+  }
 }
 
 function loadDataFromLocalDesktop() {
   if (data.organizedExercises.length) {
     $upcomingWorkoutsContent.appendChild(
       createElementForDaySeparatorDesktop(
-        data.organizedExercises[0][0].whenDo.when
+        data.organizedExercises[data.desktopCurrentDayView][0].whenDo.when
       )
     );
-    data.organizedExercises[0].forEach(item => {
+    data.organizedExercises[data.desktopCurrentDayView].forEach(item => {
       $upcomingWorkoutsContent.appendChild(
         createSearchElement(item.title, item.tag1, item.tag2, item.imgURL)
       );
@@ -198,6 +204,34 @@ function createElementForDaySeparatorDesktop(text) {
 function handleUpcomingWorkoutClicks(event) {
   if (event.target.matches('.info-icon')) {
     showInfoModalDesktop(event);
+  }
+
+  if (event.target.matches('.separator-polygon')) {
+    if (event.target.getAttribute('alt') === 'polygon right') {
+      showNextDay();
+    }
+    if (event.target.getAttribute('alt') === 'polygon left') {
+      showPreviousDay();
+    }
+    removeData();
+    modifyData();
+    loadDataFromLocalDesktop();
+  }
+}
+
+function showNextDay() {
+  if (data.desktopCurrentDayView === data.organizedExercises.length - 1) {
+    data.desktopCurrentDayView = 0;
+  } else {
+    data.desktopCurrentDayView++;
+  }
+}
+
+function showPreviousDay() {
+  if (data.desktopCurrentDayView === 0) {
+    data.desktopCurrentDayView = data.organizedExercises.length - 1;
+  } else {
+    data.desktopCurrentDayView--;
   }
 }
 
@@ -724,6 +758,7 @@ function changeViews(event) {
     $nav2.querySelector('.date-to-workout').classList.add('hidden');
     saveChosenExercises();
     modifyNoContent();
+    data.desktopCurrentDayView = 0;
   }
   if (event.target.matches('.nav-2-date')) {
     event.target.showPicker();
