@@ -24,6 +24,7 @@ var $upcomingWorkoutsContent = document.querySelector(
 var $infoModal = document.querySelector('.info-modal');
 var $descriptionTitle = $infoModal.querySelector('.description-title');
 var $descriptionText = $infoModal.querySelector('.description-text');
+var userMessage = document.querySelector('.user-message');
 var searchString = null;
 var dateInput = null;
 var dateButton = null;
@@ -294,6 +295,13 @@ function tryToAddWorkoutDesktop(event) {
   if (!validDate) {
     $date.classList.add('red-border');
     $date.classList.remove('green-border');
+    userMessage.classList.remove('hidden');
+    userMessage.style.transform = `translate(${event.x + 20}px, ${
+      event.y - 10
+    }px)`;
+    setTimeout(() => {
+      userMessage.classList.add('hidden');
+    }, 2000);
   } else if (validDate) {
     $date.classList.remove('red-border');
     $date.classList.add('green-border');
