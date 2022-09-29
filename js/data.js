@@ -9,6 +9,8 @@ if (!data) {
   data = {
     view: 'upcoming-workouts',
     exercises: [],
-    nextExerciseId: 1
+    nextExerciseId: 1,
+    organizedExercises: [],
+    desktopCurrentDayView: 0
   };
 }
