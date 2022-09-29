@@ -691,6 +691,17 @@ function changeViews(event) {
   }
 }
 
+function clearTempData() {
+  tempSearchResults = null;
+  tempSelection = {};
+  var el = $newExercisesContainer.lastElementChild;
+  while (el) {
+    $newExercisesContainer.removeChild(el);
+    el = $newExercisesContainer.lastElementChild;
+  }
+  $nav2.querySelector('.nav-2-date').value = '';
+}
+
 function saveChosenExercises() {
   var searchResults = $newExercisesContainer.children;
 
@@ -701,6 +712,7 @@ function saveChosenExercises() {
   }
 
   addExercises(null);
+  clearTempData();
 }
 
 function newExercisesViewChanges() {
