@@ -96,7 +96,11 @@ $newExercisesContainer.addEventListener(
 // #endregion
 
 modifyData();
-loadDataFromLocal();
+if (window.innerWidth < 768) {
+  loadDataFromLocalMobile();
+} else {
+  loadDataFromLocalDesktop();
+}
 
 function modifyData() {
   data.exercises.forEach((exercise, ind) => {
@@ -107,7 +111,7 @@ function modifyData() {
   });
 }
 
-function loadDataFromLocal() {
+function loadDataFromLocalMobile() {
   var organizedExercises = {};
   var imgURL = null;
   var title = null;
@@ -134,6 +138,8 @@ function loadDataFromLocal() {
     }
   }
 }
+
+function loadDataFromLocalDesktop() {}
 
 function giveDateDifferenceInDays(date) {
   var today = new Date().toLocaleDateString().split('/');
@@ -516,7 +522,7 @@ function addExercises(event) {
   }
   removeData();
   modifyData();
-  loadDataFromLocal();
+  loadDataFromLocalMobile();
   $workoutModal.classList.add('hidden');
 }
 
@@ -563,7 +569,6 @@ function changeViews(event) {
   }
   if (event.target.dataset.text === 'upcoming-workouts') {
     changeView(event);
-    $emptyContent.classList.remove('hidden');
     $plusIcon.classList.remove('hidden');
     $newExercisesContainer.classList.add('hidden');
     $upcomingWorkoutsContainer.classList.remove('hidden');
@@ -578,6 +583,9 @@ function newExercisesViewChanges() {
   $upcomingWorkoutsContainer.classList.add('hidden');
   $nav1SearchContainer.classList.remove('hidden');
   $nav1SearchContainer.lastElementChild.focus();
+  $nav2
+    .querySelector('[data-text="upcoming-workouts"]')
+    .classList.remove('dark-bg');
 }
 
 function changeView(event) {
