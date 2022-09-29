@@ -93,6 +93,7 @@ $newExercisesContainer.addEventListener(
   'click',
   handleNewExerciseContainerClicks
 );
+$upcomingWorkoutsContent.addEventListener('click', handleUpcomingWorkoutClicks);
 // #endregion
 
 modifyData();
@@ -112,34 +113,57 @@ function modifyData() {
 }
 
 function loadDataFromLocalMobile() {
-  var organizedExercises = {};
-  var imgURL = null;
-  var title = null;
-  var tag1 = null;
-  var tag2 = null;
+  var organizedExercises = [];
 
   data.exercises.forEach(e => {
-    if (!organizedExercises[e.whenDo.when]) {
-      organizedExercises[e.whenDo.when] = [e];
+    if (!organizedExercises[e.whenDo.time]) {
+      organizedExercises[e.whenDo.time] = [e];
     } else {
-      organizedExercises[e.whenDo.when].push(e);
+      organizedExercises[e.whenDo.time].push(e);
     }
   });
-  for (var key in organizedExercises) {
-    $upcomingWorkoutsContent.appendChild(createElementForDaySeparator(key));
-    for (var i = 0; i < organizedExercises[key].length; i++) {
-      imgURL = organizedExercises[key][i].imgURL;
-      title = organizedExercises[key][i].title;
-      tag1 = organizedExercises[key][i].tag1;
-      tag2 = organizedExercises[key][i].tag2;
+
+  organizedExercises.forEach(e => {
+    $upcomingWorkoutsContent.appendChild(
+      createElementForDaySeparator(e[0].whenDo.when)
+    );
+    e.forEach(item => {
       $upcomingWorkoutsContent.appendChild(
-        createElementForMobileUpcomingWorkouts(imgURL, title, tag1, tag2)
+        createElementForMobileUpcomingWorkouts(
+          item.imgURL,
+          item.title,
+          item.tag1,
+          item.tag2,
+          item.id
+        )
       );
-    }
-  }
+    });
+  });
 }
 
 function loadDataFromLocalDesktop() {}
+
+function handleUpcomingWorkoutClicks(event) {
+  if (event.target.matches('.info-icon')) {
+    showInfoModalDesktop(event);
+  }
+}
+
+function showInfoModalDesktop(event) {
+  var id = event.target.closest('li').dataset.id;
+  var exercise = getExerciseObjectGivenId(id);
+  $descriptionTitle.textContent = exercise.title;
+  $descriptionText.textContent = exercise.description;
+  $infoModal.classList.remove('hidden');
+}
+
+function getExerciseObjectGivenId(id) {
+  for (var i = 0; i < data.exercises.length; i++) {
+    if (data.exercises[i].id === parseInt(id)) {
+      return data.exercises[i];
+    }
+  }
+}
 
 function giveDateDifferenceInDays(date) {
   var today = new Date().toLocaleDateString().split('/');
@@ -326,6 +350,8 @@ function createElements(tag, attributes, children = false) {
   for (var key in attributes) {
     if (key === 'textContent') {
       el.textContent = attributes[key];
+    } else if (key === 'dataset-id') {
+      el.dataset.id = attributes[key];
     } else {
       el.setAttribute(key, attributes[key]);
     }
@@ -514,7 +540,12 @@ function addExercises(event) {
       title: tempSelection[key].querySelector('h3').textContent,
       tag1: tagContainer.children[0].textContent,
       tag2: tagContainer.children[1].textContent,
-      date: userYearMonthDay
+      date: userYearMonthDay,
+      description: tempSearchResults[tempSelection[key].dataset.id].description
+        .split('<p>')
+        .join('')
+        .split('</p>')
+        .join('')
     };
 
     data.exercises.push(tempData);
@@ -540,26 +571,36 @@ function createElementForDaySeparator(text) {
   ]);
 }
 
-function createElementForMobileUpcomingWorkouts(imgURL, title, tag1, tag2) {
-  return createElements('div', { class: 'upcoming-workout-entry row' }, [
-    createElements('div', { class: 'image-container col' }, [
-      createElements('img', { src: imgURL, alt: 'exercise image' })
-    ]),
-    createElements('div', { class: 'row flex-col space-between w-100' }, [
-      createElements('div', { class: 'row title-and-buttons pos-rel' }, [
-        createElements('h3', { textContent: title }),
-        createElements('img', {
-          src: 'images/info.png',
-          alt: 'info',
-          class: 'info-icon'
-        })
+function createElementForMobileUpcomingWorkouts(
+  imgURL,
+  title,
+  tag1,
+  tag2,
+  id = false
+) {
+  return createElements(
+    'li',
+    { class: 'upcoming-workout-entry row', 'dataset-id': id },
+    [
+      createElements('div', { class: 'image-container col' }, [
+        createElements('img', { src: imgURL, alt: 'exercise image' })
       ]),
-      createElements('div', { class: 'muscle-tag-container row' }, [
-        createElements('p', { textContent: tag1 }),
-        createElements('p', { textContent: tag2 })
+      createElements('div', { class: 'row flex-col space-between w-100' }, [
+        createElements('div', { class: 'row title-and-buttons pos-rel' }, [
+          createElements('h3', { textContent: title }),
+          createElements('img', {
+            src: 'images/info.png',
+            alt: 'info',
+            class: 'info-icon'
+          })
+        ]),
+        createElements('div', { class: 'muscle-tag-container row' }, [
+          createElements('p', { textContent: tag1 }),
+          createElements('p', { textContent: tag2 })
+        ])
       ])
-    ])
-  ]);
+    ]
+  );
 }
 
 function changeViews(event) {
