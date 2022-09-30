@@ -20,7 +20,9 @@
       <div class="nav-1">
         <div class="container margin-auto row">
           <h1 class="no-user-select">FITNESS LOG</h1>
-          <form class="nav-1-search-container row ml-auto hidden">
+          <form
+            class="nav-1-search-container row ml-auto hidden new-exercise-form"
+          >
             <button class="">Search</button>
             <input
               type="text"
@@ -55,12 +57,12 @@
           >
             NEW EXERCISES
           </h2>
-          <form class="date-to-workout hidden">
+          <div class="date-to-workout hidden">
             <label for="nav-2-date" class="nav-2-date-text">
               DATE TO WORKOUT:
             </label>
             <input class="nav-2-date" type="date" name="nav-2-date" />
-          </form>
+          </div>
         </div>
       </div>
     </header>
@@ -86,27 +88,27 @@
         <div class="modal-layout row row-lr-center">
           <div class="modal-content workout-modal-content text-align-center">
             <h2>WORKOUT</h2>
-            <div class="row row-lr-center">
+            <form class="row row-lr-center add-exercise-modal-form">
               <div class="col modal-search-and-result">
-                <form class="modal-search-container">
+                <div class="modal-search-container">
                   <input
                     type="text"
                     name="workoutSearch"
                     id="workout-search"
                     placeholder="legs, chest, arms"
                   />
-                </form>
+                </div>
                 <div class="modal-search-results-container row flex-col"></div>
               </div>
               <div class="col row flex-col">
                 <button class="search-button">SEARCH</button>
-                <form class="date-wrapper pos-rel">
+                <div class="date-wrapper pos-rel">
                   <input
                     type="date"
                     name="exercise-date"
                     class="modal-date-picker"
                   />
-                  <button class="date-button">
+                  <button class="date-button" type="button">
                     DATE
                     <img
                       class="date-polygon"
@@ -114,12 +116,16 @@
                       alt="polygon"
                     />
                   </button>
-                </form>
-                <button disabled="true" class="add-button low-brightness">
+                </div>
+                <button
+                  disabled="true"
+                  type="button"
+                  class="add-button low-brightness"
+                >
                   ADD
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>

@@ -9,21 +9,20 @@ var $upcomingWorkoutsContainer = document.querySelector(
 );
 var $nav1SearchContainer = document.querySelector('.nav-1-search-container');
 var $modalContent = document.querySelector('.workout-modal-content');
-var $searchButton = $modalContent.querySelector('.search-button');
 var $modalSearchAndResultContainer = $modalContent.querySelector(
   '.modal-search-and-result'
 );
-var $modalSearchContainer = $modalContent.querySelector(
-  '.modal-search-container'
+var $modalSearchResultContainer = $workoutModal.querySelector(
+  '.modal-search-results-container'
 );
-var $modalSearchResultContainer = $modalSearchContainer.nextElementSibling;
 var $upcomingWorkoutsContentDesktop = document.querySelector(
   '.upcoming-workouts-content-desktop'
 );
 var $upcomingWorkoutsContentMobile = document.querySelector(
   '.upcoming-workouts-content-mobile'
 );
-
+var $newExerciseForm = document.querySelector('.new-exercise-form');
+var $addExerciseModalForm = document.querySelector('.add-exercise-modal-form');
 var $infoModal = document.querySelector('.info-modal');
 var $descriptionTitle = $infoModal.querySelector('.description-title');
 var $descriptionText = $infoModal.querySelector('.description-text');
@@ -33,7 +32,6 @@ var dateInput = null;
 var dateButton = null;
 var addButton = null;
 var userYearMonthDay = null;
-var searched = false;
 var dateValid = false;
 var searchResultSelectionCount = 0;
 var tempSelection = {};
@@ -78,19 +76,8 @@ var imageCount = 0;
 $plusIconDesktop.addEventListener('click', showWorkoutModalDesktop);
 $plusIconMobile.addEventListener('click', showWorkoutModalMobile);
 $nav2.addEventListener('click', changeViews);
-$nav1SearchContainer.lastElementChild.addEventListener(
-  'keydown',
-  searchForExercise
-);
-$nav1SearchContainer.firstElementChild.addEventListener(
-  'click',
-  searchForExercise
-);
-$modalSearchContainer.firstElementChild.addEventListener(
-  'keydown',
-  searchForExercise
-);
-$searchButton.addEventListener('click', searchForExercise);
+$newExerciseForm.addEventListener('submit', searchForExerciseDesktop);
+$addExerciseModalForm.addEventListener('submit', searchForExerciseMobile);
 $modalContent.addEventListener('click', handleModalContentClicks);
 $infoModal.addEventListener('click', handleInfoModalEvents);
 $newExercisesContainer.addEventListener(
@@ -368,7 +355,6 @@ function handleModalContentClicks(event) {
       dateButton = $workoutModal.querySelector('.date-button');
       addButton = $workoutModal.querySelector('.add-button');
     }
-    dateInput.click();
     dateInput.showPicker();
     dateInput.addEventListener('change', function change(e) {
       userYearMonthDay = e.target.value.split('-');
@@ -746,28 +732,43 @@ function setImgOfEl(url, el) {
   }
 }
 
-function searchForExercise(event) {
-  if (event.key === 'Enter' || event.target.matches('.search-button')) {
-    if (searched) {
-      $modalSearchAndResultContainer.removeEventListener(
-        'click',
-        listenForSearchResultClicks
-      );
-      saveChosenExercises();
-      modifyNoContent();
-      data.desktopCurrentDayView = 0;
-    }
-    searched = true;
-    removeSearchResults();
-    searchString = event.target.value;
-    event.target.value = '';
-    getExercises();
-    document.documentElement.classList.add('wait-cursor');
-    $modalSearchAndResultContainer.addEventListener(
-      'click',
-      listenForSearchResultClicks
-    );
-  }
+function searchForExerciseDesktop(event) {
+  event.preventDefault();
+  $modalSearchAndResultContainer.removeEventListener(
+    'click',
+    listenForSearchResultClicks
+  );
+  saveChosenExercises();
+  data.desktopCurrentDayView = 0;
+  removeSearchResults();
+  searchString = event.target.lastElementChild.value;
+  getExercises();
+  // document.documentElement.classList.add("wait-cursor");
+  $modalSearchAndResultContainer.addEventListener(
+    'click',
+    listenForSearchResultClicks
+  );
+  $newExerciseForm.reset();
+}
+
+function searchForExerciseMobile(event) {
+  event.preventDefault();
+  $modalSearchAndResultContainer.removeEventListener(
+    'click',
+    listenForSearchResultClicks
+  );
+  saveChosenExercises();
+  data.desktopCurrentDayView = 0;
+  removeSearchResults();
+  searchString =
+    event.target.firstElementChild.firstElementChild.firstElementChild.value;
+  getExercises();
+  // document.documentElement.classList.add("wait-cursor");
+  $modalSearchAndResultContainer.addEventListener(
+    'click',
+    listenForSearchResultClicks
+  );
+  $addExerciseModalForm.reset();
 }
 
 function listenForSearchResultClicks() {
@@ -835,7 +836,6 @@ function addExercises(event) {
   modifyData();
   organizeExercisesByDay();
   loadDataFromLocalMobile();
-  $workoutModal.classList.add('hidden');
   loadDataFromLocalDesktop();
 }
 
