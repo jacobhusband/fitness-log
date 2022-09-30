@@ -1,3 +1,5 @@
+/* stylelint-disable no-descending-specificity */
+
 /* Element styling */
 
 body,
@@ -60,15 +62,68 @@ img {
 }
 
 input[type="date"].modal-date-picker {
-  width: 50px;
+  width: 75px;
   height: 20px;
   position: relative;
-  visibility: hidden;
-  right: 12.1rem;
-  top: 0.25rem;
+  opacity: 0;
+  left: 4px;
+  z-index: 2;
+}
+
+button,
+.exit-button,
+.exit-icon,
+.info-button,
+.info-icon,
+.add-button,
+.separator-polygon,
+input[type="date"] {
+  cursor: pointer;
 }
 
 /* Non-semantic classes */
+
+.lds-ring {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  margin: 8px;
+  border: 8px solid #fff;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #fff transparent transparent;
+}
+
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
+}
+
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
 
 .nav-1 {
   background-color: #222f3b;
@@ -145,7 +200,6 @@ input[type="date"].modal-date-picker {
   font-weight: 500;
 }
 
-.modal-search-and-result,
 .modal-search-container input {
   width: 12rem;
 }
@@ -160,7 +214,7 @@ input[type="date"].modal-date-picker {
 }
 
 .add-button {
-  margin-top: 0.48rem;
+  margin-top: 0.38rem;
 }
 
 .date-polygon {
@@ -202,8 +256,9 @@ input[type="date"].modal-date-picker {
 
 .title-and-buttons > h3 {
   font-size: 0.75rem;
-  font-weight: 500;
   padding-right: 0.25rem;
+  font-weight: 400;
+  margin-top: 0.25rem;
 }
 
 .info-button {
@@ -289,24 +344,6 @@ input[type="date"].modal-date-picker {
   margin-right: 1rem;
 }
 
-.upcoming-workout-entry > .flex-col > .title-and-buttons > h3 {
-  font-size: 0.75rem;
-  font-weight: 400;
-  margin-top: 0.25rem;
-}
-
-.upcoming-workout-entry > .flex-col > .title-and-buttons > .info-icon {
-  margin-left: auto;
-}
-
-.upcoming-workout-entry > .flex-col > .muscle-tag-container {
-  margin-bottom: 0.25rem;
-}
-
-.upcoming-workout-entry > .flex-col > .muscle-tag-container > p {
-  padding: 0.1rem 0.75rem;
-}
-
 .exit-icon {
   width: 1rem;
   height: 1rem;
@@ -357,6 +394,7 @@ input[type="date"].modal-date-picker {
   height: 30px;
   cursor: pointer;
   border: 3px solid #5e503f;
+  border-radius: 0.5rem;
 }
 
 .nav-2-date-text {
@@ -375,6 +413,33 @@ input[type="date"].modal-date-picker {
 
 .plus-icon-container-desktop {
   display: none;
+}
+
+.muscle-tag-container {
+  margin-bottom: 0.25rem;
+}
+
+.muscle-tag-container > p {
+  padding: 0.1rem 0.75rem;
+}
+
+.work-mod-title > img {
+  width: 1rem;
+  height: 1rem;
+  position: absolute;
+  right: 1rem;
+}
+
+.info-icon {
+  margin-left: auto;
+}
+
+.info-button:hover,
+.exit-button:hover,
+.exit-icon:hover,
+.info-icon:hover,
+.separator-polygon:hover {
+  filter: brightness(120%);
 }
 
 /* Semantic classes */
@@ -426,6 +491,10 @@ input[type="date"].modal-date-picker {
 
 .no-user-select {
   user-select: none;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
 }
 
 .ml-auto {

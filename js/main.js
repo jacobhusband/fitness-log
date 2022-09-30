@@ -10,6 +10,7 @@ var userMessage = $main.querySelector('.user-message');
 var $n1SearchCont = $nav1.querySelector('.nav-1-search-container');
 var $pIconDesk = $nav1.querySelector('.plus-icon-container-desktop');
 var $pIconMob = $nav1.querySelector('.plus-icon-container-mobile');
+var $n2Date = $nav2.querySelector('.nav-2-date');
 var $upWorkContDesk = $upWorkCont.querySelector('.up-work-cont-desk');
 var $upWorkContMob = $upWorkCont.querySelector('.up-work-cont-mob');
 var $noCont = $upWorkCont.querySelector('.no-content');
@@ -18,8 +19,11 @@ var $descTitle = $infoModal.querySelector('.description-title');
 var $descText = $infoModal.querySelector('.description-text');
 var $addExerModForm = $modalContent.querySelector('.add-exercise-modal-form');
 var $modSearchCont = $modalContent.querySelector('.modal-search-and-result');
-var $modResCont =
-  $modSearchCont.lastElementChild.querySelector('.mod-search-cont');
+var $workModExit = $modalContent.querySelector('.work-mod-title img');
+var $dateButton = $addExerModForm.querySelector('.date-button');
+var $dateInput = $addExerModForm.querySelector('.modal-date-picker');
+var $addButton = $addExerModForm.querySelector('.add-button');
+var $modResCont = $modSearchCont.lastElementChild;
 
 var tempSelection = {};
 var tempSearchResults = [];
@@ -28,9 +32,6 @@ var imageCount = 0;
 var dateValid = false;
 
 var searchString = null;
-var dateInput = null;
-var dateButton = null;
-var addButton = null;
 var userYearMonthDay = null;
 
 var muscleObj = {
@@ -69,16 +70,21 @@ var muscleObjReverse = {
   15: 'Soleus'
 };
 
-$pIconDesk.addEventListener('click', showworkModalDesktop);
-$pIconMob.addEventListener('click', showworkModalMobile);
+$pIconDesk.addEventListener('click', showWorkModalDesktop);
+$pIconMob.addEventListener('click', showWorkModalMobile);
 $nav2.addEventListener('click', changeViews);
-$n1SearchCont.addEventListener('submit', searchForExerciseDesktop);
-$addExerModForm.addEventListener('submit', searchForExerciseMobile);
 $modalContent.addEventListener('click', handleModalContentClicks);
 $infoModal.addEventListener('click', handleInfoModalEvents);
 $newExerCont.addEventListener('click', handleNewExerciseContainerClicks);
 $upWorkContMob.addEventListener('click', handleUpcomingWorkoutClicks);
 $upWorkContDesk.addEventListener('click', handleUpcomingWorkoutClicks);
+$workModExit.addEventListener('click', closeModal);
+$n1SearchCont.addEventListener('submit', function () {
+  searchForExercise(event, 'desktop');
+});
+$addExerModForm.addEventListener('submit', function () {
+  searchForExercise(event, 'mobile');
+});
 
 modifyData();
 loadDataFromLocalMobile();
@@ -88,7 +94,7 @@ function modifyData() {
   var newData = Object.assign({}, data);
   newData.exercises = [];
   data.exercises.forEach((exercise, ind) => {
-    exercise.whenDo = giveDateDifferenceInDays(exercise.date);
+    exercise.whenDo = getDateDifferenceInDays(exercise.date);
     if (exercise.whenDo.time >= 0) {
       newData.exercises.push(exercise);
     }
@@ -102,15 +108,51 @@ function loadDataFromLocalMobile() {
     e.forEach(item => {
       $upWorkContMob.appendChild(
         createElementForMobileUpcomingWorkouts(
-          item.imgURL,
           item.title,
           item.tag1,
           item.tag2,
+          item.imgURL,
           item.id
         )
       );
     });
   });
+}
+
+function loadDataFromLocalDesktop() {
+  if (data.organizedExercises.length) {
+    $upWorkContDesk.appendChild(
+      createElementForDaySeparatorDesktop(
+        data.organizedExercises[data.desktopCurrentDayView][0].whenDo.when
+      )
+    );
+    data.organizedExercises[data.desktopCurrentDayView].forEach(item => {
+      $upWorkContDesk.appendChild(
+        createUpcomingWorkoutElementDesktop(
+          item.title,
+          item.tag1,
+          item.tag2,
+          item.imgURL,
+          item.id
+        )
+      );
+    });
+  }
+}
+
+function removeData() {
+  var mobileContent = $upWorkContMob.lastElementChild;
+  var desktopContent = $upWorkContDesk.lastElementChild;
+
+  while (mobileContent) {
+    $upWorkContMob.removeChild(mobileContent);
+    mobileContent = $upWorkContMob.lastElementChild;
+  }
+
+  while (desktopContent) {
+    $upWorkContDesk.removeChild(desktopContent);
+    desktopContent = $upWorkContDesk.lastElementChild;
+  }
 }
 
 function organizeExercisesByDay() {
@@ -139,47 +181,6 @@ function organizeExercisesByDay() {
   if (endLength < startLength) {
     data.desktopCurrentDayView = 0;
   }
-}
-
-function loadDataFromLocalDesktop() {
-  if (data.organizedExercises.length) {
-    $upWorkContDesk.appendChild(
-      createElementForDaySeparatorDesktop(
-        data.organizedExercises[data.desktopCurrentDayView][0].whenDo.when
-      )
-    );
-    data.organizedExercises[data.desktopCurrentDayView].forEach(item => {
-      $upWorkContDesk.appendChild(
-        createUpcomingWorkoutElementDesktop(
-          item.title,
-          item.tag1,
-          item.tag2,
-          item.imgURL,
-          item.id
-        )
-      );
-    });
-  }
-}
-
-function createElementForDaySeparatorDesktop(text) {
-  return createElements(
-    'div',
-    { class: 'row desktop-day-separator space-between' },
-    [
-      createElements('img', {
-        class: 'separator-polygon',
-        src: 'images/polygon-left.png',
-        alt: 'polygon left'
-      }),
-      createElements('h1', { textContent: text }),
-      createElements('img', {
-        class: 'separator-polygon',
-        src: 'images/polygon-right.png',
-        alt: 'polygon right'
-      })
-    ]
-  );
 }
 
 function reloadPage() {
@@ -216,12 +217,500 @@ function handleUpcomingWorkoutClicks(event) {
   }
 }
 
+function handleNewExerciseContainerClicks(event) {
+  if (event.target.matches('.info-button')) {
+    showNewExerciseInfoModal(event);
+  }
+  if (event.target.matches("img[src='images/plus.png']")) {
+    tryToAddWorkoutDesktop(event);
+  }
+}
+
+function handleInfoModalEvents(event) {
+  if (
+    event.target.matches('.modal-layout') ||
+    event.target.matches('.modal-x-icon') ||
+    event.target.matches('.info-modal')
+  ) {
+    $infoModal.classList.add('hidden');
+  }
+}
+
+function handleModalContentClicks(event) {
+  if (event.target.matches('.info-icon')) {
+    showNewExerciseInfoModal(event);
+  }
+  if (
+    event.target.matches('.date-button') ||
+    event.target.matches('.date-polygon') ||
+    event.target.matches("input[type='date']")
+  ) {
+    $dateInput.click();
+    if (!testIfiOS()) {
+      $dateInput.showPicker();
+    }
+    $dateInput.addEventListener('input', function change(e) {
+      userYearMonthDay = e.target.value.split('-');
+      var date = checkDateIsValid(userYearMonthDay);
+      if (date) {
+        validDate();
+      } else {
+        invalidDate();
+      }
+      $dateButton.textContent = userYearMonthDay
+        .filter((item, ind) => ind > 0)
+        .join('/');
+      $dateInput.removeEventListener('change', change);
+    });
+  }
+}
+
+function createElementForDaySeparatorDesktop(text) {
+  return createElements(
+    'div',
+    { class: 'row desktop-day-separator space-between' },
+    [
+      createElements('img', {
+        class: 'separator-polygon ',
+        src: 'images/polygon-left.png',
+        alt: 'polygon left'
+      }),
+      createElements('h1', { textContent: text }),
+      createElements('img', {
+        class: 'separator-polygon ',
+        src: 'images/polygon-right.png',
+        alt: 'polygon right'
+      })
+    ]
+  );
+}
+
+function createElementForDaySeparator(text) {
+  return createElements('div', { class: 'day-separator' }, [
+    createElements('h3', { textContent: text })
+  ]);
+}
+
+function createSearchElementDesktop(
+  title,
+  tag1,
+  tag2,
+  img = 'images/loading.png',
+  id = false
+) {
+  var buttonVersusImage = createElements('button', {
+    textContent: 'INFO',
+    class: 'info-button'
+  });
+  var tagContainer = createElements(
+    'div',
+    { class: 'muscle-tag-container row' },
+    [
+      createElements('p', { textContent: tag1 }),
+      createElements('p', { textContent: tag2 }),
+      createElements(
+        'div',
+        {
+          class:
+            'plus-icon-container pointer-cursor bright-hover ml-auto additional-workout'
+        },
+        [createElements('img', { src: 'images/plus.png', alt: 'plus icon' })]
+      )
+    ]
+  );
+  return createVariedElements(
+    title,
+    tag1,
+    tag2,
+    tagContainer,
+    buttonVersusImage,
+    img,
+    id
+  );
+}
+
+function createSearchElementMobile(
+  title,
+  tag1,
+  tag2,
+  img = 'images/loading.png',
+  id = false
+) {
+  var buttonVersusImage = createElements('img', {
+    src: 'images/info.png',
+    class: 'info-icon'
+  });
+  var tagContainer = createElements(
+    'div',
+    { class: 'muscle-tag-container row flex-wrap' },
+    [
+      createElements('p', { textContent: tag1 }),
+      createElements('p', { textContent: tag2 })
+    ]
+  );
+  return createVariedElements(
+    title,
+    tag1,
+    tag2,
+    tagContainer,
+    buttonVersusImage,
+    img,
+    id
+  );
+}
+
+function createUpcomingWorkoutElementDesktop(
+  title,
+  tag1,
+  tag2,
+  img = 'images/loading.png',
+  id = false
+) {
+  var imgElement = createElements('img', { src: img, alt: 'exercise' });
+  if (img === 'images/loading.png') {
+    imgElement = createElements('div', { class: 'lds-ring' }, [
+      createElements('div', {}),
+      createElements('div', {}),
+      createElements('div', {}),
+      createElements('div', {})
+    ]);
+  }
+  var tagContainer = createElements(
+    'div',
+    { class: 'muscle-tag-container row' },
+    [
+      createElements('p', { textContent: tag1 }),
+      createElements('p', { textContent: tag2 })
+    ]
+  );
+  return createElements(
+    'li',
+    {
+      class: 'modal-search-result margin-auto row',
+      'dataset-id': id
+    },
+    [
+      createElements('div', { class: 'col modal-img-alignment' }, [imgElement]),
+      createElements(
+        'div',
+        {
+          class:
+            'row flex-col space-between modal-result-content text-align-left'
+        },
+        [
+          createElements(
+            'div',
+            { class: 'row space-between title-and-buttons' },
+            [
+              createElements('h3', { textContent: title }),
+              createElements('button', {
+                textContent: 'INFO',
+                class: 'info-button'
+              }),
+              createElements('img', {
+                src: 'images/x.png',
+                class: 'exit-button '
+              })
+            ]
+          ),
+          tagContainer
+        ]
+      )
+    ]
+  );
+}
+
+function createElementForMobileUpcomingWorkouts(
+  title,
+  tag1,
+  tag2,
+  img,
+  id = false
+) {
+  var imgElement = createElements('img', { src: img, alt: 'exercise' });
+  if (img === 'images/loading.png') {
+    imgElement = createElements('div', { class: 'lds-ring' }, [
+      createElements('div', {}),
+      createElements('div', {}),
+      createElements('div', {}),
+      createElements('div', {})
+    ]);
+  }
+  return createElements(
+    'li',
+    { class: 'upcoming-workout-entry row', 'dataset-id': id },
+    [
+      createElements('div', { class: 'image-container col' }, [imgElement]),
+      createElements('div', { class: 'row flex-col space-between w-100' }, [
+        createElements('div', { class: 'row title-and-buttons pos-rel' }, [
+          createElements('h3', { textContent: title }),
+          createElements('img', {
+            src: 'images/info.png',
+            alt: 'info',
+            class: 'info-icon'
+          }),
+          createElements('img', {
+            src: 'images/exit.png',
+            alt: 'exit',
+            class: 'exit-icon '
+          })
+        ]),
+        createElements('div', { class: 'muscle-tag-container row' }, [
+          createElements('p', { textContent: tag1 }),
+          createElements('p', { textContent: tag2 })
+        ])
+      ])
+    ]
+  );
+}
+
+function createVariedElements(
+  title,
+  tag1,
+  tag2,
+  tagContainer,
+  buttonVersusImage,
+  img = 'images/loading.png',
+  id = false
+) {
+  var imgElement = createElements('img', { src: img, alt: 'exercise' });
+  if (img === 'images/loading.png') {
+    imgElement = createElements('div', { class: 'lds-ring' }, [
+      createElements('div', {}),
+      createElements('div', {}),
+      createElements('div', {}),
+      createElements('div', {})
+    ]);
+  }
+  return createElements(
+    'li',
+    {
+      class: 'modal-search-result margin-auto row',
+      'dataset-id': id
+    },
+    [
+      createElements('div', { class: 'col modal-img-alignment' }, [imgElement]),
+      createElements(
+        'div',
+        {
+          class:
+            'row flex-col space-between modal-result-content text-align-left'
+        },
+        [
+          createElements(
+            'div',
+            { class: 'row space-between title-and-buttons' },
+            [createElements('h3', { textContent: title }), buttonVersusImage]
+          ),
+          tagContainer
+        ]
+      )
+    ]
+  );
+}
+
+function createElements(tag, attributes, children = false) {
+  var el = document.createElement(tag);
+  for (var key in attributes) {
+    if (key === 'textContent') {
+      el.textContent = attributes[key];
+    } else if (key === 'dataset-id') {
+      el.dataset.id = attributes[key];
+    } else {
+      el.setAttribute(key, attributes[key]);
+    }
+  }
+  if (children) {
+    children.forEach(child => {
+      el.appendChild(child);
+    });
+  }
+  return el;
+}
+
 function searchAndRemove(id) {
   data.exercises.forEach((exercise, ind) => {
     if (exercise.id === id) {
       data.exercises.splice(ind, 1);
     }
   });
+}
+
+function searchForExercise(event, target) {
+  if (target === 'mobile') {
+    searchString =
+      event.target.firstElementChild.firstElementChild.firstElementChild.value;
+  } else if (target === 'desktop') {
+    searchString = event.target.lastElementChild.value;
+    $n2Date.addEventListener('change', function change(e) {
+      var valid = checkDateIsValid(e.target.value.split('-'));
+      if (valid) {
+        e.target.classList.add('green-border');
+        e.target.classList.remove('red-border');
+      } else {
+        e.target.classList.add('red-border');
+        e.target.classList.remove('green-border');
+      }
+    });
+  }
+  event.preventDefault();
+  $modSearchCont.removeEventListener('click', listenForSearchResultClicks);
+  saveChosenExercises();
+  data.desktopCurrentDayView = 0;
+  removeSearchResults();
+  getExercises();
+  document.documentElement.classList.add('wait-cursor');
+  $modSearchCont.addEventListener('click', listenForSearchResultClicks);
+  $addExerModForm.reset();
+  $n1SearchCont.reset();
+}
+
+function getExercises() {
+  var xhr = new XMLHttpRequest();
+
+  var targetUrl = encodeURIComponent(
+    `https://wger.de/api/v2/exercise/?language=2&limit=3&muscles=${
+      muscleObj[searchString.toLowerCase()]
+    }`
+  );
+
+  xhr.open('GET', 'https://lfz-cors.herokuapp.com/?url=' + targetUrl);
+  xhr.responseType = 'json';
+
+  xhr.setRequestHeader(
+    'Authorizaton',
+    'Token 06533782073ec64f0c174e13f52373d8f19c0ae5'
+  );
+  xhr.setRequestHeader('Accept', 'application/json');
+
+  xhr.addEventListener('load', function () {
+    var results = xhr.response.results;
+    var title = null;
+    var tag1 = null;
+    var tag2 = null;
+    var el;
+    var el2;
+
+    tempSearchResults = results;
+
+    for (var i = 0; i < results.length; i++) {
+      title = results[i].name.toUpperCase();
+      tag1 = muscleObjReverse[results[i].muscles[0]];
+      tag2 = muscleObjReverse[results[i].muscles_secondary[0]];
+      if (!tag2) {
+        tag2 = muscleObjReverse[results[i].muscles[1]];
+      }
+      el = createSearchElementDesktop(title, tag1, tag2);
+      el2 = createSearchElementMobile(title, tag1, tag2);
+      el.dataset.id = i;
+      el2.dataset.id = i;
+      pushWorkoutElement(el, el2);
+      getImages2(results[i].name, el, el2);
+    }
+  });
+
+  xhr.send();
+}
+
+// function getImages(exercise, el) {
+//   var xhr = new XMLHttpRequest();
+//   var workoutQuery = exercise.split(" ").join("_");
+//   var resultingImgURL = null;
+
+//   var targetUrl = encodeURIComponent(
+//     `https://imsea.herokuapp.com/api/1?q=person_doing_${workoutQuery}_exercise`
+//   );
+
+//   xhr.open("GET", "https://lfz-cors.herokuapp.com/?url=" + targetUrl);
+//   xhr.responseType = "json";
+
+//   xhr.addEventListener("load", function () {
+//     if (xhr.status !== 200) {
+//       return;
+//     }
+//     imageCount++;
+//     if (imageCount % 3 === 0) {
+//       document.documentElement.classList.remove("wait-cursor");
+//     }
+//     resultingImgURL = xhr.response.results[0];
+//     setImgOfEl(resultingImgURL, el);
+//   });
+
+//   xhr.send();
+// }
+
+function getImages2(exercise, el, el2) {
+  const data = null;
+  var resultingImgURL = null;
+
+  const xhr = new XMLHttpRequest();
+  xhr.withCredentials = true;
+  xhr.responseType = 'json';
+
+  xhr.addEventListener('readystatechange', function () {
+    if (this.readyState === this.DONE) {
+      if (xhr.status !== 200) {
+        return;
+      }
+      imageCount++;
+      if (imageCount % 3 === 0) {
+        document.documentElement.classList.remove('wait-cursor');
+      }
+      resultingImgURL = this.response.value[0].thumbnailUrl;
+      setImgOfEl(resultingImgURL, el);
+      setImgOfEl(resultingImgURL, el2);
+    }
+  });
+
+  xhr.open(
+    'GET',
+    `https://bing-image-search1.p.rapidapi.com/images/search?q=person_doing_${exercise}_exercise`
+  );
+  xhr.setRequestHeader(
+    'X-RapidAPI-Key',
+    'df715051dbmshc5eedfd866e235dp134ff1jsnae215ea5e121'
+  );
+  xhr.setRequestHeader('X-RapidAPI-Host', 'bing-image-search1.p.rapidapi.com');
+
+  xhr.send(data);
+}
+
+function getExerciseObjectGivenId(id) {
+  for (var i = 0; i < data.exercises.length; i++) {
+    if (data.exercises[i].id === parseInt(id)) {
+      return data.exercises[i];
+    }
+  }
+}
+
+function getDateDifferenceInDays(date) {
+  var today = new Date().toLocaleDateString().split('/');
+  today = [today[2], today[0], today[1]]
+    .map(x => {
+      if (x.length < 2) {
+        x = '0' + x[0];
+      }
+      return x;
+    })
+    .join('-');
+  date = date.join('-');
+  today += 'T00:00:00';
+  date += 'T00:00:00';
+  today = Math.trunc(Date.parse(today) / 86400000);
+  date = Math.trunc(Date.parse(date) / 86400000);
+
+  if (date - today === 0) {
+    return { when: 'TODAY', time: 0 };
+  } else if (date - today === 1) {
+    return { when: 'TOMORROW', time: 1 };
+  } else {
+    return { when: `IN ${date - today} DAYS`, time: date - today };
+  }
+}
+
+function pushWorkoutElement(el, el2) {
+  $modResCont.appendChild(el2);
+  $newExerCont.appendChild(el);
 }
 
 function showNextDay() {
@@ -248,45 +737,39 @@ function showUpcomingWorkoutInfoModal(event) {
   $infoModal.classList.remove('hidden');
 }
 
-function getExerciseObjectGivenId(id) {
-  for (var i = 0; i < data.exercises.length; i++) {
-    if (data.exercises[i].id === parseInt(id)) {
-      return data.exercises[i];
+function listenForSearchResultClicks() {
+  var li;
+  if (!event.target.matches('input#workout-search')) {
+    li = event.target.closest('li');
+    if (li.classList.contains('green-border')) {
+      selCount--;
+      li.classList.remove('green-border');
+      li.classList.add('normal-border');
+      delete tempSelection[li.dataset.id];
+    } else {
+      selCount++;
+      li.classList.add('green-border');
+      li.classList.remove('normal-border');
+      tempSelection[li.dataset.id] = li;
     }
+    checkIfUserCanAddExercise();
+    checkIfUserCanNoLongerAddExercise();
   }
 }
 
-function giveDateDifferenceInDays(date) {
-  var today = new Date().toLocaleDateString().split('/');
-  today = [today[2], today[0], today[1]]
-    .map(x => {
-      if (x.length < 2) {
-        x = '0' + x[0];
-      }
-      return x;
-    })
-    .join('-');
-  date = date.join('-');
-  today += 'T00:00:00';
-  date += 'T00:00:00';
-  today = Math.trunc(Date.parse(today) / 86400000);
-  date = Math.trunc(Date.parse(date) / 86400000);
-
-  if (date - today === 0) {
-    return { when: 'TODAY', time: 0 };
-  } else if (date - today === 1) {
-    return { when: 'TOMORROW', time: 1 };
-  } else {
-    return { when: `IN ${date - today} DAYS`, time: date - today };
+function checkIfUserCanAddExercise() {
+  if (selCount > 0 && dateValid && $addButton) {
+    $addButton.classList.remove('low-brightness');
+    $addButton.removeAttribute('disabled');
+    $addButton.addEventListener('click', addExercises);
   }
 }
 
-function handleNewExerciseContainerClicks(event) {
-  if (event.target.matches('.info-button')) {
-    showNewExerciseInfoModal(event);
-  }
-  if (event.target.matches("img[src='images/plus.png']")) {
-    tryToAddWorkoutDesktop(event);
+function checkIfUserCanNoLongerAddExercise() {
+  if ($addButton && (selCount === 0 || !dateValid)) {
+    $addButton.classList.add('low-brightness');
+    $addButton.setAttribute('disabled', 'true');
+    $addButton.removeEventListener('click', addExercises);
   }
 }
 
@@ -314,46 +797,6 @@ function tryToAddWorkoutDesktop(event) {
     } else {
       li.classList.add('green-border');
     }
-  }
-}
-
-function handleInfoModalEvents(event) {
-  if (
-    event.target.matches('.modal-layout') ||
-    event.target.matches('.modal-x-icon') ||
-    event.target.matches('.info-modal')
-  ) {
-    $infoModal.classList.add('hidden');
-  }
-}
-
-function handleModalContentClicks(event) {
-  if (event.target.matches('.info-icon')) {
-    showNewExerciseInfoModal(event);
-  }
-  if (
-    event.target.matches('.date-button') ||
-    event.target.matches('.date-polygon')
-  ) {
-    if (!dateInput) {
-      dateInput = $workModal.querySelector('input[type="date"]');
-      dateButton = $workModal.querySelector('.date-button');
-      addButton = $workModal.querySelector('.add-button');
-    }
-    dateInput.showPicker();
-    dateInput.addEventListener('change', function change(e) {
-      userYearMonthDay = e.target.value.split('-');
-      var date = checkDateIsValid(userYearMonthDay);
-      if (date) {
-        validDate();
-      } else {
-        invalidDate();
-      }
-      dateButton.textContent = userYearMonthDay
-        .filter((item, ind) => ind > 0)
-        .join('/');
-      dateInput.removeEventListener('change', change);
-    });
   }
 }
 
@@ -415,265 +858,6 @@ function showNewExerciseInfoModal(event) {
   $infoModal.classList.remove('hidden');
 }
 
-function pushWorkoutElement(el, el2) {
-  $modResCont.appendChild(el2);
-  $newExerCont.appendChild(el);
-}
-
-function createUpcomingWorkoutElementDesktop(
-  title,
-  tag1,
-  tag2,
-  img = 'images/loading.png',
-  id = false
-) {
-  var tagContainer = createElements(
-    'div',
-    { class: 'muscle-tag-container row' },
-    [
-      createElements('p', { textContent: tag1 }),
-      createElements('p', { textContent: tag2 })
-    ]
-  );
-  return createElements(
-    'li',
-    {
-      class: 'modal-search-result margin-auto row',
-      'dataset-id': id
-    },
-    [
-      createElements('div', { class: 'col modal-img-alignment' }, [
-        createElements('img', { src: img, alt: 'exercise' })
-      ]),
-      createElements(
-        'div',
-        {
-          class:
-            'row flex-col space-between modal-result-content text-align-left'
-        },
-        [
-          createElements(
-            'div',
-            { class: 'row space-between title-and-buttons' },
-            [
-              createElements('h3', { textContent: title }),
-              createElements('button', {
-                textContent: 'INFO',
-                class: 'info-button'
-              }),
-              createElements('img', {
-                src: 'images/x.png',
-                class: 'exit-button'
-              })
-            ]
-          ),
-          tagContainer
-        ]
-      )
-    ]
-  );
-}
-
-function createSearchElementDesktop(
-  title,
-  tag1,
-  tag2,
-  img = 'images/loading.png',
-  id = false
-) {
-  var buttonVersusImage = createElements('button', {
-    textContent: 'INFO',
-    class: 'info-button'
-  });
-  var tagContainer = createElements(
-    'div',
-    { class: 'muscle-tag-container row' },
-    [
-      createElements('p', { textContent: tag1 }),
-      createElements('p', { textContent: tag2 }),
-      createElements(
-        'div',
-        {
-          class:
-            'plus-icon-container pointer-cursor bright-hover ml-auto additional-workout'
-        },
-        [createElements('img', { src: 'images/plus.png', alt: 'plus icon' })]
-      )
-    ]
-  );
-  return createVariedElements(
-    title,
-    tag1,
-    tag2,
-    tagContainer,
-    buttonVersusImage,
-    img,
-    id
-  );
-}
-
-function createSearchElementMobile(
-  title,
-  tag1,
-  tag2,
-  img = 'images/loading.png',
-  id = false
-) {
-  var buttonVersusImage = createElements('img', {
-    src: 'images/info.png',
-    class: 'info-icon'
-  });
-  var tagContainer = createElements(
-    'div',
-    { class: 'muscle-tag-container row' },
-    [
-      createElements('p', { textContent: tag1 }),
-      createElements('p', { textContent: tag2 })
-    ]
-  );
-  return createVariedElements(
-    title,
-    tag1,
-    tag2,
-    tagContainer,
-    buttonVersusImage,
-    img,
-    id
-  );
-}
-
-function createVariedElements(
-  title,
-  tag1,
-  tag2,
-  tagContainer,
-  buttonVersusImage,
-  img = 'images/loading.png',
-  id = false
-) {
-  return createElements(
-    'li',
-    {
-      class: 'modal-search-result margin-auto row',
-      'dataset-id': id
-    },
-    [
-      createElements('div', { class: 'col modal-img-alignment' }, [
-        createElements('img', { src: img, alt: 'exercise' })
-      ]),
-      createElements(
-        'div',
-        {
-          class:
-            'row flex-col space-between modal-result-content text-align-left'
-        },
-        [
-          createElements(
-            'div',
-            { class: 'row space-between title-and-buttons' },
-            [createElements('h3', { textContent: title }), buttonVersusImage]
-          ),
-          tagContainer
-        ]
-      )
-    ]
-  );
-}
-
-function createElements(tag, attributes, children = false) {
-  var el = document.createElement(tag);
-  for (var key in attributes) {
-    if (key === 'textContent') {
-      el.textContent = attributes[key];
-    } else if (key === 'dataset-id') {
-      el.dataset.id = attributes[key];
-    } else {
-      el.setAttribute(key, attributes[key]);
-    }
-  }
-  if (children) {
-    children.forEach(child => {
-      el.appendChild(child);
-    });
-  }
-  return el;
-}
-
-function getExercises() {
-  var xhr = new XMLHttpRequest();
-
-  var targetUrl = encodeURIComponent(
-    `https://wger.de/api/v2/exercise/?language=2&limit=5&muscles=${
-      muscleObj[searchString.toLowerCase()]
-    }`
-  );
-
-  xhr.open('GET', 'https://lfz-cors.herokuapp.com/?url=' + targetUrl);
-  xhr.responseType = 'json';
-
-  xhr.setRequestHeader(
-    'Authorizaton',
-    'Token 06533782073ec64f0c174e13f52373d8f19c0ae5'
-  );
-  xhr.setRequestHeader('Accept', 'application/json');
-
-  xhr.addEventListener('load', function () {
-    var results = xhr.response.results;
-    var title = null;
-    var tag1 = null;
-    var tag2 = null;
-    var el;
-    var el2;
-
-    tempSearchResults = results;
-
-    for (var i = 0; i < results.length; i++) {
-      title = results[i].name.toUpperCase();
-      tag1 = muscleObjReverse[results[i].muscles[0]];
-      tag2 = muscleObjReverse[results[i].muscles_secondary[0]];
-      if (!tag2) {
-        tag2 = muscleObjReverse[results[i].muscles[1]];
-      }
-      el = createSearchElementDesktop(title, tag1, tag2);
-      el2 = createSearchElementMobile(title, tag1, tag2);
-      el.dataset.id = i;
-      el2.dataset.id = i;
-      pushWorkoutElement(el, el2);
-      getImages(results[i].name, el);
-      getImages(results[i].name, el2);
-    }
-  });
-
-  xhr.send();
-}
-
-function getImages(exercise, el) {
-  var xhr = new XMLHttpRequest();
-  var workoutQuery = exercise.split(' ').join('_');
-  var resultingImgURL = null;
-
-  var targetUrl = encodeURIComponent(
-    `https://imsea.herokuapp.com/api/1?q=person_doing_${workoutQuery}_exercise`
-  );
-
-  xhr.open('GET', 'https://lfz-cors.herokuapp.com/?url=' + targetUrl);
-  xhr.responseType = 'json';
-
-  xhr.addEventListener('load', function () {
-    if (xhr.status !== 200) {
-      return;
-    }
-    imageCount++;
-    if (imageCount % 5 === 0) {
-      document.documentElement.classList.remove('wait-cursor');
-    }
-    resultingImgURL = xhr.response.results[0];
-    setImgOfEl(resultingImgURL, el);
-  });
-
-  xhr.send();
-}
-
 function removeSearchResults() {
   var lastChild = null;
   var parentContainerMobile = null;
@@ -704,79 +888,22 @@ function setImgOfEl(url, el) {
 
   for (var i = 0; i < searchEntriesMobile.length; i++) {
     if (searchEntriesMobile[i] === el) {
-      searchEntriesMobile[i].firstElementChild.firstElementChild.src = url;
+      searchEntriesMobile[i].firstElementChild.firstElementChild.remove();
+      searchEntriesMobile[i].firstElementChild.appendChild(
+        createElements('img', { src: url })
+      );
       break;
     }
   }
 
   for (var j = 0; j < searchEntriesDesktop.length; j++) {
     if (searchEntriesDesktop[j] === el) {
-      searchEntriesDesktop[j].firstElementChild.firstElementChild.src = url;
+      searchEntriesDesktop[j].firstElementChild.firstElementChild.remove();
+      searchEntriesDesktop[j].firstElementChild.appendChild(
+        createElements('img', { src: url })
+      );
       break;
     }
-  }
-}
-
-function searchForExerciseDesktop(event) {
-  event.preventDefault();
-  $modSearchCont.removeEventListener('click', listenForSearchResultClicks);
-  saveChosenExercises();
-  data.desktopCurrentDayView = 0;
-  removeSearchResults();
-  searchString = event.target.lastElementChild.value;
-  getExercises();
-  // document.documentElement.classList.add("wait-cursor");
-  $modSearchCont.addEventListener('click', listenForSearchResultClicks);
-  $n1SearchCont.reset();
-}
-
-function searchForExerciseMobile(event) {
-  event.preventDefault();
-  $modSearchCont.removeEventListener('click', listenForSearchResultClicks);
-  saveChosenExercises();
-  data.desktopCurrentDayView = 0;
-  removeSearchResults();
-  searchString =
-    event.target.firstElementChild.firstElementChild.firstElementChild.value;
-  getExercises();
-  // document.documentElement.classList.add("wait-cursor");
-  $modSearchCont.addEventListener('click', listenForSearchResultClicks);
-  $addExerModForm.reset();
-}
-
-function listenForSearchResultClicks() {
-  var li;
-  if (!event.target.matches('input#workout-search')) {
-    li = event.target.closest('li');
-    if (li.classList.contains('green-border')) {
-      selCount--;
-      li.classList.remove('green-border');
-      li.classList.add('normal-border');
-      delete tempSelection[li.dataset.id];
-    } else {
-      selCount++;
-      li.classList.add('green-border');
-      li.classList.remove('normal-border');
-      tempSelection[li.dataset.id] = li;
-    }
-    checkIfUserCanAddExercise();
-    checkIfUserCanNoLongerAddExercise();
-  }
-}
-
-function checkIfUserCanAddExercise() {
-  if (selCount > 0 && dateValid && addButton) {
-    addButton.classList.remove('low-brightness');
-    addButton.removeAttribute('disabled');
-    addButton.addEventListener('click', addExercises);
-  }
-}
-
-function checkIfUserCanNoLongerAddExercise() {
-  if (addButton && (selCount === 0 || !dateValid)) {
-    addButton.classList.add('low-brightness');
-    addButton.setAttribute('disabled', 'true');
-    addButton.removeEventListener('click', addExercises);
   }
 }
 
@@ -807,67 +934,12 @@ function addExercises(event) {
   }
   removeData();
   modifyData();
+  removeSearchResults();
+  clearTempData();
   organizeExercisesByDay();
   loadDataFromLocalMobile();
   loadDataFromLocalDesktop();
-}
-
-function removeData() {
-  var mobileContent = $upWorkContMob.lastElementChild;
-  var desktopContent = $upWorkContDesk.lastElementChild;
-
-  while (mobileContent) {
-    $upWorkContMob.removeChild(mobileContent);
-    mobileContent = $upWorkContMob.lastElementChild;
-  }
-
-  while (desktopContent) {
-    $upWorkContDesk.removeChild(desktopContent);
-    desktopContent = $upWorkContDesk.lastElementChild;
-  }
-}
-
-function createElementForDaySeparator(text) {
-  return createElements('div', { class: 'day-separator' }, [
-    createElements('h3', { textContent: text })
-  ]);
-}
-
-function createElementForMobileUpcomingWorkouts(
-  imgURL,
-  title,
-  tag1,
-  tag2,
-  id = false
-) {
-  return createElements(
-    'li',
-    { class: 'upcoming-workout-entry row', 'dataset-id': id },
-    [
-      createElements('div', { class: 'image-container col' }, [
-        createElements('img', { src: imgURL, alt: 'exercise image' })
-      ]),
-      createElements('div', { class: 'row flex-col space-between w-100' }, [
-        createElements('div', { class: 'row title-and-buttons pos-rel' }, [
-          createElements('h3', { textContent: title }),
-          createElements('img', {
-            src: 'images/info.png',
-            alt: 'info',
-            class: 'info-icon'
-          }),
-          createElements('img', {
-            src: 'images/exit.png',
-            alt: 'exit',
-            class: 'exit-icon'
-          })
-        ]),
-        createElements('div', { class: 'muscle-tag-container row' }, [
-          createElements('p', { textContent: tag1 }),
-          createElements('p', { textContent: tag2 })
-        ])
-      ])
-    ]
-  );
+  checkIfUserCanNoLongerAddExercise();
 }
 
 function changeViews(event) {
@@ -903,6 +975,7 @@ function modifyNoContent() {
 function clearTempData() {
   tempSearchResults = null;
   tempSelection = {};
+  selCount = 0;
   var el = $newExerCont.lastElementChild;
   while (el) {
     $newExerCont.removeChild(el);
@@ -943,12 +1016,12 @@ function changeView(event) {
   addCurrentNavView(event);
 }
 
-function showworkModalMobile(event) {
+function showWorkModalMobile(event) {
   $workModal.classList.remove('hidden');
   window.addEventListener('click', hideModal);
 }
 
-function showworkModalDesktop(event) {
+function showWorkModalDesktop(event) {
   removeCurrentNavView();
   data.view = 'new-exercises';
   addCurrentNavView();
@@ -971,4 +1044,19 @@ function addCurrentNavView(event = false) {
     navItem.classList.remove('bright-hover');
     navItem.classList.add('dark-bg');
   }
+}
+
+function closeModal(event) {
+  $workModal.classList.add('hidden');
+}
+
+function testIfiOS() {
+  var ua = navigator.userAgent;
+  if (
+    /iPad|iPhone|iPod/.test(ua) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  ) {
+    return true;
+  }
+  return false;
 }
