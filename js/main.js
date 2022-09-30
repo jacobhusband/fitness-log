@@ -151,6 +151,8 @@ function loadDataFromLocalMobile() {
 function organizeExercisesByDay() {
   var organizedExercises = [];
 
+  var startLength = data.organizedExercises.length;
+
   data.exercises.forEach(e => {
     if (!organizedExercises[e.whenDo.time]) {
       organizedExercises[e.whenDo.time] = [e];
@@ -165,6 +167,12 @@ function organizeExercisesByDay() {
     if (organizedExercises[i]) {
       data.organizedExercises.push(organizedExercises[i]);
     }
+  }
+
+  var endLength = data.organizedExercises.length;
+
+  if (endLength < startLength) {
+    data.desktopCurrentDayView = 0;
   }
 }
 
@@ -249,7 +257,6 @@ function searchAndRemove(id) {
   data.exercises.forEach((exercise, ind) => {
     if (exercise.id === id) {
       data.exercises.splice(ind, 1);
-
     }
   });
 }
@@ -755,6 +762,9 @@ function searchForExercise(event) {
         'click',
         listenForSearchResultClicks
       );
+      saveChosenExercises();
+      modifyNoContent();
+      data.desktopCurrentDayView = 0;
     }
     searched = true;
     removeSearchResults();
