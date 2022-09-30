@@ -1003,7 +1003,7 @@ function newExercisesViewChanges() {
   $newExerCont.classList.remove('hidden');
   $upWorkCont.classList.add('hidden');
   $n1SearchCont.classList.remove('hidden');
-  $n1SearchCont.lastElementChild.focus();
+  $n1SearchCont.firstElementChild.focus();
   $nav2
     .querySelector('[data-text="upcoming-workouts"]')
     .classList.remove('dark-bg');
