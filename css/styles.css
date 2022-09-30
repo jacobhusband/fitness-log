@@ -68,6 +68,15 @@ input[type="date"].modal-date-picker {
   top: 0.25rem;
 }
 
+button,
+.exit-button,
+.exit-icon,
+.info-button,
+.info-icon,
+.add-button {
+  cursor: pointer;
+}
+
 /* Non-semantic classes */
 
 .nav-1 {
