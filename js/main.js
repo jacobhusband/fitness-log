@@ -151,6 +151,8 @@ function loadDataFromLocalMobile() {
 function organizeExercisesByDay() {
   var organizedExercises = [];
 
+  var startLength = data.organizedExercises.length;
+
   data.exercises.forEach(e => {
     if (!organizedExercises[e.whenDo.time]) {
       organizedExercises[e.whenDo.time] = [e];
@@ -165,6 +167,12 @@ function organizeExercisesByDay() {
     if (organizedExercises[i]) {
       data.organizedExercises.push(organizedExercises[i]);
     }
+  }
+
+  var endLength = data.organizedExercises.length;
+
+  if (endLength < startLength) {
+    data.desktopCurrentDayView = 0;
   }
 }
 
@@ -209,6 +217,14 @@ function createElementForDaySeparatorDesktop(text) {
   );
 }
 
+function reloadPage() {
+  removeData();
+  modifyData();
+  organizeExercisesByDay();
+  loadDataFromLocalDesktop();
+  loadDataFromLocalMobile();
+}
+
 function handleUpcomingWorkoutClicks(event) {
   // both desktop and mobile
   if (
@@ -217,19 +233,32 @@ function handleUpcomingWorkoutClicks(event) {
   ) {
     showUpcomingWorkoutInfoModal(event);
   }
-
-  // desktop
+  if (
+    event.target.matches('.exit-button') ||
+    event.target.matches('.exit-icon')
+  ) {
+    var id = parseInt(event.target.closest('li').dataset.id);
+    searchAndRemove(id);
+    reloadPage();
+  }
   if (event.target.matches('.separator-polygon')) {
+    // desktop
     if (event.target.getAttribute('alt') === 'polygon right') {
       showNextDay();
     }
     if (event.target.getAttribute('alt') === 'polygon left') {
       showPreviousDay();
     }
-    removeData();
-    modifyData();
-    loadDataFromLocalDesktop();
+    reloadPage();
   }
+}
+
+function searchAndRemove(id) {
+  data.exercises.forEach((exercise, ind) => {
+    if (exercise.id === id) {
+      data.exercises.splice(ind, 1);
+    }
+  });
 }
 
 function showNextDay() {
@@ -436,10 +465,6 @@ function createUpcomingWorkoutElementDesktop(
   img = 'images/loading.png',
   id = false
 ) {
-  var buttonVersusImage = createElements('button', {
-    textContent: 'INFO',
-    class: 'info-button'
-  });
   var tagContainer = createElements(
     'div',
     { class: 'muscle-tag-container row' },
@@ -448,14 +473,42 @@ function createUpcomingWorkoutElementDesktop(
       createElements('p', { textContent: tag2 })
     ]
   );
-  return createVariedElements(
-    title,
-    tag1,
-    tag2,
-    tagContainer,
-    buttonVersusImage,
-    img,
-    id
+  return createElements(
+    'li',
+    {
+      class: 'modal-search-result margin-auto row',
+      'dataset-id': id
+    },
+    [
+      createElements('div', { class: 'col modal-img-alignment' }, [
+        createElements('img', { src: img, alt: 'exercise' })
+      ]),
+      createElements(
+        'div',
+        {
+          class:
+            'row flex-col space-between modal-result-content text-align-left'
+        },
+        [
+          createElements(
+            'div',
+            { class: 'row space-between title-and-buttons' },
+            [
+              createElements('h3', { textContent: title }),
+              createElements('button', {
+                textContent: 'INFO',
+                class: 'info-button'
+              }),
+              createElements('img', {
+                src: 'images/x.png',
+                class: 'exit-button'
+              })
+            ]
+          ),
+          tagContainer
+        ]
+      )
+    ]
   );
 }
 
@@ -709,6 +762,9 @@ function searchForExercise(event) {
         'click',
         listenForSearchResultClicks
       );
+      saveChosenExercises();
+      modifyNoContent();
+      data.desktopCurrentDayView = 0;
     }
     searched = true;
     removeSearchResults();
@@ -835,6 +891,11 @@ function createElementForMobileUpcomingWorkouts(
             src: 'images/info.png',
             alt: 'info',
             class: 'info-icon'
+          }),
+          createElements('img', {
+            src: 'images/exit.png',
+            alt: 'exit',
+            class: 'exit-icon'
           })
         ]),
         createElements('div', { class: 'muscle-tag-container row' }, [
