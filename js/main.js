@@ -19,6 +19,10 @@ var $descTitle = $infoModal.querySelector('.description-title');
 var $descText = $infoModal.querySelector('.description-text');
 var $addExerModForm = $modalContent.querySelector('.add-exercise-modal-form');
 var $modSearchCont = $modalContent.querySelector('.modal-search-and-result');
+var $workModExit = $modalContent.querySelector('.work-mod-title img');
+var $dateButton = $addExerModForm.querySelector('.date-button');
+var $dateInput = $addExerModForm.querySelector('.modal-date-picker');
+var $addButton = $addExerModForm.querySelector('.add-button');
 var $modResCont = $modSearchCont.lastElementChild;
 
 var tempSelection = {};
@@ -28,9 +32,6 @@ var imageCount = 0;
 var dateValid = false;
 
 var searchString = null;
-var dateInput = null;
-var dateButton = null;
-var addButton = null;
 var userYearMonthDay = null;
 
 var muscleObj = {
@@ -77,6 +78,7 @@ $infoModal.addEventListener('click', handleInfoModalEvents);
 $newExerCont.addEventListener('click', handleNewExerciseContainerClicks);
 $upWorkContMob.addEventListener('click', handleUpcomingWorkoutClicks);
 $upWorkContDesk.addEventListener('click', handleUpcomingWorkoutClicks);
+$workModExit.addEventListener('click', closeModal);
 $n1SearchCont.addEventListener('submit', function () {
   searchForExercise(event, 'desktop');
 });
@@ -240,15 +242,11 @@ function handleModalContentClicks(event) {
   }
   if (
     event.target.matches('.date-button') ||
-    event.target.matches('.date-polygon')
+    event.target.matches('.date-polygon') ||
+    event.target.matches("input[type='date']")
   ) {
-    if (!dateInput) {
-      dateInput = $workModal.querySelector('input[type="date"]');
-      dateButton = $workModal.querySelector('.date-button');
-      addButton = $workModal.querySelector('.add-button');
-    }
-    dateInput.showPicker();
-    dateInput.addEventListener('change', function change(e) {
+    $dateInput.click();
+    $dateInput.addEventListener('input', function change(e) {
       userYearMonthDay = e.target.value.split('-');
       var date = checkDateIsValid(userYearMonthDay);
       if (date) {
@@ -256,10 +254,10 @@ function handleModalContentClicks(event) {
       } else {
         invalidDate();
       }
-      dateButton.textContent = userYearMonthDay
+      $dateButton.textContent = userYearMonthDay
         .filter((item, ind) => ind > 0)
         .join('/');
-      dateInput.removeEventListener('change', change);
+      $dateInput.removeEventListener('change', change);
     });
   }
 }
@@ -568,7 +566,7 @@ function getExercises() {
   var xhr = new XMLHttpRequest();
 
   var targetUrl = encodeURIComponent(
-    `https://wger.de/api/v2/exercise/?language=2&limit=5&muscles=${
+    `https://wger.de/api/v2/exercise/?language=2&limit=3&muscles=${
       muscleObj[searchString.toLowerCase()]
     }`
   );
@@ -604,39 +602,74 @@ function getExercises() {
       el.dataset.id = i;
       el2.dataset.id = i;
       pushWorkoutElement(el, el2);
-      getImages(results[i].name, el);
-      getImages(results[i].name, el2);
+      getImages2(results[i].name, el, el2);
     }
   });
 
   xhr.send();
 }
 
-function getImages(exercise, el) {
-  var xhr = new XMLHttpRequest();
-  var workoutQuery = exercise.split(' ').join('_');
+// function getImages(exercise, el) {
+//   var xhr = new XMLHttpRequest();
+//   var workoutQuery = exercise.split(" ").join("_");
+//   var resultingImgURL = null;
+
+//   var targetUrl = encodeURIComponent(
+//     `https://imsea.herokuapp.com/api/1?q=person_doing_${workoutQuery}_exercise`
+//   );
+
+//   xhr.open("GET", "https://lfz-cors.herokuapp.com/?url=" + targetUrl);
+//   xhr.responseType = "json";
+
+//   xhr.addEventListener("load", function () {
+//     if (xhr.status !== 200) {
+//       return;
+//     }
+//     imageCount++;
+//     if (imageCount % 3 === 0) {
+//       document.documentElement.classList.remove("wait-cursor");
+//     }
+//     resultingImgURL = xhr.response.results[0];
+//     setImgOfEl(resultingImgURL, el);
+//   });
+
+//   xhr.send();
+// }
+
+function getImages2(exercise, el, el2) {
+  const data = null;
   var resultingImgURL = null;
 
-  var targetUrl = encodeURIComponent(
-    `https://imsea.herokuapp.com/api/1?q=person_doing_${workoutQuery}_exercise`
-  );
-
-  xhr.open('GET', 'https://lfz-cors.herokuapp.com/?url=' + targetUrl);
+  const xhr = new XMLHttpRequest();
+  xhr.withCredentials = true;
   xhr.responseType = 'json';
 
-  xhr.addEventListener('load', function () {
-    if (xhr.status !== 200) {
-      return;
+  xhr.addEventListener('readystatechange', function () {
+    if (this.readyState === this.DONE) {
+      if (xhr.status !== 200) {
+        return;
+      }
+      imageCount++;
+      if (imageCount % 3 === 0) {
+        document.documentElement.classList.remove('wait-cursor');
+      }
+      resultingImgURL = this.response.value[0].thumbnailUrl;
+      setImgOfEl(resultingImgURL, el);
+      setImgOfEl(resultingImgURL, el2);
     }
-    imageCount++;
-    if (imageCount % 5 === 0) {
-      document.documentElement.classList.remove('wait-cursor');
-    }
-    resultingImgURL = xhr.response.results[0];
-    setImgOfEl(resultingImgURL, el);
   });
 
-  xhr.send();
+  xhr.open(
+    'GET',
+    `https://bing-image-search1.p.rapidapi.com/images/search?q=person_doing_${exercise}_exercise`
+  );
+  xhr.setRequestHeader(
+    'X-RapidAPI-Key',
+    'df715051dbmshc5eedfd866e235dp134ff1jsnae215ea5e121'
+  );
+  xhr.setRequestHeader('X-RapidAPI-Host', 'bing-image-search1.p.rapidapi.com');
+
+  xhr.send(data);
 }
 
 function getExerciseObjectGivenId(id) {
@@ -722,18 +755,18 @@ function listenForSearchResultClicks() {
 }
 
 function checkIfUserCanAddExercise() {
-  if (selCount > 0 && dateValid && addButton) {
-    addButton.classList.remove('low-brightness');
-    addButton.removeAttribute('disabled');
-    addButton.addEventListener('click', addExercises);
+  if (selCount > 0 && dateValid && $addButton) {
+    $addButton.classList.remove('low-brightness');
+    $addButton.removeAttribute('disabled');
+    $addButton.addEventListener('click', addExercises);
   }
 }
 
 function checkIfUserCanNoLongerAddExercise() {
-  if (addButton && (selCount === 0 || !dateValid)) {
-    addButton.classList.add('low-brightness');
-    addButton.setAttribute('disabled', 'true');
-    addButton.removeEventListener('click', addExercises);
+  if ($addButton && (selCount === 0 || !dateValid)) {
+    $addButton.classList.add('low-brightness');
+    $addButton.setAttribute('disabled', 'true');
+    $addButton.removeEventListener('click', addExercises);
   }
 }
 
@@ -852,14 +885,20 @@ function setImgOfEl(url, el) {
 
   for (var i = 0; i < searchEntriesMobile.length; i++) {
     if (searchEntriesMobile[i] === el) {
-      searchEntriesMobile[i].firstElementChild.firstElementChild.src = url;
+      searchEntriesMobile[i].firstElementChild.firstElementChild.remove();
+      searchEntriesMobile[i].firstElementChild.appendChild(
+        createElements('img', { src: url })
+      );
       break;
     }
   }
 
   for (var j = 0; j < searchEntriesDesktop.length; j++) {
     if (searchEntriesDesktop[j] === el) {
-      searchEntriesDesktop[j].firstElementChild.firstElementChild.src = url;
+      searchEntriesDesktop[j].firstElementChild.firstElementChild.remove();
+      searchEntriesDesktop[j].firstElementChild.appendChild(
+        createElements('img', { src: url })
+      );
       break;
     }
   }
@@ -1002,4 +1041,8 @@ function addCurrentNavView(event = false) {
     navItem.classList.remove('bright-hover');
     navItem.classList.add('dark-bg');
   }
+}
+
+function closeModal(event) {
+  $workModal.classList.add('hidden');
 }
