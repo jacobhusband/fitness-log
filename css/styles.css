@@ -218,7 +218,8 @@ input[type="date"].modal-date-picker {
 .info-button {
   margin-left: auto;
   font-size: 1.5rem;
-  height: 2.35rem;
+  height: 2rem;
+  padding: 0 0.75rem;
 }
 
 .modal-result-content > p {
@@ -309,7 +310,7 @@ input[type="date"].modal-date-picker {
   margin-top: 0.25rem;
 }
 
-.upcoming-workout-entry > .flex-col > .title-and-buttons > img {
+.upcoming-workout-entry > .flex-col > .title-and-buttons > .info-icon {
   margin-left: auto;
 }
 
@@ -319,6 +320,17 @@ input[type="date"].modal-date-picker {
 
 .upcoming-workout-entry > .flex-col > .muscle-tag-container > p {
   padding: 0.1rem 0.75rem;
+}
+
+.exit-icon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.exit-button {
+  width: 2rem;
+  height: 2rem;
+  margin: 0 0.5rem;
 }
 
 /* Desktop content background */

@@ -436,10 +436,6 @@ function createUpcomingWorkoutElementDesktop(
   img = 'images/loading.png',
   id = false
 ) {
-  var buttonVersusImage = createElements('button', {
-    textContent: 'INFO',
-    class: 'info-button'
-  });
   var tagContainer = createElements(
     'div',
     { class: 'muscle-tag-container row' },
@@ -448,14 +444,42 @@ function createUpcomingWorkoutElementDesktop(
       createElements('p', { textContent: tag2 })
     ]
   );
-  return createVariedElements(
-    title,
-    tag1,
-    tag2,
-    tagContainer,
-    buttonVersusImage,
-    img,
-    id
+  return createElements(
+    'li',
+    {
+      class: 'modal-search-result margin-auto row',
+      'dataset-id': id
+    },
+    [
+      createElements('div', { class: 'col modal-img-alignment' }, [
+        createElements('img', { src: img, alt: 'exercise' })
+      ]),
+      createElements(
+        'div',
+        {
+          class:
+            'row flex-col space-between modal-result-content text-align-left'
+        },
+        [
+          createElements(
+            'div',
+            { class: 'row space-between title-and-buttons' },
+            [
+              createElements('h3', { textContent: title }),
+              createElements('button', {
+                textContent: 'INFO',
+                class: 'info-button'
+              }),
+              createElements('img', {
+                src: 'images/x.png',
+                class: 'exit-button'
+              })
+            ]
+          ),
+          tagContainer
+        ]
+      )
+    ]
   );
 }
 
@@ -835,6 +859,11 @@ function createElementForMobileUpcomingWorkouts(
             src: 'images/info.png',
             alt: 'info',
             class: 'info-icon'
+          }),
+          createElements('img', {
+            src: 'images/exit.png',
+            alt: 'exit',
+            class: 'exit-icon'
           })
         ]),
         createElements('div', { class: 'muscle-tag-container row' }, [
