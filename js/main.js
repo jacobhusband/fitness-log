@@ -168,13 +168,13 @@ function createElementForDaySeparatorDesktop(text) {
     { class: 'row desktop-day-separator space-between' },
     [
       createElements('img', {
-        class: 'separator-polygon',
+        class: 'separator-polygon ',
         src: 'images/polygon-left.png',
         alt: 'polygon left'
       }),
       createElements('h1', { textContent: text }),
       createElements('img', {
-        class: 'separator-polygon',
+        class: 'separator-polygon ',
         src: 'images/polygon-right.png',
         alt: 'polygon right'
       })
@@ -463,7 +463,7 @@ function createUpcomingWorkoutElementDesktop(
               }),
               createElements('img', {
                 src: 'images/x.png',
-                class: 'exit-button'
+                class: 'exit-button '
               })
             ]
           ),
@@ -858,7 +858,7 @@ function createElementForMobileUpcomingWorkouts(
           createElements('img', {
             src: 'images/exit.png',
             alt: 'exit',
-            class: 'exit-icon'
+            class: 'exit-icon '
           })
         ]),
         createElements('div', { class: 'muscle-tag-container row' }, [
