@@ -541,7 +541,7 @@ function searchForExercise(event, target) {
     searchString =
       event.target.firstElementChild.firstElementChild.firstElementChild.value;
   } else if (target === 'desktop') {
-    searchString = event.target.lastElementChild.value;
+    searchString = event.target.firstElementChild.value;
     $n2Date.addEventListener('change', function change(e) {
       var valid = checkDateIsValid(e.target.value.split('-'));
       if (valid) {
