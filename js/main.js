@@ -1,4 +1,3 @@
-// #region variable initialization
 var $workoutModal = document.querySelector('.workout-modal');
 var $plusIconDesktop = document.querySelector('.plus-icon-container-desktop');
 var $plusIconMobile = document.querySelector('.plus-icon-container-mobile');
@@ -75,8 +74,7 @@ var muscleObjReverse = {
   15: 'Soleus'
 };
 var imageCount = 0;
-// #endregion
-// #region event listeners
+
 $plusIconDesktop.addEventListener('click', showWorkoutModalDesktop);
 $plusIconMobile.addEventListener('click', showWorkoutModalMobile);
 $nav2.addEventListener('click', changeViews);
@@ -107,9 +105,6 @@ $upcomingWorkoutsContentDesktop.addEventListener(
   'click',
   handleUpcomingWorkoutClicks
 );
-// #endregion
-
-// split up the upcoming workouts views into desktop and mobile
 
 modifyData();
 loadDataFromLocalMobile();
@@ -129,12 +124,10 @@ function modifyData() {
 
 function loadDataFromLocalMobile() {
   data.organizedExercises.forEach(e => {
-    // mobile
     $upcomingWorkoutsContentMobile.appendChild(
       createElementForDaySeparator(e[0].whenDo.when)
     );
     e.forEach(item => {
-      // mobile
       $upcomingWorkoutsContentMobile.appendChild(
         createElementForMobileUpcomingWorkouts(
           item.imgURL,
@@ -204,7 +197,7 @@ function createElementForDaySeparatorDesktop(text) {
     [
       createElements('img', {
         class: 'separator-polygon',
-        src: 'images/polygon_left.png',
+        src: 'images/polygon-left.png',
         alt: 'polygon left'
       }),
       createElements('h1', { textContent: text }),
@@ -226,7 +219,6 @@ function reloadPage() {
 }
 
 function handleUpcomingWorkoutClicks(event) {
-  // both desktop and mobile
   if (
     event.target.matches('.info-icon') ||
     event.target.matches('.info-button')
@@ -242,7 +234,6 @@ function handleUpcomingWorkoutClicks(event) {
     reloadPage();
   }
   if (event.target.matches('.separator-polygon')) {
-    // desktop
     if (event.target.getAttribute('alt') === 'polygon right') {
       showNextDay();
     }
@@ -849,7 +840,6 @@ function addExercises(event) {
 }
 
 function removeData() {
-  // both mobile and desktop
   var mobileContent = $upcomingWorkoutsContentMobile.lastElementChild;
   var desktopContent = $upcomingWorkoutsContentDesktop.lastElementChild;
 

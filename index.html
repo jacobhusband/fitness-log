@@ -20,7 +20,7 @@
       <div class="nav-1">
         <div class="container margin-auto row">
           <h1 class="no-user-select">FITNESS LOG</h1>
-          <div class="nav-1-search-container row ml-auto hidden">
+          <form class="nav-1-search-container row ml-auto hidden">
             <button class="">Search</button>
             <input
               type="text"
@@ -28,7 +28,7 @@
               id="workout-search-desktop"
               placeholder="legs, chest, arms"
             />
-          </div>
+          </form>
           <div
             class="plus-icon-container-desktop pointer-cursor bright-hover ml-auto"
           >
@@ -55,12 +55,12 @@
           >
             NEW EXERCISES
           </h2>
-          <div class="date-to-workout hidden">
+          <form class="date-to-workout hidden">
             <label for="nav-2-date" class="nav-2-date-text">
               DATE TO WORKOUT:
             </label>
             <input class="nav-2-date" type="date" name="nav-2-date" />
-          </div>
+          </form>
         </div>
       </div>
     </header>
@@ -88,19 +88,19 @@
             <h2>WORKOUT</h2>
             <div class="row row-lr-center">
               <div class="col modal-search-and-result">
-                <div class="modal-search-container">
+                <form class="modal-search-container">
                   <input
                     type="text"
                     name="workoutSearch"
                     id="workout-search"
                     placeholder="legs, chest, arms"
                   />
-                </div>
+                </form>
                 <div class="modal-search-results-container row flex-col"></div>
               </div>
               <div class="col row flex-col">
                 <button class="search-button">SEARCH</button>
-                <div class="date-wrapper pos-rel">
+                <form class="date-wrapper pos-rel">
                   <input
                     type="date"
                     name="exercise-date"
@@ -114,7 +114,7 @@
                       alt="polygon"
                     />
                   </button>
-                </div>
+                </form>
                 <button disabled="true" class="add-button low-brightness">
                   ADD
                 </button>
