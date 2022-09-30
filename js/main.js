@@ -594,7 +594,7 @@ function getExercises() {
     tempSearchResults = results;
 
     for (var i = 0; i < results.length; i++) {
-      title = results[i].name.toUpperCase();
+      title = results[i].name;
       tag1 = muscleObjReverse[results[i].muscles[0]];
       tag2 = muscleObjReverse[results[i].muscles_secondary[0]];
       if (!tag2) {
@@ -700,11 +700,11 @@ function getDateDifferenceInDays(date) {
   date = Math.trunc(Date.parse(date) / 86400000);
 
   if (date - today === 0) {
-    return { when: 'TODAY', time: 0 };
+    return { when: 'Today', time: 0 };
   } else if (date - today === 1) {
-    return { when: 'TOMORROW', time: 1 };
+    return { when: 'Tomorrow', time: 1 };
   } else {
-    return { when: `IN ${date - today} DAYS`, time: date - today };
+    return { when: `In ${date - today} Days`, time: date - today };
   }
 }
 
@@ -854,7 +854,7 @@ function showNewExerciseInfoModal(event) {
     .join('')
     .split('</p>')
     .join('');
-  $descTitle.textContent = tempSearchResults[index].name.toUpperCase();
+  $descTitle.textContent = tempSearchResults[index].name;
   $infoModal.classList.remove('hidden');
 }
 
