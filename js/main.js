@@ -209,6 +209,14 @@ function createElementForDaySeparatorDesktop(text) {
   );
 }
 
+function reloadPage() {
+  removeData();
+  modifyData();
+  organizeExercisesByDay();
+  loadDataFromLocalDesktop();
+  loadDataFromLocalMobile();
+}
+
 function handleUpcomingWorkoutClicks(event) {
   // both desktop and mobile
   if (
@@ -217,19 +225,33 @@ function handleUpcomingWorkoutClicks(event) {
   ) {
     showUpcomingWorkoutInfoModal(event);
   }
-
-  // desktop
+  if (
+    event.target.matches('.exit-button') ||
+    event.target.matches('.exit-icon')
+  ) {
+    var id = parseInt(event.target.closest('li').dataset.id);
+    searchAndRemove(id);
+    reloadPage();
+  }
   if (event.target.matches('.separator-polygon')) {
+    // desktop
     if (event.target.getAttribute('alt') === 'polygon right') {
       showNextDay();
     }
     if (event.target.getAttribute('alt') === 'polygon left') {
       showPreviousDay();
     }
-    removeData();
-    modifyData();
-    loadDataFromLocalDesktop();
+    reloadPage();
   }
+}
+
+function searchAndRemove(id) {
+  data.exercises.forEach((exercise, ind) => {
+    if (exercise.id === id) {
+      data.exercises.splice(ind, 1);
+
+    }
+  });
 }
 
 function showNextDay() {
