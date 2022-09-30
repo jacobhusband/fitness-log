@@ -1,44 +1,38 @@
-// #region variable initialization
-var $workoutModal = document.querySelector('.workout-modal');
-var $plusIconDesktop = document.querySelector('.plus-icon-container-desktop');
-var $plusIconMobile = document.querySelector('.plus-icon-container-mobile');
-var $nav2 = document.querySelector('.nav-2');
-var $emptyContent = document.querySelector('.no-content');
-var $newExercisesContainer = document.querySelector('.new-exercises-container');
-var $upcomingWorkoutsContainer = document.querySelector(
-  '.upcoming-workouts-container'
-);
-var $nav1SearchContainer = document.querySelector('.nav-1-search-container');
-var $modalContent = document.querySelector('.workout-modal-content');
-var $searchButton = $modalContent.querySelector('.search-button');
-var $modalSearchAndResultContainer = $modalContent.querySelector(
-  '.modal-search-and-result'
-);
-var $modalSearchContainer = $modalContent.querySelector(
-  '.modal-search-container'
-);
-var $modalSearchResultContainer = $modalSearchContainer.nextElementSibling;
-var $upcomingWorkoutsContentDesktop = document.querySelector(
-  '.upcoming-workouts-content-desktop'
-);
-var $upcomingWorkoutsContentMobile = document.querySelector(
-  '.upcoming-workouts-content-mobile'
-);
+var $header = document.querySelector('header');
+var $main = document.querySelector('main');
+var $nav1 = $header.querySelector('.nav-1');
+var $nav2 = $header.querySelector('.nav-2');
+var $upWorkCont = $main.querySelector('.upcoming-workouts-container');
+var $newExerCont = $main.querySelector('.new-exercises-container');
+var $workModal = $main.querySelector('.workout-modal');
+var $infoModal = $main.querySelector('.info-modal');
+var userMessage = $main.querySelector('.user-message');
+var $n1SearchCont = $nav1.querySelector('.nav-1-search-container');
+var $pIconDesk = $nav1.querySelector('.plus-icon-container-desktop');
+var $pIconMob = $nav1.querySelector('.plus-icon-container-mobile');
+var $upWorkContDesk = $upWorkCont.querySelector('.up-work-cont-desk');
+var $upWorkContMob = $upWorkCont.querySelector('.up-work-cont-mob');
+var $noCont = $upWorkCont.querySelector('.no-content');
+var $modalContent = $workModal.querySelector('.work-mod-cont');
+var $descTitle = $infoModal.querySelector('.description-title');
+var $descText = $infoModal.querySelector('.description-text');
+var $addExerModForm = $modalContent.querySelector('.add-exercise-modal-form');
+var $modSearchCont = $modalContent.querySelector('.modal-search-and-result');
+var $modResCont =
+  $modSearchCont.lastElementChild.querySelector('.mod-search-cont');
 
-var $infoModal = document.querySelector('.info-modal');
-var $descriptionTitle = $infoModal.querySelector('.description-title');
-var $descriptionText = $infoModal.querySelector('.description-text');
-var userMessage = document.querySelector('.user-message');
+var tempSelection = {};
+var tempSearchResults = [];
+var selCount = 0;
+var imageCount = 0;
+var dateValid = false;
+
 var searchString = null;
 var dateInput = null;
 var dateButton = null;
 var addButton = null;
 var userYearMonthDay = null;
-var searched = false;
-var dateValid = false;
-var searchResultSelectionCount = 0;
-var tempSelection = {};
-var tempSearchResults = [];
+
 var muscleObj = {
   biceps: 1,
   shoulders: 2,
@@ -74,42 +68,17 @@ var muscleObjReverse = {
   14: 'Obliques',
   15: 'Soleus'
 };
-var imageCount = 0;
-// #endregion
-// #region event listeners
-$plusIconDesktop.addEventListener('click', showWorkoutModalDesktop);
-$plusIconMobile.addEventListener('click', showWorkoutModalMobile);
+
+$pIconDesk.addEventListener('click', showworkModalDesktop);
+$pIconMob.addEventListener('click', showworkModalMobile);
 $nav2.addEventListener('click', changeViews);
-$nav1SearchContainer.lastElementChild.addEventListener(
-  'keydown',
-  searchForExercise
-);
-$nav1SearchContainer.firstElementChild.addEventListener(
-  'click',
-  searchForExercise
-);
-$modalSearchContainer.firstElementChild.addEventListener(
-  'keydown',
-  searchForExercise
-);
-$searchButton.addEventListener('click', searchForExercise);
+$n1SearchCont.addEventListener('submit', searchForExerciseDesktop);
+$addExerModForm.addEventListener('submit', searchForExerciseMobile);
 $modalContent.addEventListener('click', handleModalContentClicks);
 $infoModal.addEventListener('click', handleInfoModalEvents);
-$newExercisesContainer.addEventListener(
-  'click',
-  handleNewExerciseContainerClicks
-);
-$upcomingWorkoutsContentMobile.addEventListener(
-  'click',
-  handleUpcomingWorkoutClicks
-);
-$upcomingWorkoutsContentDesktop.addEventListener(
-  'click',
-  handleUpcomingWorkoutClicks
-);
-// #endregion
-
-// split up the upcoming workouts views into desktop and mobile
+$newExerCont.addEventListener('click', handleNewExerciseContainerClicks);
+$upWorkContMob.addEventListener('click', handleUpcomingWorkoutClicks);
+$upWorkContDesk.addEventListener('click', handleUpcomingWorkoutClicks);
 
 modifyData();
 loadDataFromLocalMobile();
@@ -129,13 +98,9 @@ function modifyData() {
 
 function loadDataFromLocalMobile() {
   data.organizedExercises.forEach(e => {
-    // mobile
-    $upcomingWorkoutsContentMobile.appendChild(
-      createElementForDaySeparator(e[0].whenDo.when)
-    );
+    $upWorkContMob.appendChild(createElementForDaySeparator(e[0].whenDo.when));
     e.forEach(item => {
-      // mobile
-      $upcomingWorkoutsContentMobile.appendChild(
+      $upWorkContMob.appendChild(
         createElementForMobileUpcomingWorkouts(
           item.imgURL,
           item.title,
@@ -178,13 +143,13 @@ function organizeExercisesByDay() {
 
 function loadDataFromLocalDesktop() {
   if (data.organizedExercises.length) {
-    $upcomingWorkoutsContentDesktop.appendChild(
+    $upWorkContDesk.appendChild(
       createElementForDaySeparatorDesktop(
         data.organizedExercises[data.desktopCurrentDayView][0].whenDo.when
       )
     );
     data.organizedExercises[data.desktopCurrentDayView].forEach(item => {
-      $upcomingWorkoutsContentDesktop.appendChild(
+      $upWorkContDesk.appendChild(
         createUpcomingWorkoutElementDesktop(
           item.title,
           item.tag1,
@@ -204,7 +169,7 @@ function createElementForDaySeparatorDesktop(text) {
     [
       createElements('img', {
         class: 'separator-polygon',
-        src: 'images/polygon_left.png',
+        src: 'images/polygon-left.png',
         alt: 'polygon left'
       }),
       createElements('h1', { textContent: text }),
@@ -226,7 +191,6 @@ function reloadPage() {
 }
 
 function handleUpcomingWorkoutClicks(event) {
-  // both desktop and mobile
   if (
     event.target.matches('.info-icon') ||
     event.target.matches('.info-button')
@@ -242,7 +206,6 @@ function handleUpcomingWorkoutClicks(event) {
     reloadPage();
   }
   if (event.target.matches('.separator-polygon')) {
-    // desktop
     if (event.target.getAttribute('alt') === 'polygon right') {
       showNextDay();
     }
@@ -280,8 +243,8 @@ function showPreviousDay() {
 function showUpcomingWorkoutInfoModal(event) {
   var id = event.target.closest('li').dataset.id;
   var exercise = getExerciseObjectGivenId(id);
-  $descriptionTitle.textContent = exercise.title;
-  $descriptionText.textContent = exercise.description;
+  $descTitle.textContent = exercise.title;
+  $descText.textContent = exercise.description;
   $infoModal.classList.remove('hidden');
 }
 
@@ -373,11 +336,10 @@ function handleModalContentClicks(event) {
     event.target.matches('.date-polygon')
   ) {
     if (!dateInput) {
-      dateInput = $workoutModal.querySelector('input[type="date"]');
-      dateButton = $workoutModal.querySelector('.date-button');
-      addButton = $workoutModal.querySelector('.add-button');
+      dateInput = $workModal.querySelector('input[type="date"]');
+      dateButton = $workModal.querySelector('.date-button');
+      addButton = $workModal.querySelector('.add-button');
     }
-    dateInput.click();
     dateInput.showPicker();
     dateInput.addEventListener('change', function change(e) {
       userYearMonthDay = e.target.value.split('-');
@@ -436,7 +398,7 @@ function hideModal(event) {
     event.target.matches('.modal-layout') ||
     event.target.matches('.workout-modal')
   ) {
-    $workoutModal.classList.add('hidden');
+    $workModal.classList.add('hidden');
 
     window.removeEventListener('click', hideModal);
   }
@@ -444,18 +406,18 @@ function hideModal(event) {
 
 function showNewExerciseInfoModal(event) {
   var index = event.target.closest('.modal-search-result').dataset.id;
-  $descriptionText.textContent = tempSearchResults[index].description
+  $descText.textContent = tempSearchResults[index].description
     .split('<p>')
     .join('')
     .split('</p>')
     .join('');
-  $descriptionTitle.textContent = tempSearchResults[index].name.toUpperCase();
+  $descTitle.textContent = tempSearchResults[index].name.toUpperCase();
   $infoModal.classList.remove('hidden');
 }
 
 function pushWorkoutElement(el, el2) {
-  $modalSearchResultContainer.appendChild(el2);
-  $newExercisesContainer.appendChild(el);
+  $modResCont.appendChild(el2);
+  $newExerCont.appendChild(el);
 }
 
 function createUpcomingWorkoutElementDesktop(
@@ -717,8 +679,8 @@ function removeSearchResults() {
   var parentContainerMobile = null;
   var parentContainerDesktop = null;
 
-  parentContainerMobile = $modalSearchResultContainer;
-  parentContainerDesktop = $newExercisesContainer;
+  parentContainerMobile = $modResCont;
+  parentContainerDesktop = $newExerCont;
 
   lastChild = parentContainerMobile.lastElementChild;
   while (lastChild) {
@@ -737,8 +699,8 @@ function setImgOfEl(url, el) {
   var searchEntriesMobile = null;
   var searchEntriesDesktop = null;
 
-  searchEntriesMobile = $modalSearchResultContainer.children;
-  searchEntriesDesktop = $newExercisesContainer.children;
+  searchEntriesMobile = $modResCont.children;
+  searchEntriesDesktop = $newExerCont.children;
 
   for (var i = 0; i < searchEntriesMobile.length; i++) {
     if (searchEntriesMobile[i] === el) {
@@ -755,28 +717,31 @@ function setImgOfEl(url, el) {
   }
 }
 
-function searchForExercise(event) {
-  if (event.key === 'Enter' || event.target.matches('.search-button')) {
-    if (searched) {
-      $modalSearchAndResultContainer.removeEventListener(
-        'click',
-        listenForSearchResultClicks
-      );
-      saveChosenExercises();
-      modifyNoContent();
-      data.desktopCurrentDayView = 0;
-    }
-    searched = true;
-    removeSearchResults();
-    searchString = event.target.value;
-    event.target.value = '';
-    getExercises();
-    document.documentElement.classList.add('wait-cursor');
-    $modalSearchAndResultContainer.addEventListener(
-      'click',
-      listenForSearchResultClicks
-    );
-  }
+function searchForExerciseDesktop(event) {
+  event.preventDefault();
+  $modSearchCont.removeEventListener('click', listenForSearchResultClicks);
+  saveChosenExercises();
+  data.desktopCurrentDayView = 0;
+  removeSearchResults();
+  searchString = event.target.lastElementChild.value;
+  getExercises();
+  // document.documentElement.classList.add("wait-cursor");
+  $modSearchCont.addEventListener('click', listenForSearchResultClicks);
+  $n1SearchCont.reset();
+}
+
+function searchForExerciseMobile(event) {
+  event.preventDefault();
+  $modSearchCont.removeEventListener('click', listenForSearchResultClicks);
+  saveChosenExercises();
+  data.desktopCurrentDayView = 0;
+  removeSearchResults();
+  searchString =
+    event.target.firstElementChild.firstElementChild.firstElementChild.value;
+  getExercises();
+  // document.documentElement.classList.add("wait-cursor");
+  $modSearchCont.addEventListener('click', listenForSearchResultClicks);
+  $addExerModForm.reset();
 }
 
 function listenForSearchResultClicks() {
@@ -784,12 +749,12 @@ function listenForSearchResultClicks() {
   if (!event.target.matches('input#workout-search')) {
     li = event.target.closest('li');
     if (li.classList.contains('green-border')) {
-      searchResultSelectionCount--;
+      selCount--;
       li.classList.remove('green-border');
       li.classList.add('normal-border');
       delete tempSelection[li.dataset.id];
     } else {
-      searchResultSelectionCount++;
+      selCount++;
       li.classList.add('green-border');
       li.classList.remove('normal-border');
       tempSelection[li.dataset.id] = li;
@@ -800,7 +765,7 @@ function listenForSearchResultClicks() {
 }
 
 function checkIfUserCanAddExercise() {
-  if (searchResultSelectionCount > 0 && dateValid && addButton) {
+  if (selCount > 0 && dateValid && addButton) {
     addButton.classList.remove('low-brightness');
     addButton.removeAttribute('disabled');
     addButton.addEventListener('click', addExercises);
@@ -808,7 +773,7 @@ function checkIfUserCanAddExercise() {
 }
 
 function checkIfUserCanNoLongerAddExercise() {
-  if (addButton && (searchResultSelectionCount === 0 || !dateValid)) {
+  if (addButton && (selCount === 0 || !dateValid)) {
     addButton.classList.add('low-brightness');
     addButton.setAttribute('disabled', 'true');
     addButton.removeEventListener('click', addExercises);
@@ -844,23 +809,21 @@ function addExercises(event) {
   modifyData();
   organizeExercisesByDay();
   loadDataFromLocalMobile();
-  $workoutModal.classList.add('hidden');
   loadDataFromLocalDesktop();
 }
 
 function removeData() {
-  // both mobile and desktop
-  var mobileContent = $upcomingWorkoutsContentMobile.lastElementChild;
-  var desktopContent = $upcomingWorkoutsContentDesktop.lastElementChild;
+  var mobileContent = $upWorkContMob.lastElementChild;
+  var desktopContent = $upWorkContDesk.lastElementChild;
 
   while (mobileContent) {
-    $upcomingWorkoutsContentMobile.removeChild(mobileContent);
-    mobileContent = $upcomingWorkoutsContentMobile.lastElementChild;
+    $upWorkContMob.removeChild(mobileContent);
+    mobileContent = $upWorkContMob.lastElementChild;
   }
 
   while (desktopContent) {
-    $upcomingWorkoutsContentDesktop.removeChild(desktopContent);
-    desktopContent = $upcomingWorkoutsContentDesktop.lastElementChild;
+    $upWorkContDesk.removeChild(desktopContent);
+    desktopContent = $upWorkContDesk.lastElementChild;
   }
 }
 
@@ -914,10 +877,10 @@ function changeViews(event) {
   }
   if (event.target.dataset.text === 'upcoming-workouts') {
     changeView(event);
-    $plusIconDesktop.classList.remove('hidden');
-    $newExercisesContainer.classList.add('hidden');
-    $upcomingWorkoutsContainer.classList.remove('hidden');
-    $nav1SearchContainer.classList.add('hidden');
+    $pIconDesk.classList.remove('hidden');
+    $newExerCont.classList.add('hidden');
+    $upWorkCont.classList.remove('hidden');
+    $n1SearchCont.classList.add('hidden');
     $nav2.querySelector('.date-to-workout').classList.add('hidden');
     saveChosenExercises();
     modifyNoContent();
@@ -930,30 +893,26 @@ function changeViews(event) {
 
 function modifyNoContent() {
   if (data.exercises.length === 0) {
-    $upcomingWorkoutsContainer
-      .querySelector('.no-content')
-      .classList.remove('hidden');
+    $upWorkCont.querySelector('.no-content').classList.remove('hidden');
   }
   if (data.exercises.length > 0) {
-    $upcomingWorkoutsContainer
-      .querySelector('.no-content')
-      .classList.add('hidden');
+    $upWorkCont.querySelector('.no-content').classList.add('hidden');
   }
 }
 
 function clearTempData() {
   tempSearchResults = null;
   tempSelection = {};
-  var el = $newExercisesContainer.lastElementChild;
+  var el = $newExerCont.lastElementChild;
   while (el) {
-    $newExercisesContainer.removeChild(el);
-    el = $newExercisesContainer.lastElementChild;
+    $newExerCont.removeChild(el);
+    el = $newExerCont.lastElementChild;
   }
   $nav2.querySelector('.nav-2-date').value = '';
 }
 
 function saveChosenExercises() {
-  var searchResults = $newExercisesContainer.children;
+  var searchResults = $newExerCont.children;
 
   for (var i = 0; i < searchResults.length; i++) {
     if (searchResults[i].classList.contains('green-border')) {
@@ -966,12 +925,12 @@ function saveChosenExercises() {
 }
 
 function newExercisesViewChanges() {
-  $emptyContent.classList.add('hidden');
-  $plusIconDesktop.classList.add('hidden');
-  $newExercisesContainer.classList.remove('hidden');
-  $upcomingWorkoutsContainer.classList.add('hidden');
-  $nav1SearchContainer.classList.remove('hidden');
-  $nav1SearchContainer.lastElementChild.focus();
+  $noCont.classList.add('hidden');
+  $pIconDesk.classList.add('hidden');
+  $newExerCont.classList.remove('hidden');
+  $upWorkCont.classList.add('hidden');
+  $n1SearchCont.classList.remove('hidden');
+  $n1SearchCont.lastElementChild.focus();
   $nav2
     .querySelector('[data-text="upcoming-workouts"]')
     .classList.remove('dark-bg');
@@ -984,12 +943,12 @@ function changeView(event) {
   addCurrentNavView(event);
 }
 
-function showWorkoutModalMobile(event) {
-  $workoutModal.classList.remove('hidden');
+function showworkModalMobile(event) {
+  $workModal.classList.remove('hidden');
   window.addEventListener('click', hideModal);
 }
 
-function showWorkoutModalDesktop(event) {
+function showworkModalDesktop(event) {
   removeCurrentNavView();
   data.view = 'new-exercises';
   addCurrentNavView();

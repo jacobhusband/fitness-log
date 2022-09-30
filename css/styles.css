@@ -27,9 +27,6 @@ label {
 h1,
 h2,
 h3,
-h4,
-h5,
-h6,
 p,
 label {
   line-height: 1;
@@ -72,8 +69,6 @@ input[type="date"].modal-date-picker {
 }
 
 /* Non-semantic classes */
-
-/* Mobile basic styling */
 
 .nav-1 {
   background-color: #222f3b;
@@ -121,8 +116,6 @@ input[type="date"].modal-date-picker {
 .dark-bg {
   background-color: inherit;
 }
-
-/* Mobile workout modal styling */
 
 .modal {
   position: absolute;
@@ -178,13 +171,11 @@ input[type="date"].modal-date-picker {
   top: -1px;
 }
 
-.workout-modal-content button {
+.work-mod-cont button {
   width: 80px;
   height: 25px;
   padding: 0;
 }
-
-/* Mobile modal search styling */
 
 .modal-search-result {
   width: 12rem;
@@ -227,7 +218,7 @@ input[type="date"].modal-date-picker {
   font-weight: 300;
 }
 
-.modal-search-results-container {
+.mod-search-cont {
   max-height: 13.5rem;
   overflow: hidden;
   overflow-y: scroll;
@@ -247,8 +238,6 @@ input[type="date"].modal-date-picker {
   letter-spacing: 0.02rem;
 }
 
-/* Mobile info modal styling */
-
 .info-icon,
 .modal-x-icon {
   width: 16px;
@@ -266,8 +255,6 @@ input[type="date"].modal-date-picker {
   position: fixed;
 }
 
-/* Desktop user message */
-
 .user-message > p {
   background-color: rgb(17, 60, 100);
   padding: 0.2rem;
@@ -280,8 +267,6 @@ input[type="date"].modal-date-picker {
   top: 0;
   left: 0;
 }
-
-/* Mobile upcoming workouts styling */
 
 .day-separator {
   padding: 0.5rem 1rem;
@@ -333,16 +318,12 @@ input[type="date"].modal-date-picker {
   margin: 0 0.5rem;
 }
 
-/* Desktop content background */
-
 .new-exercises-container {
   display: none;
   min-height: 100vh;
   padding-top: 2rem;
   background-color: #2d2c30;
 }
-
-/* Desktop search container */
 
 .nav-1-search-container {
   display: none;
@@ -364,8 +345,6 @@ input[type="date"].modal-date-picker {
   border-radius: 0.3rem;
 }
 
-/* Desktop nav-2 date */
-
 .date-to-workout {
   display: none;
   align-self: center;
@@ -386,13 +365,11 @@ input[type="date"].modal-date-picker {
   margin-right: 0.5rem;
 }
 
-/* Desktop and mobile view swaps */
-
-.upcoming-workouts-content-desktop {
+.up-work-cont-desk {
   display: none;
 }
 
-.upcoming-workouts-content-mobile {
+.up-work-cont-mob {
   display: block;
 }
 
@@ -487,8 +464,6 @@ input[type="date"].modal-date-picker {
   width: 100%;
 }
 
-/* Mobile and desktop differences */
-
 @media only screen and (min-width: 768px) {
   button:hover {
     filter: brightness(120%);
@@ -506,11 +481,11 @@ input[type="date"].modal-date-picker {
     display: block;
   }
 
-  .upcoming-workouts-content-desktop {
+  .up-work-cont-desk {
     display: block;
   }
 
-  .upcoming-workouts-content-mobile {
+  .up-work-cont-mob {
     display: none;
   }
 
@@ -607,8 +582,6 @@ input[type="date"].modal-date-picker {
     margin-right: 1rem;
   }
 
-  /* Desktop upcoming workouts content */
-
   .new-exercises-container,
   .upcoming-workouts-container {
     display: block;
@@ -635,8 +608,6 @@ input[type="date"].modal-date-picker {
   .separator-polygon:hover {
     cursor: pointer;
   }
-
-  /* Semantic desktop specific classes */
 
   .green-border {
     border-color: green;

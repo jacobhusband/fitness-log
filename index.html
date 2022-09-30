@@ -20,7 +20,9 @@
       <div class="nav-1">
         <div class="container margin-auto row">
           <h1 class="no-user-select">FITNESS LOG</h1>
-          <div class="nav-1-search-container row ml-auto hidden">
+          <form
+            class="nav-1-search-container row ml-auto hidden new-exercise-form"
+          >
             <button class="">Search</button>
             <input
               type="text"
@@ -28,7 +30,7 @@
               id="workout-search-desktop"
               placeholder="legs, chest, arms"
             />
-          </div>
+          </form>
           <div
             class="plus-icon-container-desktop pointer-cursor bright-hover ml-auto"
           >
@@ -72,8 +74,8 @@
         <div class="no-content row row-lr-center hidden">
           <p class="no-user-select">No exercises upcoming...</p>
         </div>
-        <div class="upcoming-workouts-content-desktop"></div>
-        <div class="upcoming-workouts-content-mobile"></div>
+        <div class="up-work-cont-desk"></div>
+        <div class="up-work-cont-mob"></div>
       </div>
       <div
         data-view="new-exercises"
@@ -84,9 +86,9 @@
       </div>
       <div class="workout-modal modal hidden">
         <div class="modal-layout row row-lr-center">
-          <div class="modal-content workout-modal-content text-align-center">
+          <div class="modal-content work-mod-cont text-align-center">
             <h2>WORKOUT</h2>
-            <div class="row row-lr-center">
+            <form class="row row-lr-center add-exercise-modal-form">
               <div class="col modal-search-and-result">
                 <div class="modal-search-container">
                   <input
@@ -96,7 +98,7 @@
                     placeholder="legs, chest, arms"
                   />
                 </div>
-                <div class="modal-search-results-container row flex-col"></div>
+                <div class="mod-search-cont row flex-col"></div>
               </div>
               <div class="col row flex-col">
                 <button class="search-button">SEARCH</button>
@@ -106,7 +108,7 @@
                     name="exercise-date"
                     class="modal-date-picker"
                   />
-                  <button class="date-button">
+                  <button class="date-button" type="button">
                     DATE
                     <img
                       class="date-polygon"
@@ -115,11 +117,15 @@
                     />
                   </button>
                 </div>
-                <button disabled="true" class="add-button low-brightness">
+                <button
+                  disabled="true"
+                  type="button"
+                  class="add-button low-brightness"
+                >
                   ADD
                 </button>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
