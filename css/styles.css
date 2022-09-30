@@ -86,7 +86,11 @@ input[type="date"].modal-date-picker {
   padding: 1rem;
 }
 
-.nav-1 .plus-icon-container {
+.plus-icon-container-mobile {
+  display: block;
+}
+
+.nav-1 .plus-icon-container-mobile {
   padding: 12px;
 }
 
@@ -319,7 +323,8 @@ input[type="date"].modal-date-picker {
 
 /* Desktop content background */
 
-.new-exercises-container, {
+.new-exercises-container {
+  display: none;
   min-height: 100vh;
   padding-top: 2rem;
   background-color: #2d2c30;
@@ -328,6 +333,7 @@ input[type="date"].modal-date-picker {
 /* Desktop search container */
 
 .nav-1-search-container {
+  display: none;
   margin: 1.2rem 0;
 }
 
@@ -349,6 +355,7 @@ input[type="date"].modal-date-picker {
 /* Desktop nav-2 date */
 
 .date-to-workout {
+  display: none;
   align-self: center;
   margin-left: auto;
 }
@@ -365,6 +372,20 @@ input[type="date"].modal-date-picker {
   position: relative;
   top: 1px;
   margin-right: 0.5rem;
+}
+
+/* Desktop and mobile view swaps */
+
+.upcoming-workouts-content-desktop {
+  display: none;
+}
+
+.upcoming-workouts-content-mobile {
+  display: block;
+}
+
+.plus-icon-container-desktop {
+  display: none;
 }
 
 /* Semantic classes */
@@ -465,6 +486,32 @@ input[type="date"].modal-date-picker {
     max-width: 720px;
   }
 
+  .nav-1-search-container {
+    display: block;
+  }
+
+  .date-to-workout {
+    display: block;
+  }
+
+  .upcoming-workouts-content-desktop {
+    display: block;
+  }
+
+  .upcoming-workouts-content-mobile {
+    display: none;
+  }
+
+  .plus-icon-container-desktop {
+    align-self: center;
+    display: block;
+  }
+
+  .plus-icon-container-mobile {
+    display: none;
+    padding: 1.4rem 0.8rem 0.5rem 0;
+  }
+
   .nav-2 .new-exercises-text {
     display: block;
   }
@@ -477,10 +524,6 @@ input[type="date"].modal-date-picker {
     font-size: 1.6rem;
     letter-spacing: 0.5px;
     padding: 1.5rem 0.75rem;
-  }
-
-  .nav-1 .plus-icon-container {
-    padding: 1.4rem 0.8rem 0.5rem 0;
   }
 
   .nav-2 h2 {
@@ -556,6 +599,7 @@ input[type="date"].modal-date-picker {
 
   .new-exercises-container,
   .upcoming-workouts-container {
+    display: block;
     min-height: 100vh;
     padding-top: 2rem;
     background-color: #2d2c30;
@@ -584,5 +628,9 @@ input[type="date"].modal-date-picker {
 
   .green-border {
     border-color: green;
+  }
+
+  .hidden {
+    display: none;
   }
 }
