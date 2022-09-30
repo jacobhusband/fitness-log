@@ -171,7 +171,7 @@ input[type="date"].modal-date-picker {
   top: -1px;
 }
 
-.workout-modal-content button {
+.work-mod-cont button {
   width: 80px;
   height: 25px;
   padding: 0;
@@ -218,7 +218,7 @@ input[type="date"].modal-date-picker {
   font-weight: 300;
 }
 
-.modal-search-results-container {
+.mod-search-cont {
   max-height: 13.5rem;
   overflow: hidden;
   overflow-y: scroll;
@@ -365,11 +365,11 @@ input[type="date"].modal-date-picker {
   margin-right: 0.5rem;
 }
 
-.upcoming-workouts-content-desktop {
+.up-work-cont-desk {
   display: none;
 }
 
-.upcoming-workouts-content-mobile {
+.up-work-cont-mob {
   display: block;
 }
 
@@ -481,11 +481,11 @@ input[type="date"].modal-date-picker {
     display: block;
   }
 
-  .upcoming-workouts-content-desktop {
+  .up-work-cont-desk {
     display: block;
   }
 
-  .upcoming-workouts-content-mobile {
+  .up-work-cont-mob {
     display: none;
   }
 
