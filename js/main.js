@@ -10,6 +10,7 @@ var userMessage = $main.querySelector('.user-message');
 var $n1SearchCont = $nav1.querySelector('.nav-1-search-container');
 var $pIconDesk = $nav1.querySelector('.plus-icon-container-desktop');
 var $pIconMob = $nav1.querySelector('.plus-icon-container-mobile');
+var $n2Date = $nav2.querySelector('.nav-2-date');
 var $upWorkContDesk = $upWorkCont.querySelector('.up-work-cont-desk');
 var $upWorkContMob = $upWorkCont.querySelector('.up-work-cont-mob');
 var $noCont = $upWorkCont.querySelector('.no-content');
@@ -340,7 +341,7 @@ function createSearchElementMobile(
   });
   var tagContainer = createElements(
     'div',
-    { class: 'muscle-tag-container row' },
+    { class: 'muscle-tag-container row flex-wrap' },
     [
       createElements('p', { textContent: tag1 }),
       createElements('p', { textContent: tag2 })
@@ -364,6 +365,15 @@ function createUpcomingWorkoutElementDesktop(
   img = 'images/loading.png',
   id = false
 ) {
+  var imgElement = createElements('img', { src: img, alt: 'exercise' });
+  if (img === 'images/loading.png') {
+    imgElement = createElements('div', { class: 'lds-ring' }, [
+      createElements('div', {}),
+      createElements('div', {}),
+      createElements('div', {}),
+      createElements('div', {})
+    ]);
+  }
   var tagContainer = createElements(
     'div',
     { class: 'muscle-tag-container row' },
@@ -379,9 +389,7 @@ function createUpcomingWorkoutElementDesktop(
       'dataset-id': id
     },
     [
-      createElements('div', { class: 'col modal-img-alignment' }, [
-        createElements('img', { src: img, alt: 'exercise' })
-      ]),
+      createElements('div', { class: 'col modal-img-alignment' }, [imgElement]),
       createElements(
         'div',
         {
@@ -418,13 +426,20 @@ function createElementForMobileUpcomingWorkouts(
   img,
   id = false
 ) {
+  var imgElement = createElements('img', { src: img, alt: 'exercise' });
+  if (img === 'images/loading.png') {
+    imgElement = createElements('div', { class: 'lds-ring' }, [
+      createElements('div', {}),
+      createElements('div', {}),
+      createElements('div', {}),
+      createElements('div', {})
+    ]);
+  }
   return createElements(
     'li',
     { class: 'upcoming-workout-entry row', 'dataset-id': id },
     [
-      createElements('div', { class: 'image-container col' }, [
-        createElements('img', { src: img, alt: 'exercise' })
-      ]),
+      createElements('div', { class: 'image-container col' }, [imgElement]),
       createElements('div', { class: 'row flex-col space-between w-100' }, [
         createElements('div', { class: 'row title-and-buttons pos-rel' }, [
           createElements('h3', { textContent: title }),
@@ -457,6 +472,15 @@ function createVariedElements(
   img = 'images/loading.png',
   id = false
 ) {
+  var imgElement = createElements('img', { src: img, alt: 'exercise' });
+  if (img === 'images/loading.png') {
+    imgElement = createElements('div', { class: 'lds-ring' }, [
+      createElements('div', {}),
+      createElements('div', {}),
+      createElements('div', {}),
+      createElements('div', {})
+    ]);
+  }
   return createElements(
     'li',
     {
@@ -464,9 +488,7 @@ function createVariedElements(
       'dataset-id': id
     },
     [
-      createElements('div', { class: 'col modal-img-alignment' }, [
-        createElements('img', { src: img, alt: 'exercise' })
-      ]),
+      createElements('div', { class: 'col modal-img-alignment' }, [imgElement]),
       createElements(
         'div',
         {
@@ -519,6 +541,16 @@ function searchForExercise(event, target) {
       event.target.firstElementChild.firstElementChild.firstElementChild.value;
   } else if (target === 'desktop') {
     searchString = event.target.lastElementChild.value;
+    $n2Date.addEventListener('change', function change(e) {
+      var valid = checkDateIsValid(e.target.value.split('-'));
+      if (valid) {
+        e.target.classList.add('green-border');
+        e.target.classList.remove('red-border');
+      } else {
+        e.target.classList.add('red-border');
+        e.target.classList.remove('green-border');
+      }
+    });
   }
   event.preventDefault();
   $modSearchCont.removeEventListener('click', listenForSearchResultClicks);
@@ -529,6 +561,7 @@ function searchForExercise(event, target) {
   document.documentElement.classList.add('wait-cursor');
   $modSearchCont.addEventListener('click', listenForSearchResultClicks);
   $addExerModForm.reset();
+  $n1SearchCont.reset();
 }
 
 function getExercises() {
@@ -668,6 +701,42 @@ function showUpcomingWorkoutInfoModal(event) {
   $infoModal.classList.remove('hidden');
 }
 
+function listenForSearchResultClicks() {
+  var li;
+  if (!event.target.matches('input#workout-search')) {
+    li = event.target.closest('li');
+    if (li.classList.contains('green-border')) {
+      selCount--;
+      li.classList.remove('green-border');
+      li.classList.add('normal-border');
+      delete tempSelection[li.dataset.id];
+    } else {
+      selCount++;
+      li.classList.add('green-border');
+      li.classList.remove('normal-border');
+      tempSelection[li.dataset.id] = li;
+    }
+    checkIfUserCanAddExercise();
+    checkIfUserCanNoLongerAddExercise();
+  }
+}
+
+function checkIfUserCanAddExercise() {
+  if (selCount > 0 && dateValid && addButton) {
+    addButton.classList.remove('low-brightness');
+    addButton.removeAttribute('disabled');
+    addButton.addEventListener('click', addExercises);
+  }
+}
+
+function checkIfUserCanNoLongerAddExercise() {
+  if (addButton && (selCount === 0 || !dateValid)) {
+    addButton.classList.add('low-brightness');
+    addButton.setAttribute('disabled', 'true');
+    addButton.removeEventListener('click', addExercises);
+  }
+}
+
 function tryToAddWorkoutDesktop(event) {
   var $date = $nav2.querySelector('.nav-2-date');
   userYearMonthDay = $date.value.split('-');
@@ -796,42 +865,6 @@ function setImgOfEl(url, el) {
   }
 }
 
-function listenForSearchResultClicks() {
-  var li;
-  if (!event.target.matches('input#workout-search')) {
-    li = event.target.closest('li');
-    if (li.classList.contains('green-border')) {
-      selCount--;
-      li.classList.remove('green-border');
-      li.classList.add('normal-border');
-      delete tempSelection[li.dataset.id];
-    } else {
-      selCount++;
-      li.classList.add('green-border');
-      li.classList.remove('normal-border');
-      tempSelection[li.dataset.id] = li;
-    }
-    checkIfUserCanAddExercise();
-    checkIfUserCanNoLongerAddExercise();
-  }
-}
-
-function checkIfUserCanAddExercise() {
-  if (selCount > 0 && dateValid && addButton) {
-    addButton.classList.remove('low-brightness');
-    addButton.removeAttribute('disabled');
-    addButton.addEventListener('click', addExercises);
-  }
-}
-
-function checkIfUserCanNoLongerAddExercise() {
-  if (addButton && (selCount === 0 || !dateValid)) {
-    addButton.classList.add('low-brightness');
-    addButton.setAttribute('disabled', 'true');
-    addButton.removeEventListener('click', addExercises);
-  }
-}
-
 function addExercises(event) {
   var tempData = null;
   var tagContainer = null;
@@ -859,9 +892,12 @@ function addExercises(event) {
   }
   removeData();
   modifyData();
+  removeSearchResults();
+  clearTempData();
   organizeExercisesByDay();
   loadDataFromLocalMobile();
   loadDataFromLocalDesktop();
+  checkIfUserCanNoLongerAddExercise();
 }
 
 function changeViews(event) {
@@ -897,6 +933,7 @@ function modifyNoContent() {
 function clearTempData() {
   tempSearchResults = null;
   tempSelection = {};
+  selCount = 0;
   var el = $newExerCont.lastElementChild;
   while (el) {
     $newExerCont.removeChild(el);
