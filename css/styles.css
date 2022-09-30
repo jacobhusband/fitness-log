@@ -76,7 +76,8 @@ button,
 .info-button,
 .info-icon,
 .add-button,
-.separator-polygon {
+.separator-polygon,
+input[type="date"] {
   cursor: pointer;
 }
 
@@ -213,7 +214,7 @@ button,
 }
 
 .add-button {
-  margin-top: 0.48rem;
+  margin-top: 0.38rem;
 }
 
 .date-polygon {
@@ -433,15 +434,12 @@ button,
   margin-left: auto;
 }
 
-button:hover,
+.info-button:hover,
+.exit-button:hover,
 .exit-icon:hover,
 .info-icon:hover,
 .separator-polygon:hover {
   filter: brightness(120%);
-}
-
-button.add-button:hover {
-  filter: none;
 }
 
 /* Semantic classes */
