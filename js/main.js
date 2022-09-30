@@ -246,6 +246,9 @@ function handleModalContentClicks(event) {
     event.target.matches("input[type='date']")
   ) {
     $dateInput.click();
+    if (!testIfiOS()) {
+      $dateInput.showPicker();
+    }
     $dateInput.addEventListener('input', function change(e) {
       userYearMonthDay = e.target.value.split('-');
       var date = checkDateIsValid(userYearMonthDay);
@@ -1045,4 +1048,15 @@ function addCurrentNavView(event = false) {
 
 function closeModal(event) {
   $workModal.classList.add('hidden');
+}
+
+function testIfiOS() {
+  var ua = navigator.userAgent;
+  if (
+    /iPad|iPhone|iPod/.test(ua) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+  ) {
+    return true;
+  }
+  return false;
 }
