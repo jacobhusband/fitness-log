@@ -245,7 +245,6 @@ function handleModalContentClicks(event) {
     event.target.matches('.date-polygon') ||
     event.target.matches("input[type='date']")
   ) {
-    $dateInput.click();
     if (!testIfiOS()) {
       $dateInput.showPicker();
     }
@@ -254,13 +253,17 @@ function handleModalContentClicks(event) {
       var date = checkDateIsValid(userYearMonthDay);
       if (date) {
         validDate();
+        $dateButton.classList.add('green-border');
+        $dateButton.classList.remove('red-border');
       } else {
         invalidDate();
+        $dateButton.classList.add('red-border');
+        $dateButton.classList.remove('green-border');
       }
       $dateButton.textContent = userYearMonthDay
         .filter((item, ind) => ind > 0)
         .join('/');
-      $dateInput.removeEventListener('change', change);
+      $dateInput.removeEventListener('input', change);
     });
   }
 }
