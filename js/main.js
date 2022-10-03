@@ -245,7 +245,6 @@ function handleModalContentClicks(event) {
     event.target.matches('.date-polygon') ||
     event.target.matches("input[type='date']")
   ) {
-    $dateInput.click();
     if (!testIfiOS()) {
       $dateInput.showPicker();
     }
@@ -254,13 +253,17 @@ function handleModalContentClicks(event) {
       var date = checkDateIsValid(userYearMonthDay);
       if (date) {
         validDate();
+        $dateButton.classList.add('green-border');
+        $dateButton.classList.remove('red-border');
       } else {
         invalidDate();
+        $dateButton.classList.add('red-border');
+        $dateButton.classList.remove('green-border');
       }
       $dateButton.textContent = userYearMonthDay
         .filter((item, ind) => ind > 0)
         .join('/');
-      $dateInput.removeEventListener('change', change);
+      $dateInput.removeEventListener('input', change);
     });
   }
 }
@@ -541,7 +544,7 @@ function searchForExercise(event, target) {
     searchString =
       event.target.firstElementChild.firstElementChild.firstElementChild.value;
   } else if (target === 'desktop') {
-    searchString = event.target.lastElementChild.value;
+    searchString = event.target.firstElementChild.value;
     $n2Date.addEventListener('change', function change(e) {
       var valid = checkDateIsValid(e.target.value.split('-'));
       if (valid) {
@@ -594,7 +597,7 @@ function getExercises() {
     tempSearchResults = results;
 
     for (var i = 0; i < results.length; i++) {
-      title = results[i].name.toUpperCase();
+      title = results[i].name;
       tag1 = muscleObjReverse[results[i].muscles[0]];
       tag2 = muscleObjReverse[results[i].muscles_secondary[0]];
       if (!tag2) {
@@ -700,11 +703,11 @@ function getDateDifferenceInDays(date) {
   date = Math.trunc(Date.parse(date) / 86400000);
 
   if (date - today === 0) {
-    return { when: 'TODAY', time: 0 };
+    return { when: 'Today', time: 0 };
   } else if (date - today === 1) {
-    return { when: 'TOMORROW', time: 1 };
+    return { when: 'Tomorrow', time: 1 };
   } else {
-    return { when: `IN ${date - today} DAYS`, time: date - today };
+    return { when: `In ${date - today} Days`, time: date - today };
   }
 }
 
@@ -854,7 +857,7 @@ function showNewExerciseInfoModal(event) {
     .join('')
     .split('</p>')
     .join('');
-  $descTitle.textContent = tempSearchResults[index].name.toUpperCase();
+  $descTitle.textContent = tempSearchResults[index].name;
   $infoModal.classList.remove('hidden');
 }
 
@@ -1003,7 +1006,7 @@ function newExercisesViewChanges() {
   $newExerCont.classList.remove('hidden');
   $upWorkCont.classList.add('hidden');
   $n1SearchCont.classList.remove('hidden');
-  $n1SearchCont.lastElementChild.focus();
+  $n1SearchCont.firstElementChild.focus();
   $nav2
     .querySelector('[data-text="upcoming-workouts"]')
     .classList.remove('dark-bg');
