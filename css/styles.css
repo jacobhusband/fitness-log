@@ -38,7 +38,7 @@ label {
 
 button {
   background-color: #222f3b;
-  border: 1px solid #5e503f;
+  border: 1px solid #0a0e11;
   font-size: 0.9rem;
   color: #d9d9d9;
   padding: 0.17rem 0.9rem;
@@ -200,6 +200,11 @@ input[type="date"] {
   font-weight: 500;
 }
 
+.modal-search-container {
+  text-align: right;
+  margin-bottom: 0.2rem;
+}
+
 .modal-search-container input {
   width: 12rem;
 }
@@ -233,8 +238,8 @@ input[type="date"] {
 
 .modal-search-result {
   width: 12rem;
-  border: 4px solid #263238;
   border-radius: 0.25rem;
+  border: 3px solid #0a0e11;
 }
 
 .modal-img-alignment img {
@@ -376,10 +381,12 @@ input[type="date"] {
   letter-spacing: 0.02rem;
 }
 
-.nav-1-search-container input {
+.nav-1-search-container select {
   font-size: 1.25rem;
-  width: 12rem;
-  border-radius: 0.3rem;
+  padding: 0.2rem;
+  border: 1px solid #0a0e11;
+  color: #717171;
+  border-radius: 0.2rem;
 }
 
 .date-to-workout {
@@ -394,8 +401,7 @@ input[type="date"] {
   width: 10rem;
   height: 30px;
   cursor: pointer;
-  border: 3px solid #5e503f;
-  border-radius: 0.5rem;
+  border-radius: 0.2rem;
 }
 
 .nav-2-date-text {
@@ -538,6 +544,10 @@ input[type="date"] {
   align-self: center;
 }
 
+.thick-border {
+  border-width: 3px;
+}
+
 @media only screen and (min-width: 768px) {
   button:hover {
     filter: brightness(120%);
@@ -605,10 +615,10 @@ input[type="date"] {
   .modal-search-result {
     width: auto;
     margin: 0 1rem 1.5rem;
-    border: 4px solid #222f3b;
     border-radius: 0.25rem;
     padding: 1rem;
     background-color: #0a0e11;
+    border: 3px solid #0a0e11;
   }
 
   .modal-img-alignment img {

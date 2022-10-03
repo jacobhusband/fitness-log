@@ -10,6 +10,7 @@ var userMessage = $main.querySelector('.user-message');
 var $n1SearchCont = $nav1.querySelector('.nav-1-search-container');
 var $pIconDesk = $nav1.querySelector('.plus-icon-container-desktop');
 var $pIconMob = $nav1.querySelector('.plus-icon-container-mobile');
+var $n2Date2Work = $nav2.querySelector('.date-to-workout');
 var $n2Date = $nav2.querySelector('.nav-2-date');
 var $upWorkContDesk = $upWorkCont.querySelector('.up-work-cont-desk');
 var $upWorkContMob = $upWorkCont.querySelector('.up-work-cont-mob');
@@ -17,6 +18,7 @@ var $noCont = $upWorkCont.querySelector('.no-content');
 var $modalContent = $workModal.querySelector('.work-mod-cont');
 var $descTitle = $infoModal.querySelector('.description-title');
 var $descText = $infoModal.querySelector('.description-text');
+var $n1Search = $n1SearchCont.querySelector('#workout-search-desktop');
 var $addExerModForm = $modalContent.querySelector('.add-exercise-modal-form');
 var $modSearchCont = $modalContent.querySelector('.modal-search-and-result');
 var $workModExit = $modalContent.querySelector('.work-mod-title img');
@@ -85,6 +87,8 @@ $n1SearchCont.addEventListener('submit', function () {
 $addExerModForm.addEventListener('submit', function () {
   searchForExercise(event, 'mobile');
 });
+$n1Search.addEventListener('input', removeSearchBorder);
+$n2Date.addEventListener('input', changeDate);
 
 modifyData();
 loadDataFromLocalMobile();
@@ -315,7 +319,7 @@ function createSearchElementDesktop(
         'div',
         {
           class:
-            'plus-icon-container pointer-cursor bright-hover ml-auto additional-workout'
+            'plus-icon-container-desktop pointer-cursor bright-hover ml-auto additional-workout'
         },
         [createElements('img', { src: 'images/plus.png', alt: 'plus icon' })]
       )
@@ -389,7 +393,7 @@ function createUpcomingWorkoutElementDesktop(
   return createElements(
     'li',
     {
-      class: 'modal-search-result margin-auto row',
+      class: 'modal-search-result normal-border thick-border margin-auto row',
       'dataset-id': id
     },
     [
@@ -488,7 +492,7 @@ function createVariedElements(
   return createElements(
     'li',
     {
-      class: 'modal-search-result margin-auto row',
+      class: 'modal-search-result normal-border thick-border margin-auto row',
       'dataset-id': id
     },
     [
@@ -540,23 +544,20 @@ function searchAndRemove(id) {
 }
 
 function searchForExercise(event, target) {
+  event.preventDefault();
   if (target === 'mobile') {
     searchString =
       event.target.firstElementChild.firstElementChild.firstElementChild.value;
   } else if (target === 'desktop') {
     searchString = event.target.firstElementChild.value;
-    $n2Date.addEventListener('change', function change(e) {
-      var valid = checkDateIsValid(e.target.value.split('-'));
-      if (valid) {
-        e.target.classList.add('green-border');
-        e.target.classList.remove('red-border');
-      } else {
-        e.target.classList.add('red-border');
-        e.target.classList.remove('green-border');
-      }
-    });
   }
-  event.preventDefault();
+  if (searchString === 'muscle-group') {
+    $n1Search.style.border = '3px solid red';
+    return;
+  }
+  if (target === 'desktop') {
+    $n2Date2Work.classList.remove('hidden');
+  }
   $modSearchCont.removeEventListener('click', listenForSearchResultClicks);
   saveChosenExercises();
   data.desktopCurrentDayView = 0;
@@ -742,7 +743,7 @@ function showUpcomingWorkoutInfoModal(event) {
 
 function listenForSearchResultClicks() {
   var li;
-  if (!event.target.matches('input#workout-search')) {
+  if (!event.target.matches('#workout-search-mobile')) {
     li = event.target.closest('li');
     if (li.classList.contains('green-border')) {
       selCount--;
@@ -956,7 +957,7 @@ function changeViews(event) {
     $newExerCont.classList.add('hidden');
     $upWorkCont.classList.remove('hidden');
     $n1SearchCont.classList.add('hidden');
-    $nav2.querySelector('.date-to-workout').classList.add('hidden');
+    $n2Date2Work.classList.add('hidden');
     saveChosenExercises();
     modifyNoContent();
     data.desktopCurrentDayView = 0;
@@ -1010,7 +1011,7 @@ function newExercisesViewChanges() {
   $nav2
     .querySelector('[data-text="upcoming-workouts"]')
     .classList.remove('dark-bg');
-  $nav2.querySelector('.date-to-workout').classList.remove('hidden');
+  $n2Date.classList.remove('green-border');
 }
 
 function changeView(event) {
@@ -1062,4 +1063,19 @@ function testIfiOS() {
     return true;
   }
   return false;
+}
+
+function changeDate(e) {
+  var valid = checkDateIsValid(e.target.value.split('-'));
+  if (valid) {
+    e.target.classList.add('green-border');
+    e.target.classList.remove('red-border');
+  } else {
+    e.target.classList.add('red-border');
+    e.target.classList.remove('green-border');
+  }
+}
+
+function removeSearchBorder(e) {
+  e.target.style.border = 'none';
 }
