@@ -18,6 +18,7 @@ var $noCont = $upWorkCont.querySelector('.no-content');
 var $modalContent = $workModal.querySelector('.work-mod-cont');
 var $descTitle = $infoModal.querySelector('.description-title');
 var $descText = $infoModal.querySelector('.description-text');
+var $n1Search = $n1SearchCont.querySelector('#workout-search-desktop');
 var $addExerModForm = $modalContent.querySelector('.add-exercise-modal-form');
 var $modSearchCont = $modalContent.querySelector('.modal-search-and-result');
 var $workModExit = $modalContent.querySelector('.work-mod-title img');
@@ -86,6 +87,8 @@ $n1SearchCont.addEventListener('submit', function () {
 $addExerModForm.addEventListener('submit', function () {
   searchForExercise(event, 'mobile');
 });
+$n1Search.addEventListener('input', removeSearchBorder);
+$n2Date.addEventListener('input', changeDate);
 
 modifyData();
 loadDataFromLocalMobile();
@@ -541,24 +544,20 @@ function searchAndRemove(id) {
 }
 
 function searchForExercise(event, target) {
+  event.preventDefault();
   if (target === 'mobile') {
     searchString =
       event.target.firstElementChild.firstElementChild.firstElementChild.value;
   } else if (target === 'desktop') {
-    $n2Date2Work.classList.remove('hidden');
     searchString = event.target.firstElementChild.value;
-    $n2Date.addEventListener('change', function change(e) {
-      var valid = checkDateIsValid(e.target.value.split('-'));
-      if (valid) {
-        e.target.classList.add('green-border');
-        e.target.classList.remove('red-border');
-      } else {
-        e.target.classList.add('red-border');
-        e.target.classList.remove('green-border');
-      }
-    });
   }
-  event.preventDefault();
+  if (searchString === 'muscle-group') {
+    $n1Search.style.border = '3px solid red';
+    return;
+  }
+  if (target === 'desktop') {
+    $n2Date2Work.classList.remove('hidden');
+  }
   $modSearchCont.removeEventListener('click', listenForSearchResultClicks);
   saveChosenExercises();
   data.desktopCurrentDayView = 0;
@@ -744,7 +743,7 @@ function showUpcomingWorkoutInfoModal(event) {
 
 function listenForSearchResultClicks() {
   var li;
-  if (!event.target.matches('input#workout-search')) {
+  if (!event.target.matches('#workout-search-mobile')) {
     li = event.target.closest('li');
     if (li.classList.contains('green-border')) {
       selCount--;
@@ -1064,4 +1063,19 @@ function testIfiOS() {
     return true;
   }
   return false;
+}
+
+function changeDate(e) {
+  var valid = checkDateIsValid(e.target.value.split('-'));
+  if (valid) {
+    e.target.classList.add('green-border');
+    e.target.classList.remove('red-border');
+  } else {
+    e.target.classList.add('red-border');
+    e.target.classList.remove('green-border');
+  }
+}
+
+function removeSearchBorder(e) {
+  e.target.style.border = 'none';
 }
