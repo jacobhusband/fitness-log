@@ -9,7 +9,7 @@ window.addEventListener('pagehide', function (event) {
 
 var data = JSON.parse(localStorage.getItem('data'));
 
-if (!data) {
+if (!data || !data.view || !data.nextExerciseId || !data.organizedExercises) {
   data = {
     view: 'upcoming-workouts',
     exercises: [],
