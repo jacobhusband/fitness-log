@@ -10,6 +10,7 @@ var userMessage = $main.querySelector('.user-message');
 var $n1SearchCont = $nav1.querySelector('.nav-1-search-container');
 var $pIconDesk = $nav1.querySelector('.plus-icon-container-desktop');
 var $pIconMob = $nav1.querySelector('.plus-icon-container-mobile');
+var $n2Date2Work = $nav2.querySelector('.date-to-workout');
 var $n2Date = $nav2.querySelector('.nav-2-date');
 var $upWorkContDesk = $upWorkCont.querySelector('.up-work-cont-desk');
 var $upWorkContMob = $upWorkCont.querySelector('.up-work-cont-mob');
@@ -540,7 +541,7 @@ function searchAndRemove(id) {
 }
 
 function searchForExercise(event, target) {
-  $n2Date.classList.remove('hidden');
+  $n2Date2Work.classList.remove('hidden');
   if (target === 'mobile') {
     searchString =
       event.target.firstElementChild.firstElementChild.firstElementChild.value;
@@ -957,7 +958,7 @@ function changeViews(event) {
     $newExerCont.classList.add('hidden');
     $upWorkCont.classList.remove('hidden');
     $n1SearchCont.classList.add('hidden');
-    $nav2.querySelector('.date-to-workout').classList.add('hidden');
+    $n2Date2Work.classList.add('hidden');
     saveChosenExercises();
     modifyNoContent();
     data.desktopCurrentDayView = 0;
