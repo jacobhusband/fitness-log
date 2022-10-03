@@ -315,7 +315,7 @@ function createSearchElementDesktop(
         'div',
         {
           class:
-            'plus-icon-container pointer-cursor bright-hover ml-auto additional-workout'
+            'plus-icon-container-desktop pointer-cursor bright-hover ml-auto additional-workout'
         },
         [createElements('img', { src: 'images/plus.png', alt: 'plus icon' })]
       )
@@ -540,6 +540,7 @@ function searchAndRemove(id) {
 }
 
 function searchForExercise(event, target) {
+  $n2Date.classList.remove('hidden');
   if (target === 'mobile') {
     searchString =
       event.target.firstElementChild.firstElementChild.firstElementChild.value;
@@ -1010,7 +1011,6 @@ function newExercisesViewChanges() {
   $nav2
     .querySelector('[data-text="upcoming-workouts"]')
     .classList.remove('dark-bg');
-  $nav2.querySelector('.date-to-workout').classList.remove('hidden');
 }
 
 function changeView(event) {
