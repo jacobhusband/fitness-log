@@ -70,7 +70,7 @@
             NEW EXERCISES
           </h2>
           <div class="date-to-workout hidden">
-            <input class="nav-2-date" type="date" name="nav-2-date"/>
+            <input class="nav-2-date thick-border" type="date" name="nav-2-date"/>
           </div>
         </div>
       </div>
@@ -103,12 +103,24 @@
             <form class="row row-lr-center add-exercise-modal-form">
               <div class="col modal-search-and-result">
                 <div class="modal-search-container">
-                  <input
-                    type="text"
-                    name="workoutSearch"
-                    id="workout-search"
-                    placeholder="legs, chest, arms"
-                  />
+                  <select name="workoutSearch" id="workout-search-mobile">
+                    <option value="muscle-group">muscle group</option>
+                    <option value="arms">arms</option>
+                    <option value="legs">legs</option>
+                    <option value="chest">chest</option>
+                    <option value="quads">quads</option>
+                    <option value="lats">lats</option>
+                    <option value="abs">abs</option>
+                    <option value="calves">calves</option>
+                    <option value="hamstrings">hamstrings</option>
+                    <option value="glutes">glutes</option>
+                    <option value="triceps">triceps</option>
+                    <option value="obliques">obliques</option>
+                    <option value="biceps">biceps</option>
+                    <option value="shoulder">shoulder</option>
+                    <option value="serratus-anterior">serratus anterior</option>
+                    <option value="soleus">soleus</option>
+                  </select>
                 </div>
                 <div class="mod-search-cont row flex-col"></div>
               </div>

@@ -390,7 +390,7 @@ function createUpcomingWorkoutElementDesktop(
   return createElements(
     'li',
     {
-      class: 'modal-search-result margin-auto row',
+      class: 'modal-search-result normal-border thick-border margin-auto row',
       'dataset-id': id
     },
     [
@@ -489,7 +489,7 @@ function createVariedElements(
   return createElements(
     'li',
     {
-      class: 'modal-search-result margin-auto row',
+      class: 'modal-search-result normal-border thick-border margin-auto row',
       'dataset-id': id
     },
     [
@@ -541,11 +541,11 @@ function searchAndRemove(id) {
 }
 
 function searchForExercise(event, target) {
-  $n2Date2Work.classList.remove('hidden');
   if (target === 'mobile') {
     searchString =
       event.target.firstElementChild.firstElementChild.firstElementChild.value;
   } else if (target === 'desktop') {
+    $n2Date2Work.classList.remove('hidden');
     searchString = event.target.firstElementChild.value;
     $n2Date.addEventListener('change', function change(e) {
       var valid = checkDateIsValid(e.target.value.split('-'));
@@ -1012,6 +1012,7 @@ function newExercisesViewChanges() {
   $nav2
     .querySelector('[data-text="upcoming-workouts"]')
     .classList.remove('dark-bg');
+  $n2Date.classList.remove('green-border');
 }
 
 function changeView(event) {

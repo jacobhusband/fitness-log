@@ -200,6 +200,11 @@ input[type="date"] {
   font-weight: 500;
 }
 
+.modal-search-container {
+  text-align: right;
+  margin-bottom: 0.2rem;
+}
+
 .modal-search-container input {
   width: 12rem;
 }
@@ -234,6 +239,7 @@ input[type="date"] {
 .modal-search-result {
   width: 12rem;
   border-radius: 0.25rem;
+  border: 3px solid #0a0e11;
 }
 
 .modal-img-alignment img {
@@ -538,6 +544,10 @@ input[type="date"] {
   align-self: center;
 }
 
+.thick-border {
+  border-width: 3px;
+}
+
 @media only screen and (min-width: 768px) {
   button:hover {
     filter: brightness(120%);
@@ -566,7 +576,6 @@ input[type="date"] {
   .plus-icon-container-desktop {
     align-self: center;
     display: block;
-    margin-right: 1rem;
   }
 
   .plus-icon-container-mobile {
@@ -609,6 +618,7 @@ input[type="date"] {
     border-radius: 0.25rem;
     padding: 1rem;
     background-color: #0a0e11;
+    border: 3px solid #0a0e11;
   }
 
   .modal-img-alignment img {
