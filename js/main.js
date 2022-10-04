@@ -215,6 +215,7 @@ function handleUpcomingWorkoutClicks(event) {
     reloadPage();
     if (data.organizedExercises.length === 0) {
       $upWorkContDesk.appendChild($noCont);
+      $upWorkContMob.appendChild($noCont);
       $noCont.classList.remove('hidden');
     }
   }
@@ -736,6 +737,9 @@ function listenForSearchResultClicks() {
       li.classList.add('green-border');
       li.classList.remove('normal-border');
       tempSelection[li.dataset.id] = li;
+      if (userYearMonthDay) {
+        dateValid = checkDateIsValid(userYearMonthDay);
+      }
     }
     checkIfUserCanAddExercise();
     checkIfUserCanNoLongerAddExercise();
