@@ -19,7 +19,7 @@ var data = {
 };
 
 for (var key in grabbedData) {
-  if (data[key] === undefined || Object.keys(data).length !== Object.keys(grabbedData).length) {
+  if (data[key] === undefined) {
     badData = true;
     break;
   }
