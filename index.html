@@ -70,7 +70,11 @@
             NEW EXERCISES
           </h2>
           <form class="date-to-workout row row-ud-center">
-            <input class="nav-2-date thick-border hidden" type="date" name="nav-2-date"/>
+            <input
+              class="nav-2-date thick-border hidden"
+              type="date"
+              name="nav-2-date"
+            />
             <button class="add-button-desktop hidden">Add</button>
           </form>
         </div>
@@ -81,7 +85,7 @@
         data-view="upcoming-workouts"
         class="container margin-auto upcoming-workouts-container"
       >
-        <div class="no-content row row-lr-center hidden">
+        <div class="no-content row row-lr-center">
           <p class="no-user-select">No exercises upcoming...</p>
         </div>
         <div class="up-work-cont-desk"></div>
@@ -90,10 +94,15 @@
       <div
         data-view="new-exercises"
         class="container margin-auto new-exercises-container hidden"
-      ></div>
+      >
+        <div class="no-content row row-lr-center new-exercises-empty">
+          <p class="no-user-select">Search for an exercise up above...</p>
+        </div>
+      </div>
       <div class="user-message hidden">
         <p>Select a valid date</p>
       </div>
+
       <div class="workout-modal modal hidden">
         <div class="modal-layout row row-lr-center">
           <div class="modal-content work-mod-cont text-align-center">

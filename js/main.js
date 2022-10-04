@@ -16,6 +16,7 @@ var $addButtonDesk = $n2Date2Work.querySelector('.add-button-desktop');
 var $upWorkContDesk = $upWorkCont.querySelector('.up-work-cont-desk');
 var $upWorkContMob = $upWorkCont.querySelector('.up-work-cont-mob');
 var $noCont = $upWorkCont.querySelector('.no-content');
+var $noNewExer = $newExerCont.querySelector('.new-exercises-empty');
 var $modalContent = $workModal.querySelector('.work-mod-cont');
 var $descTitle = $infoModal.querySelector('.description-title');
 var $descText = $infoModal.querySelector('.description-text');
@@ -127,6 +128,7 @@ function loadDataFromLocalMobile() {
 
 function loadDataFromLocalDesktop() {
   if (data.organizedExercises.length) {
+    $noCont.classList.add('hidden');
     $upWorkContDesk.appendChild(
       createElementForDaySeparatorDesktop(
         data.organizedExercises[data.desktopCurrentDayView][0].whenDo.when
@@ -211,6 +213,9 @@ function handleUpcomingWorkoutClicks(event) {
     var id = parseInt(event.target.closest('li').dataset.id);
     searchAndRemove(id);
     reloadPage();
+    if (!data.organizedExercises) {
+      $noCont.classList.remove('hidden');
+    }
   }
   if (event.target.matches('.separator-polygon')) {
     if (event.target.getAttribute('alt') === 'polygon right') {
@@ -771,7 +776,6 @@ function tryToAddWorkoutDesktop(event) {
       li.classList.remove('green-border');
     } else {
       li.classList.add('green-border');
-
     }
     checkAddButtonIsValid();
   }
@@ -1064,4 +1068,5 @@ function addExercisesDesk(event) {
   event.preventDefault();
   addExercises(event);
   $n2Date.classList.remove('green-border');
+  $newExerCont.appendChild($noNewExer);
 }
