@@ -15,7 +15,7 @@ var $n2Date = $nav2.querySelector('.nav-2-date');
 var $addButtonDesk = $n2Date2Work.querySelector('.add-button-desktop');
 var $upWorkContDesk = $upWorkCont.querySelector('.up-work-cont-desk');
 var $upWorkContMob = $upWorkCont.querySelector('.up-work-cont-mob');
-var $noCont = $upWorkCont.querySelector('.no-content');
+var $noCont = $upWorkCont.querySelector('.upcoming-workouts-empty');
 var $noNewExer = $newExerCont.querySelector('.new-exercises-empty');
 var $modalContent = $workModal.querySelector('.work-mod-cont');
 var $descTitle = $infoModal.querySelector('.description-title');
@@ -214,8 +214,7 @@ function handleUpcomingWorkoutClicks(event) {
     searchAndRemove(id);
     reloadPage();
     if (data.organizedExercises.length === 0) {
-      $upWorkContDesk.appendChild($noCont);
-      $upWorkContMob.appendChild($noCont);
+      $upWorkCont.appendChild($noCont);
       $noCont.classList.remove('hidden');
     }
   }
@@ -939,16 +938,16 @@ function upcomingWorkoutsViewChanges() {
   $n1SearchCont.classList.add('hidden');
   $n2Date.classList.add('hidden');
   $addButtonDesk.classList.add('hidden');
-  modifyNoContent();
+  tryToShowNoContent();
   data.desktopCurrentDayView = 0;
 }
 
-function modifyNoContent() {
+function tryToShowNoContent() {
   if (data.exercises.length === 0) {
-    $upWorkCont.querySelector('.no-content').classList.remove('hidden');
+    $noCont.classList.remove('hidden');
   }
   if (data.exercises.length > 0) {
-    $upWorkCont.querySelector('.no-content').classList.add('hidden');
+    $noCont.classList.add('hidden');
   }
 }
 
