@@ -319,22 +319,8 @@ function createSearchElementDesktop(
     textContent: 'INFO',
     class: 'info-button'
   });
-  var tagContainer = createElements(
-    'div',
-    { class: 'muscle-tag-container row' },
-    [
-      createElements('p', { textContent: tag1 }),
-      createElements('p', { textContent: tag2 }),
-      createElements(
-        'div',
-        {
-          class:
-            'plus-icon-container-desktop pointer-cursor bright-hover ml-auto additional-workout'
-        },
-        [createElements('img', { src: 'images/plus.png', alt: 'plus icon' })]
-      )
-    ]
-  );
+  var tagContainer = createTagContainer(tag1, tag2, 'plus');
+
   return createVariedElements(
     title,
     tag1,
@@ -357,14 +343,7 @@ function createSearchElementMobile(
     src: 'images/info.png',
     class: 'info-icon'
   });
-  var tagContainer = createElements(
-    'div',
-    { class: 'muscle-tag-container row flex-wrap' },
-    [
-      createElements('p', { textContent: tag1 }),
-      createElements('p', { textContent: tag2 })
-    ]
-  );
+  var tagContainer = createTagContainer(tag1, tag2);
   return createVariedElements(
     title,
     tag1,
@@ -383,23 +362,9 @@ function createUpcomingWorkoutElementDesktop(
   img = 'images/loading.png',
   id = false
 ) {
-  var imgElement = createElements('img', { src: img, alt: 'exercise' });
-  if (img === 'images/loading.png') {
-    imgElement = createElements('div', { class: 'lds-ring' }, [
-      createElements('div', {}),
-      createElements('div', {}),
-      createElements('div', {}),
-      createElements('div', {})
-    ]);
-  }
-  var tagContainer = createElements(
-    'div',
-    { class: 'muscle-tag-container row' },
-    [
-      createElements('p', { textContent: tag1 }),
-      createElements('p', { textContent: tag2 })
-    ]
-  );
+  var imgElement = createSpinner(img);
+  var tagContainer = createTagContainer(tag1, tag2);
+
   return createElements(
     'li',
     {
@@ -444,15 +409,8 @@ function createElementForMobileUpcomingWorkouts(
   img,
   id = false
 ) {
-  var imgElement = createElements('img', { src: img, alt: 'exercise' });
-  if (img === 'images/loading.png') {
-    imgElement = createElements('div', { class: 'lds-ring' }, [
-      createElements('div', {}),
-      createElements('div', {}),
-      createElements('div', {}),
-      createElements('div', {})
-    ]);
-  }
+  var imgElement = createSpinner(img);
+  var tagContainer = createTagContainer(tag1, tag2);
   return createElements(
     'li',
     { class: 'upcoming-workout-entry row', 'dataset-id': id },
@@ -472,10 +430,7 @@ function createElementForMobileUpcomingWorkouts(
             class: 'exit-icon '
           })
         ]),
-        createElements('div', { class: 'muscle-tag-container row' }, [
-          createElements('p', { textContent: tag1 }),
-          createElements('p', { textContent: tag2 })
-        ])
+        tagContainer
       ])
     ]
   );
@@ -490,15 +445,7 @@ function createVariedElements(
   img = 'images/loading.png',
   id = false
 ) {
-  var imgElement = createElements('img', { src: img, alt: 'exercise' });
-  if (img === 'images/loading.png') {
-    imgElement = createElements('div', { class: 'lds-ring' }, [
-      createElements('div', {}),
-      createElements('div', {}),
-      createElements('div', {}),
-      createElements('div', {})
-    ]);
-  }
+  var imgElement = createSpinner(img);
   return createElements(
     'li',
     {
@@ -526,6 +473,46 @@ function createVariedElements(
   );
 }
 
+function createSpinner(img) {
+  var imgElement = createElements('img', { src: img, alt: 'exercise' });
+  if (img === 'images/loading.png') {
+    imgElement = createElements('div', { class: 'lds-ring' }, [
+      createElements('div', {}),
+      createElements('div', {}),
+      createElements('div', {}),
+      createElements('div', {})
+    ]);
+  }
+  return imgElement;
+}
+
+function createTagContainer(tag1, tag2, plus = false) {
+  var firstTag = null;
+  var secondTag = null;
+  if (tag1) {
+    firstTag = createElements('p', { textContent: tag1 });
+  }
+  if (tag2) {
+    secondTag = createElements('p', { textContent: tag2 });
+  }
+  if (plus) {
+    plus = createElements(
+      'div',
+      {
+        class:
+          'plus-icon-container-desktop pointer-cursor bright-hover ml-auto additional-workout'
+      },
+      [createElements('img', { src: 'images/plus.png', alt: 'plus icon' })]
+    );
+  }
+  var tagContainer = createElements(
+    'div',
+    { class: 'muscle-tag-container row' },
+    [firstTag, secondTag, plus]
+  );
+  return tagContainer;
+}
+
 function createElements(tag, attributes, children = false) {
   var el = document.createElement(tag);
   for (var key in attributes) {
@@ -539,7 +526,9 @@ function createElements(tag, attributes, children = false) {
   }
   if (children) {
     children.forEach(child => {
-      el.appendChild(child);
+      if (child) {
+        el.appendChild(child);
+      }
     });
   }
   return el;
