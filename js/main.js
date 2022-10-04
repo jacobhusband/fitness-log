@@ -93,12 +93,11 @@ $n1Search.addEventListener('input', removeSearchBorder);
 $n2Date.addEventListener('input', changeDate);
 $n2Date2Work.addEventListener('submit', addExercisesDesk);
 
-modifyData();
-tryToHideNoContent();
-loadDataFromLocalMobile();
-loadDataFromLocalDesktop();
+updateTimeUntilWorkout();
+removeNoContentMessageIfApplicable();
+showDataOnPage();
 
-function modifyData() {
+function updateTimeUntilWorkout() {
   var newData = Object.assign({}, data);
   newData.exercises = [];
   data.exercises.forEach((exercise, ind) => {
@@ -110,7 +109,13 @@ function modifyData() {
   data.exercises = newData.exercises;
 }
 
-function loadDataFromLocalMobile() {
+function removeNoContentMessageIfApplicable() {
+  if (data.organizedExercises.length) {
+    $noCont.classList.add('hidden');
+  }
+}
+
+function showDataOnPage() {
   data.organizedExercises.forEach(exerciseArr => {
     $upWorkContMob.appendChild(
       createElementForDaySeparator(exerciseArr[0].whenDo.when, 'mobile')
@@ -121,9 +126,6 @@ function loadDataFromLocalMobile() {
       createElementForMobileUpcomingWorkouts
     );
   });
-}
-
-function loadDataFromLocalDesktop() {
   $upWorkContDesk.appendChild(
     createElementForDaySeparator(
       data.organizedExercises[data.desktopCurrentDayView][0].whenDo.when,
@@ -143,12 +145,6 @@ function populateWebpageWithData(arr, domParent, func) {
       func(obj.title, obj.tag1, obj.tag2, obj.imgURL, obj.id)
     );
   });
-}
-
-function tryToHideNoContent() {
-  if (data.organizedExercises.length) {
-    $noCont.classList.add('hidden');
-  }
 }
 
 function removeData() {
@@ -196,10 +192,9 @@ function organizeExercisesByDay() {
 
 function reloadPage() {
   removeData();
-  modifyData();
+  updateTimeUntilWorkout();
   organizeExercisesByDay();
-  loadDataFromLocalDesktop();
-  loadDataFromLocalMobile();
+  showDataOnPage();
 }
 
 function handleUpcomingWorkoutClicks(event) {
@@ -911,12 +906,11 @@ function addExercises(event) {
     data.nextExerciseId++;
   }
   removeData();
-  modifyData();
+  updateTimeUntilWorkout();
   removeSearchResults();
   clearTempData();
   organizeExercisesByDay();
-  loadDataFromLocalMobile();
-  loadDataFromLocalDesktop();
+  showDataOnPage();
   checkIfUserCanNoLongerAddExercise();
 }
 
