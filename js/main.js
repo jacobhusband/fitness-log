@@ -895,10 +895,10 @@ function addExercises(event) {
     tempSelection[key].classList.remove('green-border');
     tagContainer = tempSelection[key].querySelector('.muscle-tag-container');
 
-    if (tagContainer.length === 2) {
+    if (tagContainer.children.length === 2) {
       firstTagText = tagContainer.children[0].textContent;
       secondTagText = tagContainer.children[1].textContent;
-    } else if (tagContainer.length === 1) {
+    } else if (tagContainer.children.length === 1) {
       firstTagText = tagContainer.children[0].textContent;
     }
 
