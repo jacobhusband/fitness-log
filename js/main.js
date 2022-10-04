@@ -94,7 +94,7 @@ $n2Date.addEventListener('input', changeDate);
 $n2Date2Work.addEventListener('submit', addExercisesDesk);
 
 updateTimeUntilWorkout();
-removeNoContentMessageIfApplicable();
+tryToHideNoContentMessage();
 showDataOnPage();
 
 function updateTimeUntilWorkout() {
@@ -109,7 +109,7 @@ function updateTimeUntilWorkout() {
   data.exercises = newData.exercises;
 }
 
-function removeNoContentMessageIfApplicable() {
+function tryToHideNoContentMessage() {
   if (data.organizedExercises.length) {
     $noCont.classList.add('hidden');
   }
@@ -126,17 +126,19 @@ function showDataOnPage() {
       createElementForMobileUpcomingWorkouts
     );
   });
-  $upWorkContDesk.appendChild(
-    createElementForDaySeparator(
-      data.organizedExercises[data.desktopCurrentDayView][0].whenDo.when,
-      'desktop'
-    )
-  );
-  populateWebpageWithData(
-    data.organizedExercises[data.desktopCurrentDayView],
-    $upWorkContDesk,
-    createUpcomingWorkoutElementDesktop
-  );
+  if (data.organizedExercises.length) {
+    $upWorkContDesk.appendChild(
+      createElementForDaySeparator(
+        data.organizedExercises[data.desktopCurrentDayView][0].whenDo.when,
+        'desktop'
+      )
+    );
+    populateWebpageWithData(
+      data.organizedExercises[data.desktopCurrentDayView],
+      $upWorkContDesk,
+      createUpcomingWorkoutElementDesktop
+    );
+  }
 }
 
 function populateWebpageWithData(arr, domParent, func) {
@@ -147,7 +149,7 @@ function populateWebpageWithData(arr, domParent, func) {
   });
 }
 
-function removeData() {
+function removeElementsFromPage() {
   var mobileContent = $upWorkContMob.lastElementChild;
   var desktopContent = $upWorkContDesk.lastElementChild;
 
@@ -162,38 +164,41 @@ function removeData() {
   }
 }
 
-function organizeExercisesByDay() {
-  var organizedExercises = [];
-
+function groupExercisesByDay() {
+  var organizedExercises = giveGroupedExercisesInArr(data.exercises, []);
   var startLength = data.organizedExercises.length;
-
-  data.exercises.forEach(e => {
-    if (!organizedExercises[e.whenDo.time]) {
-      organizedExercises[e.whenDo.time] = [e];
-    } else {
-      organizedExercises[e.whenDo.time].push(e);
-    }
-  });
-
-  data.organizedExercises = [];
-
-  for (var i = 0; i < organizedExercises.length; i++) {
-    if (organizedExercises[i]) {
-      data.organizedExercises.push(organizedExercises[i]);
-    }
-  }
-
+  data.organizedExercises = removeFalsy(organizedExercises);
   var endLength = data.organizedExercises.length;
-
   if (endLength < startLength) {
     data.desktopCurrentDayView = 0;
   }
 }
 
+function giveGroupedExercisesInArr(exerciseArr, arr) {
+  exerciseArr.forEach(e => {
+    if (!arr[e.whenDo.time]) {
+      arr[e.whenDo.time] = [e];
+    } else {
+      arr[e.whenDo.time].push(e);
+    }
+  });
+  return arr;
+}
+
+function removeFalsy(oldArr) {
+  var arr = [];
+  for (var i = 0; i < oldArr.length; i++) {
+    if (oldArr[i]) {
+      arr.push(oldArr[i]);
+    }
+  }
+  return arr;
+}
+
 function reloadPage() {
-  removeData();
+  removeElementsFromPage();
   updateTimeUntilWorkout();
-  organizeExercisesByDay();
+  groupExercisesByDay();
   showDataOnPage();
 }
 
@@ -883,17 +888,26 @@ function setImgOfEl(url, el) {
 function addExercises(event) {
   var tempData = null;
   var tagContainer = null;
+  var firstTagText = null;
+  var secondTagText = null;
 
   for (var key in tempSelection) {
     tempSelection[key].classList.remove('green-border');
     tagContainer = tempSelection[key].querySelector('.muscle-tag-container');
 
+    if (tagContainer.length === 2) {
+      firstTagText = tagContainer.children[0].textContent;
+      secondTagText = tagContainer.children[1].textContent;
+    } else if (tagContainer.length === 1) {
+      firstTagText = tagContainer.children[0].textContent;
+    }
+
     tempData = {
       id: data.nextExerciseId,
       imgURL: tempSelection[key].querySelector('img').getAttribute('src'),
       title: tempSelection[key].querySelector('h3').textContent,
-      tag1: tagContainer.children[0].textContent,
-      tag2: tagContainer.children[1].textContent,
+      tag1: firstTagText,
+      tag2: secondTagText,
       date: userYearMonthDay,
       description: tempSearchResults[tempSelection[key].dataset.id].description
         .split('<p>')
@@ -905,13 +919,14 @@ function addExercises(event) {
     data.exercises.push(tempData);
     data.nextExerciseId++;
   }
-  removeData();
+  removeElementsFromPage();
   updateTimeUntilWorkout();
   removeSearchResults();
   clearTempData();
-  organizeExercisesByDay();
+  groupExercisesByDay();
   showDataOnPage();
   checkIfUserCanNoLongerAddExercise();
+  tryToHideNoContentMessage();
 }
 
 function changeViews(event) {
