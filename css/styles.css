@@ -372,7 +372,8 @@ input[type="date"] {
   display: none;
 }
 
-.nav-1-search-container button {
+.nav-1-search-container button,
+.add-button-desktop {
   font-size: 1.25rem;
   margin-right: 0.5rem;
   padding: 0.25rem 1rem;
@@ -562,7 +563,7 @@ input[type="date"] {
   }
 
   .date-to-workout {
-    display: block;
+    display: flex;
   }
 
   .up-work-cont-desk {
