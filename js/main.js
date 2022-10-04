@@ -213,7 +213,8 @@ function handleUpcomingWorkoutClicks(event) {
     var id = parseInt(event.target.closest('li').dataset.id);
     searchAndRemove(id);
     reloadPage();
-    if (!data.organizedExercises) {
+    if (data.organizedExercises.length === 0) {
+      $upWorkContDesk.appendChild($noCont);
       $noCont.classList.remove('hidden');
     }
   }
