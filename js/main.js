@@ -259,24 +259,25 @@ function handleModalContentClicks(event) {
     if (!testIfiOS()) {
       $dateInput.showPicker();
     }
-    $dateInput.addEventListener('input', function change(e) {
-      userYearMonthDay = e.target.value.split('-');
-      var date = checkDateIsValid(userYearMonthDay);
-      if (date) {
-        validDate();
-        $dateButton.classList.add('green-border');
-        $dateButton.classList.remove('red-border');
-      } else {
-        invalidDate();
-        $dateButton.classList.add('red-border');
-        $dateButton.classList.remove('green-border');
-      }
-      $dateButton.textContent = userYearMonthDay
-        .filter((item, ind) => ind > 0)
-        .join('/');
-      $dateInput.removeEventListener('input', change);
-    });
+    $dateInput.addEventListener('input', changeDateButton);
   }
+}
+
+function changeDateButton(e) {
+  userYearMonthDay = e.target.value.split('-');
+  var date = checkDateIsValid(userYearMonthDay);
+  if (date) {
+    validDate();
+    $dateButton.classList.add('green-border');
+    $dateButton.classList.remove('red-border');
+  } else {
+    invalidDate();
+    $dateButton.classList.add('red-border');
+    $dateButton.classList.remove('green-border');
+  }
+  $dateButton.textContent = userYearMonthDay
+    .filter((item, ind) => ind > 0)
+    .join('/');
 }
 
 function createElementForDaySeparatorDesktop(text) {
@@ -823,7 +824,7 @@ function hideModal(event) {
     event.target.matches('.workout-modal')
   ) {
     $workModal.classList.add('hidden');
-
+    $dateInput.removeEventListener('input', changeDateButton);
     window.removeEventListener('click', hideModal);
   }
 }
@@ -1027,6 +1028,7 @@ function addCurrentNavView(event = false) {
 
 function closeModal(event) {
   $workModal.classList.add('hidden');
+  $dateInput.removeEventListener('input', changeDateButton);
 }
 
 function testIfiOS() {
