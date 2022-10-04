@@ -12,6 +12,7 @@ var $pIconDesk = $nav1.querySelector('.plus-icon-container-desktop');
 var $pIconMob = $nav1.querySelector('.plus-icon-container-mobile');
 var $n2Date2Work = $nav2.querySelector('.date-to-workout');
 var $n2Date = $nav2.querySelector('.nav-2-date');
+var $addButtonDesk = $n2Date2Work.querySelector('.add-button-desktop');
 var $upWorkContDesk = $upWorkCont.querySelector('.up-work-cont-desk');
 var $upWorkContMob = $upWorkCont.querySelector('.up-work-cont-mob');
 var $noCont = $upWorkCont.querySelector('.no-content');
@@ -89,6 +90,7 @@ $addExerModForm.addEventListener('submit', function () {
 });
 $n1Search.addEventListener('input', removeSearchBorder);
 $n2Date.addEventListener('input', changeDate);
+$n2Date2Work.addEventListener('submit', addExercisesDesk);
 
 modifyData();
 loadDataFromLocalMobile();
@@ -556,10 +558,9 @@ function searchForExercise(event, target) {
     return;
   }
   if (target === 'desktop') {
-    $n2Date2Work.classList.remove('hidden');
+    $n2Date.classList.remove('hidden');
   }
   $modSearchCont.removeEventListener('click', listenForSearchResultClicks);
-  saveChosenExercises();
   data.desktopCurrentDayView = 0;
   removeSearchResults();
   getExercises();
@@ -615,33 +616,6 @@ function getExercises() {
 
   xhr.send();
 }
-
-// function getImages(exercise, el) {
-//   var xhr = new XMLHttpRequest();
-//   var workoutQuery = exercise.split(" ").join("_");
-//   var resultingImgURL = null;
-
-//   var targetUrl = encodeURIComponent(
-//     `https://imsea.herokuapp.com/api/1?q=person_doing_${workoutQuery}_exercise`
-//   );
-
-//   xhr.open("GET", "https://lfz-cors.herokuapp.com/?url=" + targetUrl);
-//   xhr.responseType = "json";
-
-//   xhr.addEventListener("load", function () {
-//     if (xhr.status !== 200) {
-//       return;
-//     }
-//     imageCount++;
-//     if (imageCount % 3 === 0) {
-//       document.documentElement.classList.remove("wait-cursor");
-//     }
-//     resultingImgURL = xhr.response.results[0];
-//     setImgOfEl(resultingImgURL, el);
-//   });
-
-//   xhr.send();
-// }
 
 function getImages2(exercise, el, el2) {
   const data = null;
@@ -778,14 +752,11 @@ function checkIfUserCanNoLongerAddExercise() {
 }
 
 function tryToAddWorkoutDesktop(event) {
-  var $date = $nav2.querySelector('.nav-2-date');
-  userYearMonthDay = $date.value.split('-');
-  var validDate = checkDateIsValid(userYearMonthDay);
+  userYearMonthDay = $n2Date.value.split('-');
+  dateValid = checkDateIsValid(userYearMonthDay);
   var li = event.target.closest('li');
 
-  if (!validDate) {
-    $date.classList.add('red-border');
-    $date.classList.remove('green-border');
+  if (!dateValid) {
     userMessage.classList.remove('hidden');
     userMessage.style.transform = `translate(${event.x + 20}px, ${
       event.y - 10
@@ -793,14 +764,16 @@ function tryToAddWorkoutDesktop(event) {
     setTimeout(() => {
       userMessage.classList.add('hidden');
     }, 2000);
-  } else if (validDate) {
-    $date.classList.remove('red-border');
-    $date.classList.add('green-border');
+  } else if (dateValid) {
+    tempSelection[li.dataset.id] = li;
     if (li.classList.contains('green-border')) {
+      delete tempSelection[li.dataset.id];
       li.classList.remove('green-border');
     } else {
       li.classList.add('green-border');
+
     }
+    checkAddButtonIsValid();
   }
 }
 
@@ -953,18 +926,22 @@ function changeViews(event) {
   }
   if (event.target.dataset.text === 'upcoming-workouts') {
     changeView(event);
-    $pIconDesk.classList.remove('hidden');
-    $newExerCont.classList.add('hidden');
-    $upWorkCont.classList.remove('hidden');
-    $n1SearchCont.classList.add('hidden');
-    $n2Date2Work.classList.add('hidden');
-    saveChosenExercises();
-    modifyNoContent();
-    data.desktopCurrentDayView = 0;
+    upcomingWorkoutsViewChanges();
   }
   if (event.target.matches('.nav-2-date')) {
     event.target.showPicker();
   }
+}
+
+function upcomingWorkoutsViewChanges() {
+  $pIconDesk.classList.remove('hidden');
+  $newExerCont.classList.add('hidden');
+  $upWorkCont.classList.remove('hidden');
+  $n1SearchCont.classList.add('hidden');
+  $n2Date.classList.add('hidden');
+  $addButtonDesk.classList.add('hidden');
+  modifyNoContent();
+  data.desktopCurrentDayView = 0;
 }
 
 function modifyNoContent() {
@@ -977,7 +954,7 @@ function modifyNoContent() {
 }
 
 function clearTempData() {
-  tempSearchResults = null;
+  tempSearchResults = [];
   tempSelection = {};
   selCount = 0;
   var el = $newExerCont.lastElementChild;
@@ -986,19 +963,6 @@ function clearTempData() {
     el = $newExerCont.lastElementChild;
   }
   $nav2.querySelector('.nav-2-date').value = '';
-}
-
-function saveChosenExercises() {
-  var searchResults = $newExerCont.children;
-
-  for (var i = 0; i < searchResults.length; i++) {
-    if (searchResults[i].classList.contains('green-border')) {
-      tempSelection[searchResults[i].dataset.id] = searchResults[i];
-    }
-  }
-
-  addExercises(null);
-  clearTempData();
 }
 
 function newExercisesViewChanges() {
@@ -1011,7 +975,13 @@ function newExercisesViewChanges() {
   $nav2
     .querySelector('[data-text="upcoming-workouts"]')
     .classList.remove('dark-bg');
-  $n2Date.classList.remove('green-border');
+  if (Object.keys(tempSelection).length > 0) {
+    $n2Date.classList.remove('hidden');
+    $addButtonDesk.classList.remove('hidden');
+  }
+  if (tempSearchResults.length > 0) {
+    $n2Date.classList.remove('hidden');
+  }
 }
 
 function changeView(event) {
@@ -1023,6 +993,7 @@ function changeView(event) {
 function showWorkModalMobile(event) {
   $workModal.classList.remove('hidden');
   window.addEventListener('click', hideModal);
+  dateValid = false;
 }
 
 function showWorkModalDesktop(event) {
@@ -1066,16 +1037,31 @@ function testIfiOS() {
 }
 
 function changeDate(e) {
-  var valid = checkDateIsValid(e.target.value.split('-'));
-  if (valid) {
+  dateValid = checkDateIsValid(e.target.value.split('-'));
+  if (dateValid) {
     e.target.classList.add('green-border');
     e.target.classList.remove('red-border');
   } else {
     e.target.classList.add('red-border');
     e.target.classList.remove('green-border');
   }
+  checkAddButtonIsValid();
 }
 
 function removeSearchBorder(e) {
   e.target.style.border = 'none';
+}
+
+function checkAddButtonIsValid() {
+  if (dateValid && Object.keys(tempSelection).length > 0) {
+    $addButtonDesk.classList.remove('hidden');
+  } else {
+    $addButtonDesk.classList.add('hidden');
+  }
+}
+
+function addExercisesDesk(event) {
+  event.preventDefault();
+  addExercises(event);
+  $n2Date.classList.remove('green-border');
 }
