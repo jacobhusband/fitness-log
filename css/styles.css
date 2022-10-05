@@ -295,6 +295,7 @@ input[type="date"] {
   height: 2rem;
   padding: 0 0.75rem;
   border: none;
+  display: none;
 }
 
 .modal-result-content > p {
@@ -382,6 +383,7 @@ input[type="date"] {
   width: 2rem;
   height: 2rem;
   margin: 0 0.5rem;
+  display: none;
 }
 
 .new-exercises-container {
@@ -436,6 +438,20 @@ input[type="date"] {
 
 .up-work-cont-desk {
   display: none;
+}
+
+.up-work-cont-desk > li {
+  background-color: #0a0e11;
+  margin: 1rem;
+  border-radius: 0.25rem;
+  border: 3px solid #0a0e11;
+}
+
+.up-work-cont-desk .image-container > img {
+  width: 126px;
+  height: 126px;
+  border-radius: 0.25rem;
+  border: 3px solid #5e503f;
 }
 
 .up-work-cont-mob {
@@ -609,6 +625,22 @@ input[type="date"] {
   }
 
   .nav-2 .new-exercises-text {
+    display: block;
+  }
+
+  .exit-icon {
+    display: none;
+  }
+
+  .info-icon {
+    display: none;
+  }
+
+  .exit-button {
+    display: block;
+  }
+
+  .info-button {
     display: block;
   }
 
