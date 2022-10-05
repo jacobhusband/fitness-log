@@ -93,11 +93,11 @@ $n1Search.addEventListener('input', removeSearchBorder);
 $n2Date.addEventListener('input', changeDate);
 $n2Date2Work.addEventListener('submit', addExercisesDesk);
 
-modifyData();
-loadDataFromLocalMobile();
-loadDataFromLocalDesktop();
+updateTimeUntilWorkout();
+tryToHideNoContentMessage();
+showDataOnPage();
 
-function modifyData() {
+function updateTimeUntilWorkout() {
   var newData = Object.assign({}, data);
   newData.exercises = [];
   data.exercises.forEach((exercise, ind) => {
@@ -109,46 +109,47 @@ function modifyData() {
   data.exercises = newData.exercises;
 }
 
-function loadDataFromLocalMobile() {
-  data.organizedExercises.forEach(e => {
-    $upWorkContMob.appendChild(createElementForDaySeparator(e[0].whenDo.when));
-    e.forEach(item => {
-      $upWorkContMob.appendChild(
-        createElementForMobileUpcomingWorkouts(
-          item.title,
-          item.tag1,
-          item.tag2,
-          item.imgURL,
-          item.id
-        )
-      );
-    });
-  });
-}
-
-function loadDataFromLocalDesktop() {
+function tryToHideNoContentMessage() {
   if (data.organizedExercises.length) {
     $noCont.classList.add('hidden');
-    $upWorkContDesk.appendChild(
-      createElementForDaySeparatorDesktop(
-        data.organizedExercises[data.desktopCurrentDayView][0].whenDo.when
-      )
-    );
-    data.organizedExercises[data.desktopCurrentDayView].forEach(item => {
-      $upWorkContDesk.appendChild(
-        createUpcomingWorkoutElementDesktop(
-          item.title,
-          item.tag1,
-          item.tag2,
-          item.imgURL,
-          item.id
-        )
-      );
-    });
   }
 }
 
-function removeData() {
+function showDataOnPage() {
+  data.organizedExercises.forEach(exerciseArr => {
+    $upWorkContMob.appendChild(
+      createElementForDaySeparator(exerciseArr[0].whenDo.when, 'mobile')
+    );
+    populateWebpageWithData(
+      exerciseArr,
+      $upWorkContMob,
+      createElementForMobileUpcomingWorkouts
+    );
+  });
+  if (data.organizedExercises.length) {
+    $upWorkContDesk.appendChild(
+      createElementForDaySeparator(
+        data.organizedExercises[data.desktopCurrentDayView][0].whenDo.when,
+        'desktop'
+      )
+    );
+    populateWebpageWithData(
+      data.organizedExercises[data.desktopCurrentDayView],
+      $upWorkContDesk,
+      createUpcomingWorkoutElementDesktop
+    );
+  }
+}
+
+function populateWebpageWithData(arr, domParent, func) {
+  arr.forEach(obj => {
+    domParent.appendChild(
+      func(obj.title, obj.tag1, obj.tag2, obj.imgURL, obj.id)
+    );
+  });
+}
+
+function removeElementsFromPage() {
   var mobileContent = $upWorkContMob.lastElementChild;
   var desktopContent = $upWorkContDesk.lastElementChild;
 
@@ -163,40 +164,42 @@ function removeData() {
   }
 }
 
-function organizeExercisesByDay() {
-  var organizedExercises = [];
-
+function groupExercisesByDay() {
+  var organizedExercises = getGroupedExercisesInArr(data.exercises, []);
   var startLength = data.organizedExercises.length;
-
-  data.exercises.forEach(e => {
-    if (!organizedExercises[e.whenDo.time]) {
-      organizedExercises[e.whenDo.time] = [e];
-    } else {
-      organizedExercises[e.whenDo.time].push(e);
-    }
-  });
-
-  data.organizedExercises = [];
-
-  for (var i = 0; i < organizedExercises.length; i++) {
-    if (organizedExercises[i]) {
-      data.organizedExercises.push(organizedExercises[i]);
-    }
-  }
-
+  data.organizedExercises = removeFalsy(organizedExercises);
   var endLength = data.organizedExercises.length;
-
   if (endLength < startLength) {
     data.desktopCurrentDayView = 0;
   }
 }
 
+function getGroupedExercisesInArr(exerciseArr, arr) {
+  exerciseArr.forEach(e => {
+    if (!arr[e.whenDo.time]) {
+      arr[e.whenDo.time] = [e];
+    } else {
+      arr[e.whenDo.time].push(e);
+    }
+  });
+  return arr;
+}
+
+function removeFalsy(oldArr) {
+  var arr = [];
+  for (var i = 0; i < oldArr.length; i++) {
+    if (oldArr[i]) {
+      arr.push(oldArr[i]);
+    }
+  }
+  return arr;
+}
+
 function reloadPage() {
-  removeData();
-  modifyData();
-  organizeExercisesByDay();
-  loadDataFromLocalDesktop();
-  loadDataFromLocalMobile();
+  removeElementsFromPage();
+  updateTimeUntilWorkout();
+  groupExercisesByDay();
+  showDataOnPage();
 }
 
 function handleUpcomingWorkoutClicks(event) {
@@ -211,7 +214,7 @@ function handleUpcomingWorkoutClicks(event) {
     event.target.matches('.exit-icon')
   ) {
     var id = parseInt(event.target.closest('li').dataset.id);
-    searchAndRemove(id);
+    removeExerciseFromData(id);
     reloadPage();
     if (data.organizedExercises.length === 0) {
       $upWorkCont.appendChild($noCont);
@@ -281,30 +284,30 @@ function changeDateButton(e) {
     .join('/');
 }
 
-function createElementForDaySeparatorDesktop(text) {
-  return createElements(
-    'div',
-    { class: 'row desktop-day-separator space-between' },
-    [
-      createElements('img', {
-        class: 'separator-polygon ',
-        src: 'images/polygon-left.png',
-        alt: 'polygon left'
-      }),
-      createElements('h1', { textContent: text }),
-      createElements('img', {
-        class: 'separator-polygon ',
-        src: 'images/polygon-right.png',
-        alt: 'polygon right'
-      })
-    ]
-  );
-}
-
-function createElementForDaySeparator(text) {
-  return createElements('div', { class: 'day-separator' }, [
-    createElements('h3', { textContent: text })
-  ]);
+function createElementForDaySeparator(text, target) {
+  if (target === 'mobile') {
+    return createElements('div', { class: 'day-separator' }, [
+      createElements('h3', { textContent: text })
+    ]);
+  } else if (target === 'desktop') {
+    return createElements(
+      'div',
+      { class: 'row desktop-day-separator space-between' },
+      [
+        createElements('img', {
+          class: 'separator-polygon ',
+          src: 'images/polygon-left.png',
+          alt: 'polygon left'
+        }),
+        createElements('h1', { textContent: text }),
+        createElements('img', {
+          class: 'separator-polygon ',
+          src: 'images/polygon-right.png',
+          alt: 'polygon right'
+        })
+      ]
+    );
+  }
 }
 
 function createSearchElementDesktop(
@@ -533,7 +536,7 @@ function createElements(tag, attributes, children = false) {
   return el;
 }
 
-function searchAndRemove(id) {
+function removeExerciseFromData(id) {
   data.exercises.forEach((exercise, ind) => {
     if (exercise.id === id) {
       data.exercises.splice(ind, 1);
@@ -885,17 +888,26 @@ function setImgOfEl(url, el) {
 function addExercises(event) {
   var tempData = null;
   var tagContainer = null;
+  var firstTagText = null;
+  var secondTagText = null;
 
   for (var key in tempSelection) {
     tempSelection[key].classList.remove('green-border');
     tagContainer = tempSelection[key].querySelector('.muscle-tag-container');
 
+    if (tagContainer.children.length === 2) {
+      firstTagText = tagContainer.children[0].textContent;
+      secondTagText = tagContainer.children[1].textContent;
+    } else if (tagContainer.children.length === 1) {
+      firstTagText = tagContainer.children[0].textContent;
+    }
+
     tempData = {
       id: data.nextExerciseId,
       imgURL: tempSelection[key].querySelector('img').getAttribute('src'),
       title: tempSelection[key].querySelector('h3').textContent,
-      tag1: tagContainer.children[0].textContent,
-      tag2: tagContainer.children[1].textContent,
+      tag1: firstTagText,
+      tag2: secondTagText,
       date: userYearMonthDay,
       description: tempSearchResults[tempSelection[key].dataset.id].description
         .split('<p>')
@@ -907,14 +919,14 @@ function addExercises(event) {
     data.exercises.push(tempData);
     data.nextExerciseId++;
   }
-  removeData();
-  modifyData();
+  removeElementsFromPage();
+  updateTimeUntilWorkout();
   removeSearchResults();
   clearTempData();
-  organizeExercisesByDay();
-  loadDataFromLocalMobile();
-  loadDataFromLocalDesktop();
+  groupExercisesByDay();
+  showDataOnPage();
   checkIfUserCanNoLongerAddExercise();
+  tryToHideNoContentMessage();
 }
 
 function changeViews(event) {
