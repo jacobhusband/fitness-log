@@ -214,6 +214,25 @@ input[type="date"] {
   width: 12rem;
 }
 
+.mod-search-cont > .upcoming-workout-entry {
+  padding: 0.25rem;
+  border: 3px solid #334b61;
+  border-radius: 3px;
+}
+
+.mod-search-cont .image-container > img {
+  outline: 2px solid #5e503f;
+}
+
+.mod-search-cont .title-and-buttons > img.info-icon {
+  position: relative;
+  top: 3px;
+}
+
+.mod-search-cont .title-and-buttons > img.exit-icon {
+  display: none;
+}
+
 .search-button {
   margin-bottom: 0.2rem;
 }
