@@ -6,7 +6,7 @@ var $upWorkCont = $main.querySelector('.upcoming-workouts-container');
 var $newExerCont = $main.querySelector('.new-exercises-container');
 var $workModal = $main.querySelector('.workout-modal');
 var $infoModal = $main.querySelector('.info-modal');
-var userMessage = $main.querySelector('.user-message');
+var $userMessage = $main.querySelector('.user-message');
 var $n1SearchCont = $nav1.querySelector('.nav-1-search-container');
 var $pIconDesk = $nav1.querySelector('.plus-icon-container-desktop');
 var $pIconMob = $nav1.querySelector('.plus-icon-container-mobile');
@@ -759,13 +759,15 @@ function tryToAddWorkoutDesktop(event) {
   var li = event.target.closest('li');
 
   if (!dateValid) {
-    userMessage.classList.remove('hidden');
-    userMessage.style.transform = `translate(${event.x + 20}px, ${
-      event.y - 10
+    var rect = $n2Date.getBoundingClientRect();
+    $userMessage.classList.remove('hidden');
+    $userMessage.style.transform = `translate(${rect.x + 5 + rect.width}px, ${
+      rect.y
     }px)`;
     setTimeout(() => {
-      userMessage.classList.add('hidden');
+      $userMessage.classList.add('hidden');
     }, 2000);
+    $n2Date.showPicker();
   } else if (dateValid) {
     tempSelection[li.dataset.id] = li;
     if (li.classList.contains('green-border')) {
