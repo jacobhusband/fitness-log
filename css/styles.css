@@ -36,6 +36,11 @@ label {
   color: #eaeaea;
 }
 
+ul {
+  margin: 0;
+  padding: 0;
+}
+
 button {
   background-color: #222f3b;
   border: 1px solid #0a0e11;
