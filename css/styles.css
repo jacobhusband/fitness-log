@@ -255,7 +255,6 @@ input[type="date"] {
 }
 
 .modal-result-content {
-  flex-grow: 2;
   margin: 0.4rem 0 0.4rem 0.1rem;
 }
 
@@ -424,6 +423,7 @@ input[type="date"] {
 }
 
 .muscle-tag-container {
+  flex-wrap: wrap;
   margin-bottom: 0.25rem;
 }
 
@@ -633,6 +633,11 @@ input[type="date"] {
 
   .title-and-buttons > h3 {
     font-size: 2rem;
+  }
+
+  .modal-result-content {
+    width: 100%;
+    margin: 0.4rem 0 0.4rem 0.1rem;
   }
 
   .modal-result-content > p {

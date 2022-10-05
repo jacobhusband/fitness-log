@@ -165,7 +165,7 @@ function removeElementsFromPage() {
 }
 
 function groupExercisesByDay() {
-  var organizedExercises = giveGroupedExercisesInArr(data.exercises, []);
+  var organizedExercises = getGroupedExercisesInArr(data.exercises, []);
   var startLength = data.organizedExercises.length;
   data.organizedExercises = removeFalsy(organizedExercises);
   var endLength = data.organizedExercises.length;
@@ -174,7 +174,7 @@ function groupExercisesByDay() {
   }
 }
 
-function giveGroupedExercisesInArr(exerciseArr, arr) {
+function getGroupedExercisesInArr(exerciseArr, arr) {
   exerciseArr.forEach(e => {
     if (!arr[e.whenDo.time]) {
       arr[e.whenDo.time] = [e];
@@ -214,7 +214,7 @@ function handleUpcomingWorkoutClicks(event) {
     event.target.matches('.exit-icon')
   ) {
     var id = parseInt(event.target.closest('li').dataset.id);
-    searchAndRemove(id);
+    removeExerciseFromData(id);
     reloadPage();
     if (data.organizedExercises.length === 0) {
       $upWorkCont.appendChild($noCont);
@@ -536,7 +536,7 @@ function createElements(tag, attributes, children = false) {
   return el;
 }
 
-function searchAndRemove(id) {
+function removeExerciseFromData(id) {
   data.exercises.forEach((exercise, ind) => {
     if (exercise.id === id) {
       data.exercises.splice(ind, 1);
