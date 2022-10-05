@@ -120,11 +120,7 @@ function showDataOnPage() {
     $upWorkContMob.appendChild(
       createElementForDaySeparator(exerciseArr[0].whenDo.when, 'mobile')
     );
-    populateWebpageWithData(
-      exerciseArr,
-      $upWorkContMob,
-      createElementForMobileUpcomingWorkouts
-    );
+    populateWebpageWithData(exerciseArr, $upWorkContMob, createLiElement);
   });
   if (data.organizedExercises.length) {
     $upWorkContDesk.appendChild(
@@ -136,7 +132,7 @@ function showDataOnPage() {
     populateWebpageWithData(
       data.organizedExercises[data.desktopCurrentDayView],
       $upWorkContDesk,
-      createUpcomingWorkoutElementDesktop
+      createLiElement
     );
   }
 }
@@ -310,54 +306,7 @@ function createElementForDaySeparator(text, target) {
   }
 }
 
-function createSearchElementDesktop(
-  title,
-  tag1,
-  tag2,
-  img = 'images/loading.png',
-  id = false
-) {
-  var buttonVersusImage = createElements('button', {
-    textContent: 'INFO',
-    class: 'info-button'
-  });
-  var tagContainer = createTagContainer(tag1, tag2, 'plus');
-
-  return createVariedElements(
-    title,
-    tag1,
-    tag2,
-    tagContainer,
-    buttonVersusImage,
-    img,
-    id
-  );
-}
-
-function createSearchElementMobile(
-  title,
-  tag1,
-  tag2,
-  img = 'images/loading.png',
-  id = false
-) {
-  var buttonVersusImage = createElements('img', {
-    src: 'images/info.png',
-    class: 'info-icon'
-  });
-  var tagContainer = createTagContainer(tag1, tag2);
-  return createVariedElements(
-    title,
-    tag1,
-    tag2,
-    tagContainer,
-    buttonVersusImage,
-    img,
-    id
-  );
-}
-
-function createUpcomingWorkoutElementDesktop(
+function createLiElement(
   title,
   tag1,
   tag2,
@@ -370,104 +319,38 @@ function createUpcomingWorkoutElementDesktop(
   return createElements(
     'li',
     {
-      class: 'modal-search-result normal-border thick-border margin-auto row',
+      class: 'upcoming-workout-entry row',
       'dataset-id': id
     },
     [
-      createElements('div', { class: 'col modal-img-alignment' }, [imgElement]),
+      createElements('div', { class: 'image-container row' }, [imgElement]),
       createElements(
         'div',
         {
-          class:
-            'row flex-col space-between modal-result-content text-align-left'
+          class: 'row flex-col space-between w-100'
         },
         [
-          createElements(
-            'div',
-            { class: 'row space-between title-and-buttons' },
-            [
-              createElements('h3', { textContent: title }),
-              createElements('button', {
-                textContent: 'INFO',
-                class: 'info-button'
-              }),
-              createElements('img', {
-                src: 'images/x.png',
-                class: 'exit-button '
-              })
-            ]
-          ),
-          tagContainer
-        ]
-      )
-    ]
-  );
-}
-
-function createElementForMobileUpcomingWorkouts(
-  title,
-  tag1,
-  tag2,
-  img,
-  id = false
-) {
-  var imgElement = createSpinner(img);
-  var tagContainer = createTagContainer(tag1, tag2);
-  return createElements(
-    'li',
-    { class: 'upcoming-workout-entry row', 'dataset-id': id },
-    [
-      createElements('div', { class: 'image-container col' }, [imgElement]),
-      createElements('div', { class: 'row flex-col space-between w-100' }, [
-        createElements('div', { class: 'row title-and-buttons pos-rel' }, [
-          createElements('h3', { textContent: title }),
-          createElements('img', {
-            src: 'images/info.png',
-            alt: 'info',
-            class: 'info-icon'
-          }),
-          createElements('img', {
-            src: 'images/exit.png',
-            alt: 'exit',
-            class: 'exit-icon '
-          })
-        ]),
-        tagContainer
-      ])
-    ]
-  );
-}
-
-function createVariedElements(
-  title,
-  tag1,
-  tag2,
-  tagContainer,
-  buttonVersusImage,
-  img = 'images/loading.png',
-  id = false
-) {
-  var imgElement = createSpinner(img);
-  return createElements(
-    'li',
-    {
-      class: 'modal-search-result normal-border thick-border margin-auto row',
-      'dataset-id': id
-    },
-    [
-      createElements('div', { class: 'col modal-img-alignment' }, [imgElement]),
-      createElements(
-        'div',
-        {
-          class:
-            'row flex-col space-between modal-result-content text-align-left'
-        },
-        [
-          createElements(
-            'div',
-            { class: 'row space-between title-and-buttons' },
-            [createElements('h3', { textContent: title }), buttonVersusImage]
-          ),
+          createElements('div', { class: 'row title-and-buttons pos-rel' }, [
+            createElements('h3', { textContent: title }),
+            createElements('img', {
+              src: 'images/info.png',
+              alt: 'info',
+              class: 'info-icon'
+            }),
+            createElements('img', {
+              src: 'images/exit.png',
+              alt: 'exit',
+              class: 'exit-icon'
+            }),
+            createElements('button', {
+              textContent: 'INFO',
+              class: 'info-button'
+            }),
+            createElements('img', {
+              src: 'images/x.png',
+              class: 'exit-button '
+            })
+          ]),
           tagContainer
         ]
       )
@@ -604,8 +487,8 @@ function getExercises() {
       if (!tag2) {
         tag2 = muscleObjReverse[results[i].muscles[1]];
       }
-      el = createSearchElementDesktop(title, tag1, tag2);
-      el2 = createSearchElementMobile(title, tag1, tag2);
+      el = createLiElement(title, tag1, tag2);
+      el2 = createLiElement(title, tag1, tag2);
       el.dataset.id = i;
       el2.dataset.id = i;
       pushWorkoutElement(el, el2);

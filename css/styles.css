@@ -218,6 +218,7 @@ input[type="date"] {
   padding: 0.25rem;
   border: 3px solid #334b61;
   border-radius: 3px;
+  width: 12rem;
 }
 
 .mod-search-cont .image-container > img {
