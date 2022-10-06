@@ -71,17 +71,23 @@ var muscleObjReverse = {
 
 $nav2.addEventListener('click', changeViews);
 $pIcon.addEventListener('click', handlePlusIconClicks);
-$modalContent.addEventListener('click', handleModalContentClicks);
+$workModal.addEventListener('click', handleModalContentClicks);
 $infoModal.addEventListener('click', handleInfoModalEvents);
 $newExerCont.addEventListener('click', handleNewExerciseContainerClicks);
 $upWorkCont.addEventListener('click', handleUpcomingWorkoutClicks);
 $modSearchCont.addEventListener('click', listenForSearchResultClicks);
-$n1SearchCont.addEventListener('submit', searchForExercise);
-$addExerModForm.addEventListener('submit', searchForExercise);
-$n2Date2Work.addEventListener('submit', handleAddButtonClicks);
-$addExerModForm.addEventListener('submit', handleAddButtonClicks);
 $n1Search.addEventListener('input', removeSearchBorder);
 $n2Date.addEventListener('input', changeDate);
+$n2Date2Work.addEventListener('submit', handleAddButtonClicks);
+$addExerModForm.addEventListener('submit', handleAddButtonClicks);
+$n1SearchCont.addEventListener('submit', function () {
+  searchForExercise(event, 'desktop');
+});
+$addExerModForm.addEventListener('submit', function () {
+  searchForExercise(event, 'mobile');
+});
+
+checkContentMessage();
 
 function handlePlusIconClicks(event) {
   var mobile = window.innerWidth < 768;
@@ -143,35 +149,49 @@ function handleModalContentClicks(event) {
   if (event.target.matches('.info-icon')) {
     showNewExerciseInfoModal(event);
   }
-  if (
-    event.target.matches('.date-button') ||
-    event.target.matches('.date-polygon') ||
-    event.target.matches("input[type='date']")
-  ) {
+  if (event.target.matches("input[type='date']")) {
     if (!testIfiOS()) {
       $dateInput.showPicker();
     }
     $dateInput.addEventListener('input', changeDateButton);
   }
+  if (
+    event.target.matches('.workout-modal') ||
+    event.target.matches("[src='images/exit.png']")
+  ) {
+    $workModal.classList.add('hidden');
+  }
 }
 
 function handleAddButtonClicks(event) {
+  event.preventDefault();
   if (event.submitter.className === 'search-button') {
     return;
   }
-  event.preventDefault();
   addExercisesToDataObj();
   resetSearchItems();
+  var lis = createLiElements(data.recentExercises[data.recentDate]);
   var ulContainer = checkForUlContainer();
   if (!ulContainer) {
-    ulContainer = createUlContainer();
+    ulContainer = createUlContainer(lis);
     $upWorkCont.appendChild(ulContainer);
   } else {
-    ulContainer = createUlContainer(ulContainer);
+    appendToUlContainer(lis, ulContainer);
+  }
+  checkContentMessage();
+}
+
+function checkContentMessage() {
+  if (Object.keys(data.exercises).length > 0) {
+    $noCont.classList.add('desktop-hidden');
+  } else {
+    $noCont.classList.remove('desktop-hidden');
   }
 }
 
-function showNewExerModal() {}
+function showNewExerModal() {
+  $workModal.classList.remove('hidden');
+}
 
 function changeDateButton(e) {
   userYearMonthDay = e.target.value.split('-');
@@ -197,6 +217,7 @@ function addExercisesToDataObj() {
   var secondTagText = null;
   var saveDate = userYearMonthDay.join('');
   data.recentDate = saveDate;
+  data.recentExercises = {};
 
   for (var key in tempSelection) {
     tagContainer = tempSelection[key].querySelector('.muscle-tag-container');
@@ -224,12 +245,13 @@ function addExercisesToDataObj() {
 
     if (!data.exercises[saveDate]) {
       data.exercises[saveDate] = [tempData];
+      data.recentExercises[saveDate] = [tempData];
     } else {
       data.exercises[saveDate].push(tempData);
+      data.recentExercises[saveDate].push(tempData);
     }
     data.nextExerciseId++;
   }
-  // resetPageContent();
 }
 
 function createElementForDaySeparator(text) {
@@ -256,26 +278,25 @@ function checkForUlContainer() {
   }
 }
 
-function createUlContainer(container = false) {
-  var lis = createLiElements(data.exercises[data.recentDate]);
-  if (!container) {
-    return createElements(
-      'ul',
-      { class: 'day-container', 'data-view': data.recentDate },
-      [
-        createElementForDaySeparator(
-          `${getDateDifferenceInDays(
-            data.exercises[data.recentDate][0].date.join('-')
-          )}`
-        ),
-        ...lis
-      ]
-    );
-  } else {
-    lis.forEach(li => {
-      container.appendChild(li);
-    });
-  }
+function createUlContainer(lis) {
+  return createElements(
+    'ul',
+    { class: 'day-container', 'data-view': data.recentDate },
+    [
+      createElementForDaySeparator(
+        `${getDateDifferenceInDays(
+          data.exercises[data.recentDate][0].date.join('-')
+        )}`
+      ),
+      ...lis
+    ]
+  );
+}
+
+function appendToUlContainer(lis, container) {
+  lis.forEach(li => {
+    container.appendChild(li);
+  });
 }
 
 function createLiElements(arrOfExers) {
@@ -411,6 +432,9 @@ function removeExerciseFromData(id) {
 
 function searchForExercise(event, target) {
   event.preventDefault();
+  if (event.submitter.className === 'add-button') {
+    return;
+  }
   if (target === 'mobile') {
     searchString =
       event.target.firstElementChild.firstElementChild.firstElementChild.value;
@@ -433,22 +457,18 @@ function searchForExercise(event, target) {
 
 function getExercises() {
   var xhr = new XMLHttpRequest();
-
   var targetUrl = encodeURIComponent(
     `https://wger.de/api/v2/exercise/?language=2&limit=3&muscles=${
       muscleObj[searchString.toLowerCase()]
     }`
   );
-
   xhr.open('GET', 'https://lfz-cors.herokuapp.com/?url=' + targetUrl);
   xhr.responseType = 'json';
-
   xhr.setRequestHeader(
     'Authorizaton',
     'Token 06533782073ec64f0c174e13f52373d8f19c0ae5'
   );
   xhr.setRequestHeader('Accept', 'application/json');
-
   xhr.addEventListener('load', function () {
     var results = xhr.response.results;
     var title = null;

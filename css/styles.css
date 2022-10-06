@@ -449,6 +449,10 @@ input[type="date"] {
   display: none;
 }
 
+.workout-modal .plus-icon-container {
+  display: none;
+}
+
 .work-mod-title > img {
   width: 1rem;
   height: 1rem;
@@ -537,6 +541,10 @@ input[type="date"] {
 
 .p-1r {
   padding: 1rem;
+}
+
+.green-border {
+  border-color: green;
 }
 
 .red-border {

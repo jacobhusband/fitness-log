@@ -16,11 +16,12 @@ var data = {
   nextExerciseId: 1,
   desktopCurrentDayView: 0,
   exercises: {},
+  recentExercises: {},
   recentDate: null
 };
 
-for (var key in grabbedData) {
-  if (data[key] === undefined) {
+for (var key in data) {
+  if (grabbedData[key] === undefined) {
     badData = true;
     break;
   }
