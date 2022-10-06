@@ -92,6 +92,7 @@ $addExerModForm.addEventListener('submit', function () {
 $n1Search.addEventListener('input', removeSearchBorder);
 $n2Date.addEventListener('input', changeDate);
 $n2Date2Work.addEventListener('submit', addExercisesDesk);
+$modSearchCont.addEventListener('click', listenForSearchResultClicks);
 
 updateTimeUntilWorkout();
 tryToHideNoContentMessage();
@@ -442,12 +443,10 @@ function searchForExercise(event, target) {
   if (target === 'desktop') {
     $n2Date.classList.remove('hidden');
   }
-  $modSearchCont.removeEventListener('click', listenForSearchResultClicks);
   data.desktopCurrentDayView = 0;
   removeSearchResults();
   getExercises();
   document.documentElement.classList.add('wait-cursor');
-  $modSearchCont.addEventListener('click', listenForSearchResultClicks);
   $addExerModForm.reset();
   $n1SearchCont.reset();
 }
@@ -598,41 +597,32 @@ function showUpcomingWorkoutInfoModal(event) {
 }
 
 function listenForSearchResultClicks() {
-  var li;
   if (!event.target.matches('#workout-search-mobile')) {
-    li = event.target.closest('li');
-    if (li.classList.contains('green-border')) {
-      selCount--;
-      li.classList.remove('green-border');
-      li.classList.add('normal-border');
+    var li = event.target.closest('li');
+    if (li.style.borderColor === '' || li.style.borderColor === '#334b61') {
+      li.style.borderColor = 'green';
+      selCount++;
       delete tempSelection[li.dataset.id];
     } else {
-      selCount++;
-      li.classList.add('green-border');
-      li.classList.remove('normal-border');
+      selCount--;
+      li.style.borderColor = '#334b61';
       tempSelection[li.dataset.id] = li;
       if (userYearMonthDay) {
         dateValid = checkDateIsValid(userYearMonthDay);
       }
     }
     checkIfUserCanAddExercise();
-    checkIfUserCanNoLongerAddExercise();
   }
 }
 
 function checkIfUserCanAddExercise() {
   if (selCount > 0 && dateValid && $addButton) {
     $addButton.classList.remove('low-brightness');
-    $addButton.removeAttribute('disabled');
     $addButton.addEventListener('click', addExercises);
+    $addButton.removeAttribute('disabled');
   }
-}
-
-function checkIfUserCanNoLongerAddExercise() {
   if ($addButton && (selCount === 0 || !dateValid)) {
-    $addButton.classList.add('low-brightness');
     $addButton.setAttribute('disabled', 'true');
-    $addButton.removeEventListener('click', addExercises);
   }
 }
 
@@ -665,7 +655,7 @@ function tryToAddWorkoutDesktop(event) {
 
 function invalidDate() {
   dateValid = false;
-  checkIfUserCanNoLongerAddExercise();
+  checkIfUserCanAddExercise();
 }
 
 function validDate() {
@@ -810,7 +800,7 @@ function addExercises(event) {
   clearTempData();
   groupExercisesByDay();
   showDataOnPage();
-  checkIfUserCanNoLongerAddExercise();
+  checkIfUserCanAddExercise();
   tryToHideNoContentMessage();
 }
 
