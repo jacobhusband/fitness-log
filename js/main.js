@@ -195,6 +195,7 @@ function loadContentOntoPage() {
     var lis = createLiElements(data.exercises[key]);
     $upWorkCont.appendChild(createUlContainer(lis, lis[0].dataset.date));
   }
+  hideAllButMostRecent();
 }
 
 function showNewExerModal() {
@@ -253,9 +254,12 @@ function addExercisesToDataObj() {
 
     if (!data.exercises[saveDate]) {
       data.exercises[saveDate] = [tempData];
-      data.recentExercises[saveDate] = [tempData];
     } else {
       data.exercises[saveDate].push(tempData);
+    }
+    if (!data.recentExercises[saveDate]) {
+      data.recentExercises[saveDate] = [tempData];
+    } else {
       data.recentExercises[saveDate].push(tempData);
     }
     data.nextExerciseId++;
@@ -786,6 +790,19 @@ function showUpcomingWorkoutsView() {
   $nav2.dataset.view = 'upcoming-workouts';
   $newExerCont.classList.add('desktop-hidden');
   $upWorkCont.classList.remove('desktop-hidden');
+  hideAllButMostRecent();
+}
+
+function hideAllButMostRecent() {
+  var notFirst = false;
+  for (var i = 0; i < $upWorkCont.children.length; i++) {
+    if ($upWorkCont.children[i].classList.contains('day-container')) {
+      if (notFirst) {
+        $upWorkCont.children[i].classList.add('desktop-hidden');
+      }
+      notFirst = true;
+    }
+  }
 }
 
 function testIfiOS() {
