@@ -441,14 +441,16 @@ input[type="date"] {
   display: none;
 }
 
-.up-work-cont-desk > li {
+.up-work-cont-desk > li,
+.new-exercises-container > li {
   background-color: #0a0e11;
   margin: 1rem;
   border-radius: 0.25rem;
   border: 3px solid #0a0e11;
 }
 
-.up-work-cont-desk .image-container > img {
+.up-work-cont-desk .image-container > img,
+.new-exercises-container .image-container > img {
   width: 126px;
   height: 126px;
   border-radius: 0.25rem;
