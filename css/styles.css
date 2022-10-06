@@ -442,7 +442,7 @@ input[type="date"] {
 }
 
 .up-work-cont-desk > li,
-.new-exercises-container > li {
+.new-exercises-container > li.upcoming-workout-entry {
   background-color: #0a0e11;
   margin: 1rem;
   border-radius: 0.25rem;
@@ -455,6 +455,12 @@ input[type="date"] {
   height: 126px;
   border-radius: 0.25rem;
   border: 3px solid #5e503f;
+}
+
+.up-work-cont-desk .plus-icon-container-desktop,
+.up-work-cont-mob .plus-icon-container-desktop,
+.modal-content .plus-icon-container-desktop {
+  display: none;
 }
 
 .up-work-cont-mob {
@@ -564,16 +570,8 @@ input[type="date"] {
   padding: 1rem;
 }
 
-.green-border {
-  border-color: green;
-}
-
 .red-border {
   border-color: red;
-}
-
-.normal-border {
-  border-color: #263238;
 }
 
 .low-brightness {
@@ -760,10 +758,6 @@ input[type="date"] {
 
   .separator-polygon:hover {
     cursor: pointer;
-  }
-
-  .green-border {
-    border-color: green;
   }
 
   .hidden {

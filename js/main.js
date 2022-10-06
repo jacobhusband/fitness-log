@@ -315,7 +315,7 @@ function createLiElement(
   id = false
 ) {
   var imgElement = createSpinner(img);
-  var tagContainer = createTagContainer(tag1, tag2);
+  var tagContainer = createTagContainer(tag1, tag2, 'true');
 
   return createElements(
     'li',
@@ -596,26 +596,26 @@ function showUpcomingWorkoutInfoModal(event) {
   $infoModal.classList.remove('hidden');
 }
 
-function listenForSearchResultClicks() {
+function listenForSearchResultClicks(event) {
   if (!event.target.matches('#workout-search-mobile')) {
     var li = event.target.closest('li');
     if (li.style.borderColor === '' || li.style.borderColor === '#334b61') {
       li.style.borderColor = 'green';
       selCount++;
       tempSelection[li.dataset.id] = li;
-      if (userYearMonthDay) {
-        dateValid = checkDateIsValid(userYearMonthDay);
-      }
     } else {
       selCount--;
       li.style.borderColor = '#334b61';
       delete tempSelection[li.dataset.id];
     }
-    checkIfUserCanAddExercise();
+    checkIfUserCanAddExerciseMobile();
   }
 }
 
-function checkIfUserCanAddExercise() {
+function checkIfUserCanAddExerciseMobile() {
+  if (userYearMonthDay) {
+    dateValid = checkDateIsValid(userYearMonthDay);
+  }
   if (selCount > 0 && dateValid && $addButton) {
     $addButton.classList.remove('low-brightness');
     $addButton.addEventListener('click', addExercises);
@@ -632,35 +632,39 @@ function tryToAddWorkoutDesktop(event) {
   var li = event.target.closest('li');
 
   if (!dateValid) {
-    var rect = $n2Date.getBoundingClientRect();
-    $userMessage.classList.remove('hidden');
-    $userMessage.style.transform = `translate(${rect.x + 5 + rect.width}px, ${
-      rect.y
-    }px)`;
+    showDateMessage();
     setTimeout(() => {
       $userMessage.classList.add('hidden');
     }, 2000);
     $n2Date.showPicker();
   } else if (dateValid) {
-    tempSelection[li.dataset.id] = li;
-    if (li.classList.contains('green-border')) {
+    if (li.borderColor === 'green') {
       delete tempSelection[li.dataset.id];
-      li.classList.remove('green-border');
+      li.style.borderColor = '#0a0e11';
     } else {
-      li.classList.add('green-border');
+      tempSelection[li.dataset.id] = li;
+      li.style.borderColor = 'green';
     }
     checkAddButtonIsValid();
   }
 }
 
+function showDateMessage() {
+  var rect = $n2Date.getBoundingClientRect();
+  $userMessage.classList.remove('hidden');
+  $userMessage.style.transform = `translate(${rect.x + 5 + rect.width}px, ${
+    rect.y
+  }px)`;
+}
+
 function invalidDate() {
   dateValid = false;
-  checkIfUserCanAddExercise();
+  checkIfUserCanAddExerciseMobile();
 }
 
 function validDate() {
   dateValid = true;
-  checkIfUserCanAddExercise();
+  checkIfUserCanAddExerciseMobile();
 }
 
 function checkDateIsValid(userYearMonthDay) {
@@ -803,7 +807,7 @@ function resetPageContent() {
   clearTempData();
   groupExercisesByDay();
   showDataOnPage();
-  checkIfUserCanAddExercise();
+  checkIfUserCanAddExerciseMobile();
   tryToHideNoContentMessage();
 }
 
