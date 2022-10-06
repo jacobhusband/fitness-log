@@ -19,8 +19,8 @@ var data = {
   recentDate: null
 };
 
-for (var key in data) {
-  if (grabbedData[key] === undefined) {
+for (var key in grabbedData) {
+  if (data[key] === undefined) {
     badData = true;
     break;
   }

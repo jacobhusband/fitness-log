@@ -269,11 +269,10 @@ function handleAddButtonClicks(event) {
   if (event.submitter.className === 'search-button') {
     return;
   }
-  var ulContainer = null;
   event.preventDefault();
   addExercisesToDataObj();
   resetSearchItems();
-  ulContainer = checkForUlContainer();
+  var ulContainer = checkForUlContainer();
   if (!ulContainer) {
     ulContainer = createUlContainer();
     $upWorkContDesk.appendChild(ulContainer);
@@ -342,7 +341,7 @@ function addExercisesToDataObj() {
   // resetPageContent();
 }
 
-function createElementForDaySeparator(text, target) {
+function createElementForDaySeparator(text) {
   return createElements('li', { class: 'row day-separator space-between' }, [
     createElements('img', {
       class: 'separator-polygon ',
@@ -372,7 +371,14 @@ function createUlContainer(container = false) {
     return createElements(
       'ul',
       { class: 'day-container', 'data-view': data.recentDate },
-      [createElementForDaySeparator, ...lis]
+      [
+        createElementForDaySeparator(
+          `${getDateDifferenceInDays(
+            data.exercises[data.recentDate][0].date.join('-')
+          )}`
+        ),
+        ...lis
+      ]
     );
   } else {
     lis.forEach(li => {
@@ -636,18 +642,17 @@ function getDateDifferenceInDays(date) {
       return x;
     })
     .join('-');
-  date = date.join('-');
   today += 'T00:00:00';
   date += 'T00:00:00';
   today = Math.trunc(Date.parse(today) / 86400000);
   date = Math.trunc(Date.parse(date) / 86400000);
 
   if (date - today === 0) {
-    return { when: 'Today', time: 0 };
+    return 'Today';
   } else if (date - today === 1) {
-    return { when: 'Tomorrow', time: 1 };
+    return 'Tomorrow';
   } else {
-    return { when: `In ${date - today} Days`, time: date - today };
+    return `In ${date - today} Days`;
   }
 }
 
