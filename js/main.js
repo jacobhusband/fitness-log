@@ -174,7 +174,7 @@ function handleAddButtonClicks(event) {
   var lis = createLiElements(data.recentExercises[data.recentDate]);
   var ulContainer = checkForUlContainer();
   if (!ulContainer) {
-    ulContainer = createUlContainer(lis);
+    ulContainer = createUlContainer(lis, data.recentDate);
     $upWorkCont.appendChild(ulContainer);
   } else {
     appendToUlContainer(lis, ulContainer);
@@ -193,7 +193,7 @@ function checkContentMessage() {
 function loadContentOntoPage() {
   for (var key in data.exercises) {
     var lis = createLiElements(data.exercises[key]);
-    $upWorkCont.appendChild(createUlContainer(lis));
+    $upWorkCont.appendChild(createUlContainer(lis, lis[0].dataset.date));
   }
 }
 
@@ -286,19 +286,13 @@ function checkForUlContainer() {
   }
 }
 
-function createUlContainer(lis) {
-  return createElements(
-    'ul',
-    { class: 'day-container', 'data-view': data.recentDate },
-    [
-      createElementForDaySeparator(
-        `${getDateDifferenceInDays(
-          data.exercises[data.recentDate][0].date.join('-')
-        )}`
-      ),
-      ...lis
-    ]
-  );
+function createUlContainer(lis, date) {
+  return createElements('ul', { class: 'day-container', 'data-view': date }, [
+    createElementForDaySeparator(
+      `${getDateDifferenceInDays(data.exercises[date][0].date.join('-'))}`
+    ),
+    ...lis
+  ]);
 }
 
 function appendToUlContainer(lis, container) {
@@ -310,7 +304,9 @@ function appendToUlContainer(lis, container) {
 function createLiElements(arrOfExers) {
   var output = [];
   arrOfExers.forEach(ex => {
-    output.push(createLiElement(ex.title, ex.tag1, ex.tag2, ex.imgURL, ex.id));
+    output.push(
+      createLiElement(ex.title, ex.tag1, ex.tag2, ex.imgURL, ex.id, ex.date)
+    );
   });
   return output;
 }
@@ -320,7 +316,8 @@ function createLiElement(
   tag1,
   tag2,
   img = 'images/loading.png',
-  id = false
+  id = false,
+  date = []
 ) {
   var imgElement = createSpinner(img);
   var tagContainer = createTagContainer(tag1, tag2, 'true');
@@ -329,7 +326,8 @@ function createLiElement(
     'li',
     {
       class: 'upcoming-workout-entry row',
-      'dataset-id': id
+      'dataset-id': id,
+      'dataset-date': date.join('')
     },
     [
       createElements('div', { class: 'image-container row' }, [imgElement]),
@@ -416,6 +414,8 @@ function createElements(tag, attributes, children = false) {
       el.dataset.id = attributes[key];
     } else if (key === 'dataset-view') {
       el.dataset.view = attributes[key];
+    } else if (key === 'dataset-date') {
+      el.dataset.date = attributes[key];
     } else {
       el.setAttribute(key, attributes[key]);
     }
