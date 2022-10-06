@@ -184,9 +184,9 @@ function handleAddButtonClicks(event) {
 
 function checkContentMessage() {
   if (Object.keys(data.exercises).length > 0) {
-    $noCont.classList.add('desktop-hidden');
+    $noCont.classList.add('hidden');
   } else {
-    $noCont.classList.remove('desktop-hidden');
+    $noCont.classList.remove('hidden');
   }
 }
 
