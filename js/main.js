@@ -16,7 +16,7 @@ var $addButtonDesk = $n2Date2Work.querySelector('.add-button-desktop');
 var $upWorkContDesk = $upWorkCont.querySelector('.up-work-cont-desk');
 var $upWorkContMob = $upWorkCont.querySelector('.up-work-cont-mob');
 var $noCont = $upWorkCont.querySelector('.upcoming-workouts-empty');
-var $noNewExer = $newExerCont.querySelector('.new-exercises-empty');
+// var $noNewExer = $newExerCont.querySelector(".new-exercises-empty");
 var $modalContent = $workModal.querySelector('.work-mod-cont');
 var $descTitle = $infoModal.querySelector('.description-title');
 var $descText = $infoModal.querySelector('.description-text');
@@ -91,12 +91,13 @@ $addExerModForm.addEventListener('submit', function () {
 });
 $n1Search.addEventListener('input', removeSearchBorder);
 $n2Date.addEventListener('input', changeDate);
-$n2Date2Work.addEventListener('submit', addExercisesDesk);
+$n2Date2Work.addEventListener('submit', handleAddButtonClicks);
+$addButton.addEventListener('submit', handleAddButtonClicks);
 $modSearchCont.addEventListener('click', listenForSearchResultClicks);
 
-updateTimeUntilWorkout();
-tryToHideNoContentMessage();
-showDataOnPage();
+// updateTimeUntilWorkout();
+// tryToHideNoContentMessage();
+// showDataOnPage();
 
 function updateTimeUntilWorkout() {
   var newData = Object.assign({}, data);
@@ -110,11 +111,11 @@ function updateTimeUntilWorkout() {
   data.exercises = newData.exercises;
 }
 
-function tryToHideNoContentMessage() {
-  if (data.organizedExercises.length) {
-    $noCont.classList.add('hidden');
-  }
-}
+// function tryToHideNoContentMessage() {
+//   if (data.organizedExercises.length) {
+//     $noCont.classList.add("hidden");
+//   }
+// }
 
 function showDataOnPage() {
   data.organizedExercises.forEach(exerciseArr => {
@@ -608,7 +609,6 @@ function checkIfUserCanAddExerciseMobile() {
   }
   if (selCount > 0 && dateValid && $addButton) {
     $addButton.classList.remove('low-brightness');
-    $addButton.addEventListener('click', addExercises);
     $addButton.removeAttribute('disabled');
   }
   if ($addButton && (selCount === 0 || !dateValid)) {
@@ -754,20 +754,21 @@ function setImgOfEl(url, el) {
   }
 }
 
-function addExercises(event) {
+function addExercisesToDataObj() {
   var tempData = null;
+  var saveDate = null;
   var tagContainer = null;
   var firstTagText = null;
   var secondTagText = null;
 
   for (var key in tempSelection) {
-    tempSelection[key].classList.remove('green-border');
     tagContainer = tempSelection[key].querySelector('.muscle-tag-container');
+    saveDate = userYearMonthDay.join('');
 
-    if (tagContainer.children.length === 2) {
+    if (tagContainer.children.length === 3) {
       firstTagText = tagContainer.children[0].textContent;
       secondTagText = tagContainer.children[1].textContent;
-    } else if (tagContainer.children.length === 1) {
+    } else if (tagContainer.children.length === 2) {
       firstTagText = tagContainer.children[0].textContent;
     }
 
@@ -784,22 +785,27 @@ function addExercises(event) {
         .split('</p>')
         .join('')
     };
-    data.exercises.push(tempData);
+
+    if (!data.exercises[saveDate]) {
+      data.exercises[saveDate] = [tempData];
+    } else {
+      data.exercises[saveDate].push(tempData);
+    }
     data.nextExerciseId++;
   }
-  resetPageContent();
+  // resetPageContent();
 }
 
-function resetPageContent() {
-  removeElementsFromPage();
-  updateTimeUntilWorkout();
-  removeSearchResults();
-  clearTempData();
-  groupExercisesByDay();
-  showDataOnPage();
-  checkIfUserCanAddExerciseMobile();
-  tryToHideNoContentMessage();
-}
+// function resetPageContent() {
+//   removeElementsFromPage();
+//   updateTimeUntilWorkout();
+//   removeSearchResults();
+//   clearTempData();
+//   groupExercisesByDay();
+//   showDataOnPage();
+//   checkIfUserCanAddExerciseMobile();
+//   tryToHideNoContentMessage();
+// }
 
 function changeViews(event) {
   if (event.target.dataset.text === 'new-exercises') {
@@ -835,17 +841,17 @@ function tryToShowNoContent() {
   }
 }
 
-function clearTempData() {
-  tempSearchResults = [];
-  tempSelection = {};
-  selCount = 0;
-  var el = $newExerCont.lastElementChild;
-  while (el) {
-    $newExerCont.removeChild(el);
-    el = $newExerCont.lastElementChild;
-  }
-  $nav2.querySelector('.nav-2-date').value = '';
-}
+// function clearTempData() {
+//   tempSearchResults = [];
+//   tempSelection = {};
+//   selCount = 0;
+//   var el = $newExerCont.lastElementChild;
+//   while (el) {
+//     $newExerCont.removeChild(el);
+//     el = $newExerCont.lastElementChild;
+//   }
+//   $nav2.querySelector(".nav-2-date").value = "";
+// }
 
 function newExercisesViewChanges() {
   $noCont.classList.add('hidden');
@@ -943,9 +949,15 @@ function checkAddButtonIsValid() {
   }
 }
 
-function addExercisesDesk(event) {
+function handleAddButtonClicks(event) {
   event.preventDefault();
-  addExercises(event);
+  addExercisesToDataObj();
+  resetSearchItems();
+}
+
+function resetSearchItems() {
+  for (var key in tempSelection) {
+    tempSelection[key].classList.remove('green-border');
+  }
   $n2Date.classList.remove('green-border');
-  $newExerCont.appendChild($noNewExer);
 }
