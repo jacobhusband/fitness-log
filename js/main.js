@@ -602,14 +602,14 @@ function listenForSearchResultClicks() {
     if (li.style.borderColor === '' || li.style.borderColor === '#334b61') {
       li.style.borderColor = 'green';
       selCount++;
-      delete tempSelection[li.dataset.id];
-    } else {
-      selCount--;
-      li.style.borderColor = '#334b61';
       tempSelection[li.dataset.id] = li;
       if (userYearMonthDay) {
         dateValid = checkDateIsValid(userYearMonthDay);
       }
+    } else {
+      selCount--;
+      li.style.borderColor = '#334b61';
+      delete tempSelection[li.dataset.id];
     }
     checkIfUserCanAddExercise();
   }
@@ -790,10 +790,13 @@ function addExercises(event) {
         .split('</p>')
         .join('')
     };
-
     data.exercises.push(tempData);
     data.nextExerciseId++;
   }
+  resetPageContent();
+}
+
+function resetPageContent() {
   removeElementsFromPage();
   updateTimeUntilWorkout();
   removeSearchResults();
