@@ -350,6 +350,14 @@ input[type="date"] {
   left: 0;
 }
 
+.upcoming-workouts-container .plus-icon-container {
+  display: none;
+}
+
+.new-exercises-container .exit-button {
+  display: none;
+}
+
 .plus-icon-container {
   align-self: center;
   display: block;
@@ -407,9 +415,13 @@ input[type="date"] {
 }
 
 .nav-1-search-container select {
-  font-size: 1.25rem;
-  padding: 0.2rem;
   border: 1px solid #0a0e11;
+  padding: 0.2rem;
+}
+
+.nav-1-search-container select,
+.nav-2-date {
+  font-size: 1.25rem;
   color: #717171;
   border-radius: 0.2rem;
 }
@@ -418,21 +430,6 @@ input[type="date"] {
   display: none;
   align-self: center;
   margin-left: auto;
-}
-
-.nav-2-date {
-  font-size: 1.25rem;
-  color: #717171;
-  width: 10rem;
-  height: 30px;
-  cursor: pointer;
-  border-radius: 0.2rem;
-}
-
-.nav-2-date-text {
-  position: relative;
-  top: 1px;
-  margin-right: 0.5rem;
 }
 
 .muscle-tag-container {
@@ -599,6 +596,12 @@ input[type="date"] {
     background-color: #564b3e;
   }
 
+  .nav-2[data-view="new-exercises"] .date-to-workout {
+    display: flex;
+    align-self: center;
+    margin-left: auto;
+  }
+
   .exit-icon {
     display: none;
   }
@@ -712,8 +715,8 @@ input[type="date"] {
     background-color: #2d2c30;
   }
 
-  .upcoming-workouts-container > li.upcoming-workout-entry,
-  .new-exercises-container > li.upcoming-workout-entry {
+  .upcoming-workouts-container li.upcoming-workout-entry,
+  .new-exercises-container li.upcoming-workout-entry {
     background-color: #0a0e11;
     margin: 1rem;
     border-radius: 0.25rem;

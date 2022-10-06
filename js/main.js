@@ -360,7 +360,7 @@ function createTagContainer(tag1, tag2, plus = false) {
       'div',
       {
         class:
-          'plus-icon-container-desktop pointer-cursor bright-hover ml-auto additional-workout'
+          'plus-icon-container pointer-cursor bright-hover ml-auto additional-workout'
       },
       [createElements('img', { src: 'images/plus.png', alt: 'plus icon' })]
     );
@@ -423,7 +423,6 @@ function searchForExercise(event, target) {
   removeSearchResults();
   getExercises();
   document.documentElement.classList.add('wait-cursor');
-  $addExerModForm.reset();
   $n1SearchCont.reset();
 }
 
@@ -671,7 +670,7 @@ function checkDateIsValid(userYearMonthDay) {
 }
 
 function showNewExerciseInfoModal(event) {
-  var index = event.target.closest('.modal-search-result').dataset.id;
+  var index = event.target.closest('li').dataset.id;
   $descText.textContent = tempSearchResults[index].description
     .split('<p>')
     .join('')
@@ -731,17 +730,20 @@ function setImgOfEl(url, el) {
 }
 
 function changeViews(event) {
-  if (event.target.dataset.text === 'new-exercises') {
+  if (
+    event.target.dataset.text === 'new-exercises' ||
+    event.target.matches('.plus-icon-container')
+  ) {
     $nav1.dataset.view = 'new-exercises';
     $nav2.dataset.view = 'new-exercises';
+    $upWorkCont.classList.add('desktop-hidden');
+    $newExerCont.classList.remove('desktop-hidden');
   }
   if (event.target.dataset.text === 'upcoming-workouts') {
     $nav1.dataset.view = 'upcoming-workouts';
     $nav2.dataset.view = 'upcoming-workouts';
-  }
-  if (event.target.matches('.plus-icon-container')) {
-    $nav1.dataset.view = 'new-exercises';
-    $nav2.dataset.view = 'new-exercises';
+    $newExerCont.classList.add('desktop-hidden');
+    $upWorkCont.classList.remove('desktop-hidden');
   }
   if (event.target.matches('.nav-2-date')) {
     event.target.showPicker();
