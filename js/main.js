@@ -13,10 +13,7 @@ var $pIconMob = $nav1.querySelector('.plus-icon-container-mobile');
 var $n2Date2Work = $nav2.querySelector('.date-to-workout');
 var $n2Date = $nav2.querySelector('.nav-2-date');
 var $addButtonDesk = $n2Date2Work.querySelector('.add-button-desktop');
-// var $upWorkContDesk = $upWorkCont.querySelector(".up-work-cont-desk");
-var $upWorkContMob = $upWorkCont.querySelector('.up-work-cont-mob');
 var $noCont = $upWorkCont.querySelector('.upcoming-workouts-empty');
-// var $noNewExer = $newExerCont.querySelector(".new-exercises-empty");
 var $modalContent = $workModal.querySelector('.work-mod-cont');
 var $descTitle = $infoModal.querySelector('.description-title');
 var $descText = $infoModal.querySelector('.description-text');
@@ -80,8 +77,7 @@ $nav2.addEventListener('click', changeViews);
 $modalContent.addEventListener('click', handleModalContentClicks);
 $infoModal.addEventListener('click', handleInfoModalEvents);
 $newExerCont.addEventListener('click', handleNewExerciseContainerClicks);
-$upWorkContMob.addEventListener('click', handleUpcomingWorkoutClicks);
-// $upWorkContDesk.addEventListener("click", handleUpcomingWorkoutClicks);
+$upWorkCont.addEventListener('click', handleUpcomingWorkoutClicks);
 $workModExit.addEventListener('click', closeModal);
 $n1SearchCont.addEventListener('submit', function () {
   searchForExercise(event, 'desktop');
@@ -168,7 +164,7 @@ function handleAddButtonClicks(event) {
   var ulContainer = checkForUlContainer();
   if (!ulContainer) {
     ulContainer = createUlContainer();
-    $upWorkContMob.appendChild(ulContainer);
+    $upWorkCont.appendChild(ulContainer);
   } else {
     ulContainer = createUlContainer(ulContainer);
   }
@@ -250,9 +246,9 @@ function createElementForDaySeparator(text) {
 }
 
 function checkForUlContainer() {
-  for (var i = 0; i < $upWorkContMob.children.length; i++) {
-    if ($upWorkContMob.children[i].dataset.view === data.recentDate) {
-      return $upWorkContMob.children[i];
+  for (var i = 0; i < $upWorkCont.children.length; i++) {
+    if ($upWorkCont.children[i].dataset.view === data.recentDate) {
+      return $upWorkCont.children[i];
     }
   }
 }
