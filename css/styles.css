@@ -141,14 +141,6 @@ input[type="date"] {
   padding: 1rem;
 }
 
-.plus-icon-container-mobile {
-  display: block;
-}
-
-.nav-1 .plus-icon-container-mobile {
-  padding: 12px;
-}
-
 .nav-2 {
   background-color: #5e503f;
   border-bottom: 1px solid #334b61;
@@ -358,6 +350,12 @@ input[type="date"] {
   left: 0;
 }
 
+.plus-icon-container {
+  align-self: center;
+  display: block;
+  margin-right: 0.75rem;
+}
+
 .day-separator {
   padding: 0.5rem 1rem;
   background-color: #2d2c30;
@@ -396,10 +394,6 @@ input[type="date"] {
   min-height: 100vh;
   padding-top: 2rem;
   background-color: #2d2c30;
-}
-
-.nav-1-search-container {
-  display: none;
 }
 
 .nav-1-search-container button,
@@ -441,40 +435,6 @@ input[type="date"] {
   margin-right: 0.5rem;
 }
 
-.up-work-cont-desk {
-  display: none;
-}
-
-.up-work-cont-desk > li.upcoming-workout-entry,
-.new-exercises-container > li.upcoming-workout-entry {
-  background-color: #0a0e11;
-  margin: 1rem;
-  border-radius: 0.25rem;
-  border: 3px solid #0a0e11;
-}
-
-.up-work-cont-desk .image-container > img,
-.new-exercises-container .image-container > img {
-  width: 126px;
-  height: 126px;
-  border-radius: 0.25rem;
-  border: 3px solid #5e503f;
-}
-
-.up-work-cont-desk .plus-icon-container-desktop,
-.up-work-cont-mob .plus-icon-container-desktop,
-.modal-content .plus-icon-container-desktop {
-  display: none;
-}
-
-.up-work-cont-mob {
-  display: block;
-}
-
-.plus-icon-container-desktop {
-  display: none;
-}
-
 .muscle-tag-container {
   flex-wrap: wrap;
   margin-bottom: 0.25rem;
@@ -482,6 +442,14 @@ input[type="date"] {
 
 .muscle-tag-container > p {
   padding: 0.1rem 0.75rem;
+}
+
+.nav-1[data-view="new-exercises"] .nav-1-search-container {
+  display: none;
+}
+
+.nav-1[data-view="upcoming-workouts"] .nav-1-search-container {
+  display: none;
 }
 
 .work-mod-title > img {
@@ -603,34 +571,32 @@ input[type="date"] {
     max-width: 720px;
   }
 
-  .nav-1-search-container {
-    display: flex;
-  }
-
-  .date-to-workout {
-    display: flex;
-  }
-
-  .up-work-cont-desk {
-    display: block;
-  }
-
-  .up-work-cont-mob {
+  .nav-1[data-view="upcoming-workouts"] .nav-1-search-container {
     display: none;
   }
 
-  .plus-icon-container-desktop {
-    align-self: center;
-    display: block;
+  .nav-1[data-view="upcoming-workouts"] .plus-icon-container {
+    display: flex;
   }
 
-  .plus-icon-container-mobile {
+  .nav-1[data-view="new-exercises"] .nav-1-search-container {
+    display: flex;
+  }
+
+  .nav-1[data-view="new-exercises"] .plus-icon-container {
     display: none;
-    padding: 1.4rem 0.8rem 0.5rem 0;
   }
 
   .nav-2 .new-exercises-text {
     display: block;
+  }
+
+  .nav-2[data-view="upcoming-workouts"] .upcoming-workouts-text {
+    background-color: #564b3e;
+  }
+
+  .nav-2[data-view="new-exercises"] .new-exercises-text {
+    background-color: #564b3e;
   }
 
   .exit-icon {
@@ -647,10 +613,6 @@ input[type="date"] {
 
   .info-button {
     display: block;
-  }
-
-  .dark-bg {
-    background-color: #514536;
   }
 
   .nav-1 h1 {
@@ -750,6 +712,22 @@ input[type="date"] {
     background-color: #2d2c30;
   }
 
+  .upcoming-workouts-container > li.upcoming-workout-entry,
+  .new-exercises-container > li.upcoming-workout-entry {
+    background-color: #0a0e11;
+    margin: 1rem;
+    border-radius: 0.25rem;
+    border: 3px solid #0a0e11;
+  }
+
+  .upcoming-workouts-container .image-container > img,
+  .new-exercises-container .image-container > img {
+    width: 126px;
+    height: 126px;
+    border-radius: 0.25rem;
+    border: 3px solid #5e503f;
+  }
+
   .upcoming-workouts-container {
     padding-top: 1rem;
   }
@@ -770,7 +748,7 @@ input[type="date"] {
     cursor: pointer;
   }
 
-  .hidden {
+  .desktop-hidden {
     display: none;
   }
 }

@@ -8,8 +8,7 @@ var $workModal = $main.querySelector('.workout-modal');
 var $infoModal = $main.querySelector('.info-modal');
 var $userMessage = $main.querySelector('.user-message');
 var $n1SearchCont = $nav1.querySelector('.nav-1-search-container');
-var $pIconDesk = $nav1.querySelector('.plus-icon-container-desktop');
-var $pIconMob = $nav1.querySelector('.plus-icon-container-mobile');
+var $pIcon = $nav1.querySelector('.plus-icon-container');
 var $n2Date2Work = $nav2.querySelector('.date-to-workout');
 var $n2Date = $nav2.querySelector('.nav-2-date');
 var $addButtonDesk = $n2Date2Work.querySelector('.add-button-desktop');
@@ -71,8 +70,7 @@ var muscleObjReverse = {
   15: 'Soleus'
 };
 
-$pIconDesk.addEventListener('click', showWorkModalDesktop);
-$pIconMob.addEventListener('click', showWorkModalMobile);
+$pIcon.addEventListener('click', changeViews);
 $nav2.addEventListener('click', changeViews);
 $modalContent.addEventListener('click', handleModalContentClicks);
 $infoModal.addEventListener('click', handleInfoModalEvents);
@@ -672,17 +670,6 @@ function checkDateIsValid(userYearMonthDay) {
   }
 }
 
-function hideModal(event) {
-  if (
-    event.target.matches('.modal-layout') ||
-    event.target.matches('.workout-modal')
-  ) {
-    $workModal.classList.add('hidden');
-    $dateInput.removeEventListener('input', changeDateButton);
-    window.removeEventListener('click', hideModal);
-  }
-}
-
 function showNewExerciseInfoModal(event) {
   var index = event.target.closest('.modal-search-result').dataset.id;
   $descText.textContent = tempSearchResults[index].description
@@ -745,91 +732,19 @@ function setImgOfEl(url, el) {
 
 function changeViews(event) {
   if (event.target.dataset.text === 'new-exercises') {
-    changeView(event);
-    newExercisesViewChanges();
+    $nav1.dataset.view = 'new-exercises';
+    $nav2.dataset.view = 'new-exercises';
   }
   if (event.target.dataset.text === 'upcoming-workouts') {
-    changeView(event);
-    upcomingWorkoutsViewChanges();
+    $nav1.dataset.view = 'upcoming-workouts';
+    $nav2.dataset.view = 'upcoming-workouts';
+  }
+  if (event.target.matches('.plus-icon-container')) {
+    $nav1.dataset.view = 'new-exercises';
+    $nav2.dataset.view = 'new-exercises';
   }
   if (event.target.matches('.nav-2-date')) {
     event.target.showPicker();
-  }
-}
-
-function upcomingWorkoutsViewChanges() {
-  $pIconDesk.classList.remove('hidden');
-  $newExerCont.classList.add('hidden');
-  $upWorkCont.classList.remove('hidden');
-  $n1SearchCont.classList.add('hidden');
-  $n2Date.classList.add('hidden');
-  $addButtonDesk.classList.add('hidden');
-  tryToShowNoContent();
-  data.desktopCurrentDayView = 0;
-}
-
-function tryToShowNoContent() {
-  if (data.exercises.length === 0) {
-    $noCont.classList.remove('hidden');
-  }
-  if (data.exercises.length > 0) {
-    $noCont.classList.add('hidden');
-  }
-}
-
-function newExercisesViewChanges() {
-  $noCont.classList.add('hidden');
-  $pIconDesk.classList.add('hidden');
-  $newExerCont.classList.remove('hidden');
-  $upWorkCont.classList.add('hidden');
-  $n1SearchCont.classList.remove('hidden');
-  $n1SearchCont.firstElementChild.focus();
-  $nav2
-    .querySelector('[data-text="upcoming-workouts"]')
-    .classList.remove('dark-bg');
-  if (Object.keys(tempSelection).length > 0) {
-    $n2Date.classList.remove('hidden');
-    $addButtonDesk.classList.remove('hidden');
-  }
-  if (tempSearchResults.length > 0) {
-    $n2Date.classList.remove('hidden');
-  }
-}
-
-function changeView(event) {
-  removeCurrentNavView();
-  data.view = event.target.dataset.text;
-  addCurrentNavView(event);
-}
-
-function showWorkModalMobile(event) {
-  $workModal.classList.remove('hidden');
-  window.addEventListener('click', hideModal);
-  dateValid = false;
-}
-
-function showWorkModalDesktop(event) {
-  removeCurrentNavView();
-  data.view = 'new-exercises';
-  addCurrentNavView();
-  newExercisesViewChanges();
-}
-
-function removeCurrentNavView() {
-  var navItem = $nav2.querySelector(`[data-text="${data.view}"`);
-  navItem.classList.remove('dark-bg');
-  navItem.classList.add('bright-hover');
-}
-
-function addCurrentNavView(event = false) {
-  var navItem = null;
-  if (event) {
-    event.target.classList.remove('bright-hover');
-    event.target.classList.add('dark-bg');
-  } else {
-    navItem = $nav2.querySelector(`[data-text="${data.view}"`);
-    navItem.classList.remove('bright-hover');
-    navItem.classList.add('dark-bg');
   }
 }
 
