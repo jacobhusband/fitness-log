@@ -19,7 +19,6 @@ var $descText = $infoModal.querySelector('.description-text');
 var $n1Search = $n1SearchCont.querySelector('#workout-search-desktop');
 var $addExerModForm = $modalContent.querySelector('.add-exercise-modal-form');
 var $modSearchCont = $modalContent.querySelector('.modal-search-and-result');
-var $workModExit = $modalContent.querySelector('.work-mod-title img');
 var $dateButton = $addExerModForm.querySelector('.date-button');
 var $dateInput = $addExerModForm.querySelector('.modal-date-picker');
 var $addButton = $addExerModForm.querySelector('.add-button');
@@ -70,24 +69,28 @@ var muscleObjReverse = {
   15: 'Soleus'
 };
 
-$pIcon.addEventListener('click', changeViews);
 $nav2.addEventListener('click', changeViews);
+$pIcon.addEventListener('click', handlePlusIconClicks);
 $modalContent.addEventListener('click', handleModalContentClicks);
 $infoModal.addEventListener('click', handleInfoModalEvents);
 $newExerCont.addEventListener('click', handleNewExerciseContainerClicks);
 $upWorkCont.addEventListener('click', handleUpcomingWorkoutClicks);
-$workModExit.addEventListener('click', closeModal);
-$n1SearchCont.addEventListener('submit', function () {
-  searchForExercise(event, 'desktop');
-});
-$addExerModForm.addEventListener('submit', function () {
-  searchForExercise(event, 'mobile');
-});
-$n1Search.addEventListener('input', removeSearchBorder);
-$n2Date.addEventListener('input', changeDate);
+$modSearchCont.addEventListener('click', listenForSearchResultClicks);
+$n1SearchCont.addEventListener('submit', searchForExercise);
+$addExerModForm.addEventListener('submit', searchForExercise);
 $n2Date2Work.addEventListener('submit', handleAddButtonClicks);
 $addExerModForm.addEventListener('submit', handleAddButtonClicks);
-$modSearchCont.addEventListener('click', listenForSearchResultClicks);
+$n1Search.addEventListener('input', removeSearchBorder);
+$n2Date.addEventListener('input', changeDate);
+
+function handlePlusIconClicks(event) {
+  var mobile = window.innerWidth < 768;
+  if (mobile) {
+    showNewExerModal();
+  } else {
+    showNewExercisesView();
+  }
+}
 
 function handleUpcomingWorkoutClicks(event) {
   if (
@@ -167,6 +170,8 @@ function handleAddButtonClicks(event) {
     ulContainer = createUlContainer(ulContainer);
   }
 }
+
+function showNewExerModal() {}
 
 function changeDateButton(e) {
   userYearMonthDay = e.target.value.split('-');
@@ -730,29 +735,29 @@ function setImgOfEl(url, el) {
 }
 
 function changeViews(event) {
-  if (
-    event.target.dataset.text === 'new-exercises' ||
-    event.target.matches('.plus-icon-container')
-  ) {
-    $nav1.dataset.view = 'new-exercises';
-    $nav2.dataset.view = 'new-exercises';
-    $upWorkCont.classList.add('desktop-hidden');
-    $newExerCont.classList.remove('desktop-hidden');
+  if (event.target.dataset.text === 'new-exercises') {
+    showNewExercisesView();
   }
   if (event.target.dataset.text === 'upcoming-workouts') {
-    $nav1.dataset.view = 'upcoming-workouts';
-    $nav2.dataset.view = 'upcoming-workouts';
-    $newExerCont.classList.add('desktop-hidden');
-    $upWorkCont.classList.remove('desktop-hidden');
+    showUpcomingWorkoutsView();
   }
   if (event.target.matches('.nav-2-date')) {
     event.target.showPicker();
   }
 }
 
-function closeModal(event) {
-  $workModal.classList.add('hidden');
-  $dateInput.removeEventListener('input', changeDateButton);
+function showNewExercisesView() {
+  $nav1.dataset.view = 'new-exercises';
+  $nav2.dataset.view = 'new-exercises';
+  $upWorkCont.classList.add('desktop-hidden');
+  $newExerCont.classList.remove('desktop-hidden');
+}
+
+function showUpcomingWorkoutsView() {
+  $nav1.dataset.view = 'upcoming-workouts';
+  $nav2.dataset.view = 'upcoming-workouts';
+  $newExerCont.classList.add('desktop-hidden');
+  $upWorkCont.classList.remove('desktop-hidden');
 }
 
 function testIfiOS() {
