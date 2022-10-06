@@ -88,6 +88,7 @@ $addExerModForm.addEventListener('submit', function () {
 });
 
 checkContentMessage();
+loadContentOntoPage();
 
 function handlePlusIconClicks(event) {
   var mobile = window.innerWidth < 768;
@@ -186,6 +187,13 @@ function checkContentMessage() {
     $noCont.classList.add('desktop-hidden');
   } else {
     $noCont.classList.remove('desktop-hidden');
+  }
+}
+
+function loadContentOntoPage() {
+  for (var key in data.exercises) {
+    var lis = createLiElements(data.exercises[key]);
+    $upWorkCont.appendChild(createUlContainer(lis));
   }
 }
 
