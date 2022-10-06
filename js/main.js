@@ -13,7 +13,7 @@ var $pIconMob = $nav1.querySelector('.plus-icon-container-mobile');
 var $n2Date2Work = $nav2.querySelector('.date-to-workout');
 var $n2Date = $nav2.querySelector('.nav-2-date');
 var $addButtonDesk = $n2Date2Work.querySelector('.add-button-desktop');
-var $upWorkContDesk = $upWorkCont.querySelector('.up-work-cont-desk');
+// var $upWorkContDesk = $upWorkCont.querySelector(".up-work-cont-desk");
 var $upWorkContMob = $upWorkCont.querySelector('.up-work-cont-mob');
 var $noCont = $upWorkCont.querySelector('.upcoming-workouts-empty');
 // var $noNewExer = $newExerCont.querySelector(".new-exercises-empty");
@@ -81,7 +81,7 @@ $modalContent.addEventListener('click', handleModalContentClicks);
 $infoModal.addEventListener('click', handleInfoModalEvents);
 $newExerCont.addEventListener('click', handleNewExerciseContainerClicks);
 $upWorkContMob.addEventListener('click', handleUpcomingWorkoutClicks);
-$upWorkContDesk.addEventListener('click', handleUpcomingWorkoutClicks);
+// $upWorkContDesk.addEventListener("click", handleUpcomingWorkoutClicks);
 $workModExit.addEventListener('click', closeModal);
 $n1SearchCont.addEventListener('submit', function () {
   searchForExercise(event, 'desktop');
@@ -94,111 +94,6 @@ $n2Date.addEventListener('input', changeDate);
 $n2Date2Work.addEventListener('submit', handleAddButtonClicks);
 $addExerModForm.addEventListener('submit', handleAddButtonClicks);
 $modSearchCont.addEventListener('click', listenForSearchResultClicks);
-
-// updateTimeUntilWorkout();
-// tryToHideNoContentMessage();
-// showDataOnPage();
-
-function updateTimeUntilWorkout() {
-  var newData = Object.assign({}, data);
-  newData.exercises = [];
-  data.exercises.forEach((exercise, ind) => {
-    exercise.whenDo = getDateDifferenceInDays(exercise.date);
-    if (exercise.whenDo.time >= 0) {
-      newData.exercises.push(exercise);
-    }
-  });
-  data.exercises = newData.exercises;
-}
-
-// function tryToHideNoContentMessage() {
-//   if (data.organizedExercises.length) {
-//     $noCont.classList.add("hidden");
-//   }
-// }
-
-function showDataOnPage() {
-  data.organizedExercises.forEach(exerciseArr => {
-    $upWorkContMob.appendChild(
-      createElementForDaySeparator(exerciseArr[0].whenDo.when, 'mobile')
-    );
-    populateWebpageWithData(exerciseArr, $upWorkContMob, createLiElement);
-  });
-  if (data.organizedExercises.length) {
-    $upWorkContDesk.appendChild(
-      createElementForDaySeparator(
-        data.organizedExercises[data.desktopCurrentDayView][0].whenDo.when,
-        'desktop'
-      )
-    );
-    populateWebpageWithData(
-      data.organizedExercises[data.desktopCurrentDayView],
-      $upWorkContDesk,
-      createLiElement
-    );
-  }
-}
-
-function populateWebpageWithData(arr, domParent, func) {
-  arr.forEach(obj => {
-    domParent.appendChild(
-      func(obj.title, obj.tag1, obj.tag2, obj.imgURL, obj.id)
-    );
-  });
-}
-
-function removeElementsFromPage() {
-  var mobileContent = $upWorkContMob.lastElementChild;
-  var desktopContent = $upWorkContDesk.lastElementChild;
-
-  while (mobileContent) {
-    $upWorkContMob.removeChild(mobileContent);
-    mobileContent = $upWorkContMob.lastElementChild;
-  }
-
-  while (desktopContent) {
-    $upWorkContDesk.removeChild(desktopContent);
-    desktopContent = $upWorkContDesk.lastElementChild;
-  }
-}
-
-function groupExercisesByDay() {
-  var organizedExercises = getGroupedExercisesInArr(data.exercises, []);
-  var startLength = data.organizedExercises.length;
-  data.organizedExercises = removeFalsy(organizedExercises);
-  var endLength = data.organizedExercises.length;
-  if (endLength < startLength) {
-    data.desktopCurrentDayView = 0;
-  }
-}
-
-function getGroupedExercisesInArr(exerciseArr, arr) {
-  exerciseArr.forEach(e => {
-    if (!arr[e.whenDo.time]) {
-      arr[e.whenDo.time] = [e];
-    } else {
-      arr[e.whenDo.time].push(e);
-    }
-  });
-  return arr;
-}
-
-function removeFalsy(oldArr) {
-  var arr = [];
-  for (var i = 0; i < oldArr.length; i++) {
-    if (oldArr[i]) {
-      arr.push(oldArr[i]);
-    }
-  }
-  return arr;
-}
-
-function reloadPage() {
-  removeElementsFromPage();
-  updateTimeUntilWorkout();
-  groupExercisesByDay();
-  showDataOnPage();
-}
 
 function handleUpcomingWorkoutClicks(event) {
   if (
@@ -213,7 +108,6 @@ function handleUpcomingWorkoutClicks(event) {
   ) {
     var id = parseInt(event.target.closest('li').dataset.id);
     removeExerciseFromData(id);
-    reloadPage();
     if (data.organizedExercises.length === 0) {
       $upWorkCont.appendChild($noCont);
       $noCont.classList.remove('hidden');
@@ -226,7 +120,6 @@ function handleUpcomingWorkoutClicks(event) {
     if (event.target.getAttribute('alt') === 'polygon left') {
       showPreviousDay();
     }
-    reloadPage();
   }
 }
 
@@ -275,7 +168,6 @@ function handleAddButtonClicks(event) {
   var ulContainer = checkForUlContainer();
   if (!ulContainer) {
     ulContainer = createUlContainer();
-    $upWorkContDesk.appendChild(ulContainer);
     $upWorkContMob.appendChild(ulContainer);
   } else {
     ulContainer = createUlContainer(ulContainer);
@@ -855,17 +747,6 @@ function setImgOfEl(url, el) {
   }
 }
 
-// function resetPageContent() {
-//   removeElementsFromPage();
-//   updateTimeUntilWorkout();
-//   removeSearchResults();
-//   clearTempData();
-//   groupExercisesByDay();
-//   showDataOnPage();
-//   checkIfUserCanAddExerciseMobile();
-//   tryToHideNoContentMessage();
-// }
-
 function changeViews(event) {
   if (event.target.dataset.text === 'new-exercises') {
     changeView(event);
@@ -899,18 +780,6 @@ function tryToShowNoContent() {
     $noCont.classList.add('hidden');
   }
 }
-
-// function clearTempData() {
-//   tempSearchResults = [];
-//   tempSelection = {};
-//   selCount = 0;
-//   var el = $newExerCont.lastElementChild;
-//   while (el) {
-//     $newExerCont.removeChild(el);
-//     el = $newExerCont.lastElementChild;
-//   }
-//   $nav2.querySelector(".nav-2-date").value = "";
-// }
 
 function newExercisesViewChanges() {
   $noCont.classList.add('hidden');
