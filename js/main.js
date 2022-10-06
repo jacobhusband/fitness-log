@@ -282,29 +282,19 @@ function changeDateButton(e) {
 }
 
 function createElementForDaySeparator(text, target) {
-  if (target === 'mobile') {
-    return createElements('div', { class: 'day-separator' }, [
-      createElements('h3', { textContent: text })
-    ]);
-  } else if (target === 'desktop') {
-    return createElements(
-      'div',
-      { class: 'row desktop-day-separator space-between' },
-      [
-        createElements('img', {
-          class: 'separator-polygon ',
-          src: 'images/polygon-left.png',
-          alt: 'polygon left'
-        }),
-        createElements('h1', { textContent: text }),
-        createElements('img', {
-          class: 'separator-polygon ',
-          src: 'images/polygon-right.png',
-          alt: 'polygon right'
-        })
-      ]
-    );
-  }
+  return createElements('li', { class: 'row day-separator space-between' }, [
+    createElements('img', {
+      class: 'separator-polygon ',
+      src: 'images/polygon-left.png',
+      alt: 'polygon left'
+    }),
+    createElements('h1', { textContent: text }),
+    createElements('img', {
+      class: 'separator-polygon ',
+      src: 'images/polygon-right.png',
+      alt: 'polygon right'
+    })
+  ]);
 }
 
 function createLiElement(
@@ -523,7 +513,7 @@ function getImages2(exercise, el, el2) {
 
   xhr.open(
     'GET',
-    `https://bing-image-search1.p.rapidapi.com/images/search?q=person_doing_${exercise}_exercise`
+    `https://bing-image-search1.p.rapidapi.com/images/search?q=person_doing_${exercise}_gym_workout`
   );
   xhr.setRequestHeader(
     'X-RapidAPI-Key',

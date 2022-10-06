@@ -12,14 +12,15 @@ var badData = false;
 
 var data = {
   view: 'upcoming-workouts',
-  exercises: [],
+  viewUpcoming: '',
   nextExerciseId: 1,
-  organizedExercises: [],
-  desktopCurrentDayView: 0
+  desktopCurrentDayView: 0,
+  exercises: [],
+  organizedExercises: []
 };
 
-for (var key in grabbedData) {
-  if (data[key] === undefined) {
+for (var key in data) {
+  if (grabbedData[key] === undefined) {
     badData = true;
     break;
   }
