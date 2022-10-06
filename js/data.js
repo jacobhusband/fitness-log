@@ -15,7 +15,8 @@ var data = {
   viewUpcoming: '',
   nextExerciseId: 1,
   desktopCurrentDayView: 0,
-  exercises: {}
+  exercises: {},
+  recentDate: null
 };
 
 for (var key in data) {
