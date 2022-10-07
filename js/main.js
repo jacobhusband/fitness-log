@@ -110,7 +110,8 @@ function handleUpcomingWorkoutClicks(event) {
     event.target.matches('.exit-button') ||
     event.target.matches('.exit-icon')
   ) {
-    var id = parseInt(event.target.closest('li').dataset.id);
+    var li = event.target.closest('li').remove();
+    var id = li.dataset.id;
     removeExerciseFromData(id);
     if (data.organizedExercises.length === 0) {
       $upWorkCont.appendChild($noCont);
@@ -191,11 +192,38 @@ function checkContentMessage() {
 }
 
 function loadContentOntoPage() {
+  removeOldContent();
   for (var key in data.exercises) {
     var lis = createLiElements(data.exercises[key]);
     $upWorkCont.appendChild(createUlContainer(lis, lis[0].dataset.date));
   }
   hideAllButMostRecent();
+}
+
+function removeOldContent() {
+  var today = getTodaysDate(true);
+  for (var key in data.exercises) {
+    if (parseInt(key) < parseInt(today)) {
+      delete data.exercises[key];
+    }
+  }
+}
+
+function getTodaysDate(simple = false) {
+  var today = new Date().toLocaleDateString().split('/');
+  today = [today[2], today[0], today[1]].map(x => {
+    if (x.length < 2) {
+      x = '0' + x[0];
+    }
+    return x;
+  });
+  if (simple) {
+    return today.join('');
+  }
+  today = today.join('-');
+  today += 'T00:00:00';
+  today = Math.trunc(Date.parse(today) / 86400000);
+  return today;
 }
 
 function showNewExerModal() {
@@ -547,26 +575,19 @@ function getImages2(exercise, el, el2) {
 }
 
 function getExerciseObjectGivenId(id) {
-  for (var i = 0; i < data.exercises.length; i++) {
-    if (data.exercises[i].id === parseInt(id)) {
-      return data.exercises[i];
+  for (var key in data.exercises) {
+    for (var i = 0; i < data.exercises[key].length; i++) {
+      if (parseInt(id) === data.exercises[key][i].id) {
+        return data.exercises[key][i];
+      }
     }
   }
 }
 
 function getDateDifferenceInDays(date) {
-  var today = new Date().toLocaleDateString().split('/');
-  today = [today[2], today[0], today[1]]
-    .map(x => {
-      if (x.length < 2) {
-        x = '0' + x[0];
-      }
-      return x;
-    })
-    .join('-');
-  today += 'T00:00:00';
+  var today = getTodaysDate();
+
   date += 'T00:00:00';
-  today = Math.trunc(Date.parse(today) / 86400000);
   date = Math.trunc(Date.parse(date) / 86400000);
 
   if (date - today === 0) {
