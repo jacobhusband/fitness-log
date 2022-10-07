@@ -87,7 +87,6 @@ $addExerModForm.addEventListener('submit', function () {
   searchForExercise(event, 'mobile');
 });
 
-checkContentMessage();
 loadContentOntoPage();
 
 function handlePlusIconClicks(event) {
@@ -110,13 +109,10 @@ function handleUpcomingWorkoutClicks(event) {
     event.target.matches('.exit-button') ||
     event.target.matches('.exit-icon')
   ) {
-    var li = event.target.closest('li').remove();
-    var id = li.dataset.id;
+    var li = event.target.closest('li');
+    var id = parseInt(li.dataset.id);
     removeExerciseFromData(id);
-    if (data.organizedExercises.length === 0) {
-      $upWorkCont.appendChild($noCont);
-      $noCont.classList.remove('hidden');
-    }
+    removeExerciseFromDOM(id);
   }
   if (event.target.matches('.separator-polygon')) {
     if (event.target.getAttribute('alt') === 'polygon right') {
@@ -183,6 +179,20 @@ function handleAddButtonClicks(event) {
   checkContentMessage();
 }
 
+function removeExerciseFromDOM(id) {
+  var element = $upWorkCont.querySelector(`[data-id='${id}']`);
+  var papa = element.parentElement;
+  var grandpa = papa.parentElement;
+  if (papa.children.length === 2) {
+    papa.remove();
+  } else {
+    element.remove();
+  }
+  if (grandpa.children.length === 1) {
+    $noCont.classList.remove('hidden');
+  }
+}
+
 function checkContentMessage() {
   if (Object.keys(data.exercises).length > 0) {
     $noCont.classList.add('hidden');
@@ -192,6 +202,7 @@ function checkContentMessage() {
 }
 
 function loadContentOntoPage() {
+  checkContentMessage();
   removeOldContent();
   for (var key in data.exercises) {
     var lis = createLiElements(data.exercises[key]);
@@ -463,11 +474,17 @@ function createElements(tag, attributes, children = false) {
 }
 
 function removeExerciseFromData(id) {
-  data.exercises.forEach((exercise, ind) => {
-    if (exercise.id === id) {
-      data.exercises.splice(ind, 1);
+  for (var key in data.exercises) {
+    for (var i = 0; i < data.exercises[key].length; i++) {
+      if (data.exercises[key][i].id === id) {
+        data.exercises[key].splice(i, 1);
+        if (data.exercises[key].length === 0) {
+          delete data.exercises[key];
+        }
+        return;
+      }
     }
-  });
+  }
 }
 
 function searchForExercise(event, target) {
