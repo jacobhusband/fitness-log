@@ -129,7 +129,7 @@ function handleNewExerciseContainerClicks(event) {
   if (event.target.matches('.info-button')) {
     showNewExerciseInfoModal(event);
   }
-  if (event.target.matches("img[src='images/plus.png']")) {
+  if (event.target.matches("img[src='images/plus.webp']")) {
     var li = event.target.closest('li');
     updateUserDate();
     showInvalidDate(event, li);
@@ -162,7 +162,7 @@ function handleModalContentClicks(event) {
   }
   if (
     event.target.matches('.workout-modal') ||
-    event.target.matches("[src='images/exit.png']")
+    event.target.matches("[src='images/exit.webp']")
   ) {
     $workModal.classList.add('hidden');
   }
@@ -345,13 +345,13 @@ function createElementForDaySeparator(text) {
   return createElements('li', { class: 'row day-separator space-between' }, [
     createElements('img', {
       class: 'separator-polygon ',
-      src: 'images/polygon-left.png',
+      src: 'images/polygon-left.webp',
       alt: 'polygon left'
     }),
     createElements('h1', { textContent: text }),
     createElements('img', {
       class: 'separator-polygon ',
-      src: 'images/polygon-right.png',
+      src: 'images/polygon-right.webp',
       alt: 'polygon right'
     })
   ]);
@@ -394,7 +394,7 @@ function createLiElement(
   title,
   tag1,
   tag2,
-  img = 'images/loading.png',
+  img = 'images/loading.webp',
   id = false,
   date = []
 ) {
@@ -419,12 +419,12 @@ function createLiElement(
           createElements('div', { class: 'row title-and-buttons pos-rel' }, [
             createElements('h3', { textContent: title }),
             createElements('img', {
-              src: 'images/info.png',
+              src: 'images/info.webp',
               alt: 'info',
               class: 'info-icon'
             }),
             createElements('img', {
-              src: 'images/exit.png',
+              src: 'images/exit.webp',
               alt: 'exit',
               class: 'exit-icon'
             }),
@@ -433,7 +433,7 @@ function createLiElement(
               class: 'info-button'
             }),
             createElements('img', {
-              src: 'images/x.png',
+              src: 'images/x.webp',
               class: 'exit-button '
             })
           ]),
@@ -446,7 +446,7 @@ function createLiElement(
 
 function createSpinner(img) {
   var imgElement = createElements('img', { src: img, alt: 'exercise' });
-  if (img === 'images/loading.png') {
+  if (img === 'images/loading.webp') {
     imgElement = createElements('div', { class: 'lds-ring' }, [
       createElements('div', {}),
       createElements('div', {}),
@@ -473,7 +473,7 @@ function createTagContainer(tag1, tag2, plus = false) {
         class:
           'plus-icon-container pointer-cursor bright-hover ml-auto additional-workout'
       },
-      [createElements('img', { src: 'images/plus.png', alt: 'plus icon' })]
+      [createElements('img', { src: 'images/plus.webp', alt: 'plus icon' })]
     );
   }
   var tagContainer = createElements(
