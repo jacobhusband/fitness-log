@@ -578,7 +578,6 @@ function getExercises() {
     var title = null;
     var tag1 = null;
     var tag2 = null;
-    var waitTime = null;
     var el;
     var el2;
 
@@ -586,7 +585,6 @@ function getExercises() {
     spinner.remove();
 
     for (var i = 0; i < results.length; i++) {
-      waitTime = 400 * (i + 1);
       title = results[i].name;
       tag1 = muscleObjReverse[results[i].muscles[0]];
       tag2 = muscleObjReverse[results[i].muscles_secondary[0]];
@@ -598,14 +596,14 @@ function getExercises() {
       el.dataset.id = i;
       el2.dataset.id = i;
       pushWorkoutElement(el, el2);
-      setTimeout(getImages, waitTime, results[i].name, el, el2);
+      getImages(results[i].name, el, el2);
     }
   });
 
   xhr.send();
 }
 
-function getImages(exercise, el, el2) {
+function getImagesBackup(exercise, el, el2) {
   const data = null;
   var resultingImgURL = null;
 
@@ -619,6 +617,7 @@ function getImages(exercise, el, el2) {
         resultingImgURL = 'images/image-not-found.webp';
         setImgOfEl(resultingImgURL, el);
         setImgOfEl(resultingImgURL, el2);
+        return;
       }
       imageCount++;
       if (imageCount % 3 === 0) {
@@ -641,6 +640,35 @@ function getImages(exercise, el, el2) {
   xhr.setRequestHeader('X-RapidAPI-Host', 'bing-image-search1.p.rapidapi.com');
 
   xhr.send(data);
+}
+
+function getImages(exercise, el, el2) {
+  var xhr = new XMLHttpRequest();
+  var workoutQuery = exercise.split(' ').join('_');
+  var resultingImgURL = null;
+
+  var targetUrl = encodeURIComponent(
+    `https://imsea.herokuapp.com/api/1?q=person_doing_${workoutQuery}_exercise`
+  );
+
+  xhr.open('GET', 'https://lfz-cors.herokuapp.com/?url=' + targetUrl);
+  xhr.responseType = 'json';
+
+  xhr.addEventListener('load', function () {
+    if (xhr.status !== 200) {
+      getImagesBackup(exercise, el, el2);
+      return;
+    }
+    imageCount++;
+    if (imageCount % 3 === 0) {
+      document.documentElement.classList.remove('wait-cursor');
+    }
+    resultingImgURL = xhr.response.results[0];
+    setImgOfEl(resultingImgURL, el);
+    setImgOfEl(resultingImgURL, el2);
+  });
+
+  xhr.send();
 }
 
 function getExerciseObjectGivenId(id) {
