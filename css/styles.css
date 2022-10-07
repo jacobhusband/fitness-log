@@ -549,10 +549,6 @@ input[type="date"] {
   align-self: center;
 }
 
-.thick-border {
-  border-width: 3px;
-}
-
 @media only screen and (min-width: 768px) {
   button:hover {
     filter: brightness(120%);

@@ -562,7 +562,7 @@ function addWaitingSpinner() {
 function getExercises() {
   var xhr = new XMLHttpRequest();
   var targetUrl = encodeURIComponent(
-    `https://wger.de/api/v2/exercise/?language=2&limit=3&muscles=${
+    `https://wger.de/api/v2/exercise/?language=2&limit=12&muscles=${
       muscleObj[searchString.toLowerCase()]
     }`
   );
@@ -578,6 +578,7 @@ function getExercises() {
     var title = null;
     var tag1 = null;
     var tag2 = null;
+    var waitTime = null;
     var el;
     var el2;
 
@@ -585,6 +586,7 @@ function getExercises() {
     spinner.remove();
 
     for (var i = 0; i < results.length; i++) {
+      waitTime = 400 * (i + 1);
       title = results[i].name;
       tag1 = muscleObjReverse[results[i].muscles[0]];
       tag2 = muscleObjReverse[results[i].muscles_secondary[0]];
@@ -596,14 +598,14 @@ function getExercises() {
       el.dataset.id = i;
       el2.dataset.id = i;
       pushWorkoutElement(el, el2);
-      getImages2(results[i].name, el, el2);
+      setTimeout(getImages, waitTime, results[i].name, el, el2);
     }
   });
 
   xhr.send();
 }
 
-function getImages2(exercise, el, el2) {
+function getImages(exercise, el, el2) {
   const data = null;
   var resultingImgURL = null;
 
@@ -614,7 +616,9 @@ function getImages2(exercise, el, el2) {
   xhr.addEventListener('readystatechange', function () {
     if (this.readyState === this.DONE) {
       if (xhr.status !== 200) {
-        return;
+        resultingImgURL = 'images/image-not-found.webp';
+        setImgOfEl(resultingImgURL, el);
+        setImgOfEl(resultingImgURL, el2);
       }
       imageCount++;
       if (imageCount % 3 === 0) {
@@ -632,7 +636,7 @@ function getImages2(exercise, el, el2) {
   );
   xhr.setRequestHeader(
     'X-RapidAPI-Key',
-    'df715051dbmshc5eedfd866e235dp134ff1jsnae215ea5e121'
+    '7554e57ef3msh1833d2c439a50a2p14b399jsnab00643335db'
   );
   xhr.setRequestHeader('X-RapidAPI-Host', 'bing-image-search1.p.rapidapi.com');
 
