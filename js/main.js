@@ -119,10 +119,10 @@ function handleUpcomingWorkoutClicks(event) {
   }
   if (event.target.matches('.separator-polygon')) {
     if (event.target.getAttribute('alt') === 'polygon right') {
-      showNextDay();
+      changeDayView(event, 'right');
     }
     if (event.target.getAttribute('alt') === 'polygon left') {
-      showPreviousDay();
+      changeDayView(event, 'left');
     }
   }
 }
@@ -583,19 +583,27 @@ function pushWorkoutElement(el, el2) {
   $newExerCont.appendChild(el);
 }
 
-function showNextDay() {
-  if (data.desktopCurrentDayView === data.organizedExercises.length - 1) {
-    data.desktopCurrentDayView = 0;
-  } else {
-    data.desktopCurrentDayView++;
-  }
-}
-
-function showPreviousDay() {
-  if (data.desktopCurrentDayView === 0) {
-    data.desktopCurrentDayView = data.organizedExercises.length - 1;
-  } else {
-    data.desktopCurrentDayView--;
+function changeDayView(event, direction) {
+  var ul = event.target.closest('ul');
+  var ulSibling;
+  var papa = ul.parentElement;
+  ul.classList.add('desktop-hidden');
+  if (direction === 'right') {
+    ulSibling = ul.nextElementSibling;
+    if (ulSibling) {
+      ulSibling.classList.remove('desktop-hidden');
+    } else {
+      papa.firstElementChild.nextElementSibling.classList.remove(
+        'desktop-hidden'
+      );
+    }
+  } else if (direction === 'left') {
+    ulSibling = ul.previousElementSibling;
+    if (!ulSibling.classList.contains('no-content')) {
+      ulSibling.classList.remove('desktop-hidden');
+    } else {
+      papa.lastElementChild.classList.remove('desktop-hidden');
+    }
   }
 }
 
