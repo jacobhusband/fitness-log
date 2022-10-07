@@ -32,6 +32,7 @@ var dateValid = false;
 
 var searchString = null;
 var userYearMonthDay = null;
+var spinner = null;
 
 var muscleObj = {
   biceps: 1,
@@ -542,9 +543,20 @@ function searchForExercise(event, target) {
   }
   data.desktopCurrentDayView = 0;
   removeSearchResults();
+  addWaitingSpinner();
   getExercises();
   document.documentElement.classList.add('wait-cursor');
   $n1SearchCont.reset();
+}
+
+function addWaitingSpinner() {
+  spinner = createElements(
+    'div',
+    { class: 'row w-100 row-ud-center row-lr-center' },
+    [createElements('div', { class: 'lds-hourglass' })]
+  );
+  $modResCont.appendChild(spinner);
+  $newExerCont.appendChild(spinner);
 }
 
 function getExercises() {
@@ -570,6 +582,7 @@ function getExercises() {
     var el2;
 
     tempSearchResults = results;
+    spinner.remove();
 
     for (var i = 0; i < results.length; i++) {
       title = results[i].name;
