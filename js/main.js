@@ -129,7 +129,13 @@ function handleNewExerciseContainerClicks(event) {
     showNewExerciseInfoModal(event);
   }
   if (event.target.matches("img[src='images/plus.png']")) {
-    tryToAddWorkoutDesktop(event);
+    var li = event.target.closest('li');
+    updateUserDate();
+    showInvalidDate(event, li);
+    if (dateValid) {
+      changeSelection(li);
+      checkAddButtonIsValid();
+    }
   }
 }
 
@@ -168,6 +174,8 @@ function handleAddButtonClicks(event) {
   }
   addExercisesToDataObj();
   resetSearchItems();
+  tempSelection = {};
+
   var lis = createLiElements(data.recentExercises[data.recentDate]);
   var ulContainer = checkForUlContainer();
   if (!ulContainer) {
@@ -177,6 +185,12 @@ function handleAddButtonClicks(event) {
     appendToUlContainer(lis, ulContainer);
   }
   checkContentMessage();
+  showUpcomingWorkoutsView();
+}
+
+function updateUserDate() {
+  userYearMonthDay = $n2Date.value.split('-');
+  dateValid = checkDateIsValid(userYearMonthDay);
 }
 
 function removeExerciseFromDOM(id) {
@@ -243,15 +257,13 @@ function showNewExerModal() {
 
 function changeDateButton(e) {
   userYearMonthDay = e.target.value.split('-');
-  var date = checkDateIsValid(userYearMonthDay);
-  if (date) {
-    validDate();
-    $dateButton.classList.add('green-border');
-    $dateButton.classList.remove('red-border');
+  dateValid = checkDateIsValid(userYearMonthDay);
+  if (dateValid) {
+    checkIfUserCanAddExerciseMobile();
+    $dateButton.style.borderColor = 'green';
   } else {
-    invalidDate();
-    $dateButton.classList.add('red-border');
-    $dateButton.classList.remove('green-border');
+    checkIfUserCanAddExerciseMobile();
+    $dateButton.style.borderColor = 'red';
   }
   $dateButton.textContent = userYearMonthDay
     .filter((item, ind) => ind > 0)
@@ -656,19 +668,20 @@ function showUpcomingWorkoutInfoModal(event) {
 function listenForSearchResultClicks(event) {
   if (!event.target.matches('#workout-search-mobile')) {
     var li = event.target.closest('li');
-    if (
-      li.style.borderColor === '' ||
-      li.style.borderColor === 'rgb(51, 75, 97)'
-    ) {
-      li.style.borderColor = 'green';
-      selCount++;
-      tempSelection[li.dataset.id] = li;
-    } else {
-      selCount--;
-      li.style.borderColor = '#334b61';
-      delete tempSelection[li.dataset.id];
-    }
+    changeSelection(li);
     checkIfUserCanAddExerciseMobile();
+  }
+}
+
+function changeSelection(li) {
+  if (li.style.borderColor === '') {
+    li.style.borderColor = 'green';
+    selCount++;
+    tempSelection[li.dataset.id] = li;
+  } else {
+    selCount--;
+    li.style.borderColor = '';
+    delete tempSelection[li.dataset.id];
   }
 }
 
@@ -685,26 +698,14 @@ function checkIfUserCanAddExerciseMobile() {
   }
 }
 
-function tryToAddWorkoutDesktop(event) {
-  userYearMonthDay = $n2Date.value.split('-');
-  dateValid = checkDateIsValid(userYearMonthDay);
-  var li = event.target.closest('li');
-
+function showInvalidDate(event, li) {
   if (!dateValid) {
     showDateMessage();
     setTimeout(() => {
       $userMessage.classList.add('hidden');
     }, 2000);
     $n2Date.showPicker();
-  } else if (dateValid) {
-    if (li.borderColor === 'green') {
-      delete tempSelection[li.dataset.id];
-      li.style.borderColor = '#0a0e11';
-    } else {
-      tempSelection[li.dataset.id] = li;
-      li.style.borderColor = 'green';
-    }
-    checkAddButtonIsValid();
+    $n2Date.style.borderColor = 'red';
   }
 }
 
@@ -716,17 +717,11 @@ function showDateMessage() {
   }px)`;
 }
 
-function invalidDate() {
-  dateValid = false;
-  checkIfUserCanAddExerciseMobile();
-}
-
-function validDate() {
-  dateValid = true;
-  checkIfUserCanAddExerciseMobile();
-}
-
 function checkDateIsValid(userYearMonthDay) {
+  if (!userYearMonthDay) {
+    return false;
+  }
+
   var date = null;
   var year = null;
   var month = null;
@@ -845,6 +840,8 @@ function hideAllButMostRecent() {
     if ($upWorkCont.children[i].classList.contains('day-container')) {
       if (notFirst) {
         $upWorkCont.children[i].classList.add('desktop-hidden');
+      } else {
+        $upWorkCont.children[i].classList.remove('desktop-hidden');
       }
       notFirst = true;
     }
@@ -863,13 +860,15 @@ function testIfiOS() {
 }
 
 function changeDate(e) {
-  dateValid = checkDateIsValid(e.target.value.split('-'));
+  userYearMonthDay = e.target.value.split('-');
+  if (!userYearMonthDay) {
+    return;
+  }
+  dateValid = checkDateIsValid(userYearMonthDay);
   if (dateValid) {
-    e.target.classList.add('green-border');
-    e.target.classList.remove('red-border');
+    e.target.style.borderColor = 'green';
   } else {
-    e.target.classList.add('red-border');
-    e.target.classList.remove('green-border');
+    e.target.style.borderColor = 'red';
   }
   checkAddButtonIsValid();
 }
@@ -888,7 +887,10 @@ function checkAddButtonIsValid() {
 
 function resetSearchItems() {
   for (var key in tempSelection) {
-    tempSelection[key].classList.remove('green-border');
+    tempSelection[key].style.borderColor = '';
   }
-  $n2Date.classList.remove('green-border');
+  $n2Date.style.borderColor = '';
+  $n2Date2Work.reset();
+  $addExerModForm.reset();
+  $addButtonDesk.classList.add('hidden');
 }
