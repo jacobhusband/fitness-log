@@ -175,6 +175,7 @@ function handleAddButtonClicks(event) {
   addExercisesToDataObj();
   resetSearchItems();
   tempSelection = {};
+  selCount = 0;
   var lis = createLiElements(data.recentExercises[data.recentDate]);
   var ulContainer = checkForUlContainer();
   if (!ulContainer) {
@@ -185,6 +186,8 @@ function handleAddButtonClicks(event) {
   }
   checkContentMessage();
   showUpcomingWorkoutsView();
+  showOrHideAddButtonMobile();
+  $workModal.classList.add('hidden');
 }
 
 function pushUlContainer(ulContainer) {
@@ -279,10 +282,10 @@ function changeDateButton(e) {
   userYearMonthDay = e.target.value.split('-');
   dateValid = checkDateIsValid(userYearMonthDay);
   if (dateValid) {
-    checkIfUserCanAddExerciseMobile();
+    showOrHideAddButtonMobile();
     $dateButton.style.borderColor = 'green';
   } else {
-    checkIfUserCanAddExerciseMobile();
+    showOrHideAddButtonMobile();
     $dateButton.style.borderColor = 'red';
   }
   $dateButton.textContent = userYearMonthDay
@@ -686,10 +689,13 @@ function showUpcomingWorkoutInfoModal(event) {
 }
 
 function listenForSearchResultClicks(event) {
-  if (!event.target.matches('#workout-search-mobile')) {
+  if (
+    !event.target.matches('#workout-search-mobile') &&
+    !event.target.matches('.info-icon')
+  ) {
     var li = event.target.closest('li');
     changeSelection(li);
-    checkIfUserCanAddExerciseMobile();
+    showOrHideAddButtonMobile();
   }
 }
 
@@ -705,15 +711,14 @@ function changeSelection(li) {
   }
 }
 
-function checkIfUserCanAddExerciseMobile() {
-  if (userYearMonthDay) {
-    dateValid = checkDateIsValid(userYearMonthDay);
-  }
+function showOrHideAddButtonMobile() {
+  dateValid = checkDateIsValid(userYearMonthDay);
   if (selCount > 0 && dateValid) {
     $addButton.classList.remove('low-brightness');
     $addButton.removeAttribute('disabled');
   }
   if (selCount === 0 || !dateValid) {
+    $addButton.classList.add('low-brightness');
     $addButton.setAttribute('disabled', 'true');
   }
 }
