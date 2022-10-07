@@ -329,6 +329,10 @@ input[type="date"] {
   right: 10px;
 }
 
+.edit-icon {
+  margin-right: 1rem;
+}
+
 .info-modal,
 .workout-modal {
   position: fixed;
@@ -463,7 +467,7 @@ input[type="date"] {
 
 .info-icon {
   margin-left: auto;
-  margin-right: 0.4rem;
+  margin-right: 1.35rem;
   position: relative;
   top: 2px;
 }
