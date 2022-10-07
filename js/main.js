@@ -424,6 +424,11 @@ function createLiElement(
               class: 'info-icon'
             }),
             createElements('img', {
+              src: 'images/edit.webp',
+              alt: 'edit',
+              class: 'edit-icon'
+            }),
+            createElements('img', {
               src: 'images/exit.webp',
               alt: 'exit',
               class: 'exit-icon'
@@ -431,6 +436,10 @@ function createLiElement(
             createElements('button', {
               textContent: 'INFO',
               class: 'info-button'
+            }),
+            createElements('button', {
+              textContent: 'EDIT',
+              class: 'edit-button'
             }),
             createElements('img', {
               src: 'images/x.webp',
