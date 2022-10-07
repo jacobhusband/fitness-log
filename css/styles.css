@@ -22,7 +22,8 @@ h3,
 h4,
 h5,
 h6,
-label {
+label,
+a {
   font-family: Oswald, sans-serif;
 }
 
@@ -30,10 +31,16 @@ h1,
 h2,
 h3,
 p,
-label {
+label,
+a {
   line-height: 1;
   margin: 0;
   color: #eaeaea;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
 }
 
 button {
@@ -125,6 +132,42 @@ input[type="date"] {
   }
 }
 
+.lds-hourglass {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.lds-hourglass::after {
+  content: " ";
+  display: block;
+  border-radius: 50%;
+  width: 0;
+  height: 0;
+  margin: 8px;
+  box-sizing: border-box;
+  border: 32px solid #fff;
+  border-color: #fff transparent;
+  animation: lds-hourglass 1.2s infinite;
+}
+
+@keyframes lds-hourglass {
+  0% {
+    transform: rotate(0);
+    animation-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+  }
+
+  50% {
+    transform: rotate(900deg);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+
+  100% {
+    transform: rotate(1800deg);
+  }
+}
+
 .nav-1 {
   background-color: #222f3b;
   filter: drop-shadow(0 0 0.1rem rgb(53, 53, 53));
@@ -136,20 +179,12 @@ input[type="date"] {
   padding: 1rem;
 }
 
-.plus-icon-container-mobile {
-  display: block;
-}
-
-.nav-1 .plus-icon-container-mobile {
-  padding: 12px;
-}
-
 .nav-2 {
   background-color: #5e503f;
   border-bottom: 1px solid #334b61;
 }
 
-.nav-2 h2 {
+.nav-2 a {
   font-weight: 500;
   padding: 0.5rem 1rem;
   font-size: 1rem;
@@ -209,6 +244,26 @@ input[type="date"] {
   width: 12rem;
 }
 
+.mod-search-cont > .upcoming-workout-entry {
+  padding: 0.25rem;
+  border: 3px solid #334b61;
+  border-radius: 3px;
+  width: 12rem;
+}
+
+.mod-search-cont .image-container > img {
+  outline: 2px solid #5e503f;
+}
+
+.mod-search-cont .title-and-buttons > img.info-icon {
+  position: relative;
+  top: 3px;
+}
+
+.mod-search-cont .title-and-buttons > img.exit-icon {
+  display: none;
+}
+
 .search-button {
   margin-bottom: 0.2rem;
 }
@@ -228,6 +283,10 @@ input[type="date"] {
   height: 8px;
   position: relative;
   top: -1px;
+}
+
+.separator-polygon {
+  display: none;
 }
 
 .work-mod-cont button {
@@ -271,6 +330,7 @@ input[type="date"] {
   height: 2rem;
   padding: 0 0.75rem;
   border: none;
+  display: none;
 }
 
 .modal-result-content > p {
@@ -328,12 +388,26 @@ input[type="date"] {
   left: 0;
 }
 
+.upcoming-workouts-container .plus-icon-container {
+  display: none;
+}
+
+.new-exercises-container .exit-button {
+  display: none;
+}
+
+.plus-icon-container {
+  align-self: center;
+  display: block;
+  margin-right: 0.75rem;
+}
+
 .day-separator {
   padding: 0.5rem 1rem;
   background-color: #2d2c30;
 }
 
-.day-separator > h3 {
+.day-separator > h1 {
   font-size: 0.9rem;
   font-weight: 500;
 }
@@ -357,7 +431,8 @@ input[type="date"] {
 .exit-button {
   width: 2rem;
   height: 2rem;
-  margin: 0 0.5rem;
+  margin: 0 0 0 0.5rem;
+  display: none;
 }
 
 .new-exercises-container {
@@ -365,10 +440,6 @@ input[type="date"] {
   min-height: 100vh;
   padding-top: 2rem;
   background-color: #2d2c30;
-}
-
-.nav-1-search-container {
-  display: none;
 }
 
 .nav-1-search-container button,
@@ -382,9 +453,13 @@ input[type="date"] {
 }
 
 .nav-1-search-container select {
-  font-size: 1.25rem;
-  padding: 0.2rem;
   border: 1px solid #0a0e11;
+  padding: 0.2rem;
+}
+
+.nav-1-search-container select,
+.nav-2-date {
+  font-size: 1.25rem;
   color: #717171;
   border-radius: 0.2rem;
 }
@@ -395,33 +470,6 @@ input[type="date"] {
   margin-left: auto;
 }
 
-.nav-2-date {
-  font-size: 1.25rem;
-  color: #717171;
-  width: 10rem;
-  height: 30px;
-  cursor: pointer;
-  border-radius: 0.2rem;
-}
-
-.nav-2-date-text {
-  position: relative;
-  top: 1px;
-  margin-right: 0.5rem;
-}
-
-.up-work-cont-desk {
-  display: none;
-}
-
-.up-work-cont-mob {
-  display: block;
-}
-
-.plus-icon-container-desktop {
-  display: none;
-}
-
 .muscle-tag-container {
   flex-wrap: wrap;
   margin-bottom: 0.25rem;
@@ -429,6 +477,18 @@ input[type="date"] {
 
 .muscle-tag-container > p {
   padding: 0.1rem 0.75rem;
+}
+
+.nav-1[data-view="new-exercises"] .nav-1-search-container {
+  display: none;
+}
+
+.nav-1[data-view="upcoming-workouts"] .nav-1-search-container {
+  display: none;
+}
+
+.workout-modal .plus-icon-container {
+  display: none;
 }
 
 .work-mod-title > img {
@@ -529,10 +589,6 @@ input[type="date"] {
   border-color: red;
 }
 
-.normal-border {
-  border-color: #263238;
-}
-
 .low-brightness {
   filter: brightness(50%);
 }
@@ -558,38 +614,54 @@ input[type="date"] {
     max-width: 720px;
   }
 
-  .nav-1-search-container {
-    display: flex;
-  }
-
-  .date-to-workout {
-    display: flex;
-  }
-
-  .up-work-cont-desk {
-    display: block;
-  }
-
-  .up-work-cont-mob {
+  .nav-1[data-view="upcoming-workouts"] .nav-1-search-container {
     display: none;
   }
 
-  .plus-icon-container-desktop {
-    align-self: center;
-    display: block;
+  .nav-1[data-view="upcoming-workouts"] .plus-icon-container {
+    display: flex;
   }
 
-  .plus-icon-container-mobile {
+  .nav-1[data-view="new-exercises"] .nav-1-search-container {
+    display: flex;
+  }
+
+  .nav-1[data-view="new-exercises"] .plus-icon-container {
     display: none;
-    padding: 1.4rem 0.8rem 0.5rem 0;
   }
 
   .nav-2 .new-exercises-text {
     display: block;
   }
 
-  .dark-bg {
-    background-color: #514536;
+  .nav-2[data-view="upcoming-workouts"] .upcoming-workouts-text {
+    background-color: #564b3e;
+  }
+
+  .nav-2[data-view="new-exercises"] .new-exercises-text {
+    background-color: #564b3e;
+  }
+
+  .nav-2[data-view="new-exercises"] .date-to-workout {
+    display: flex;
+    align-self: center;
+    margin-left: auto;
+  }
+
+  .exit-icon {
+    display: none;
+  }
+
+  .info-icon {
+    display: none;
+  }
+
+  .exit-button {
+    display: block;
+  }
+
+  .info-button {
+    display: block;
   }
 
   .nav-1 h1 {
@@ -598,7 +670,7 @@ input[type="date"] {
     padding: 1.5rem 0.75rem;
   }
 
-  .nav-2 h2 {
+  .nav-2 a {
     font-weight: 500;
     padding: 1rem;
     font-size: 1.4rem;
@@ -645,6 +717,15 @@ input[type="date"] {
     font-weight: 300;
   }
 
+  .day-separator {
+    padding: 0 1rem;
+  }
+
+  .day-separator > h1 {
+    font-size: 2.5rem;
+    font-weight: 500;
+  }
+
   .muscle-tag-container p {
     position: relative;
     top: 3px;
@@ -680,12 +761,24 @@ input[type="date"] {
     background-color: #2d2c30;
   }
 
-  .upcoming-workouts-container {
-    padding-top: 1rem;
+  .upcoming-workouts-container li.upcoming-workout-entry,
+  .new-exercises-container li.upcoming-workout-entry {
+    background-color: #0a0e11;
+    margin: 1rem;
+    border-radius: 0.25rem;
+    border: 3px solid #0a0e11;
   }
 
-  .desktop-day-separator {
-    margin-bottom: 1rem;
+  .upcoming-workouts-container .image-container > img,
+  .new-exercises-container .image-container > img {
+    width: 126px;
+    height: 126px;
+    border-radius: 0.25rem;
+    border: 3px solid #5e503f;
+  }
+
+  .upcoming-workouts-container {
+    padding-top: 1rem;
   }
 
   .separator-polygon {
@@ -693,6 +786,7 @@ input[type="date"] {
     height: 1rem;
     align-self: center;
     margin: 0 1rem;
+    display: block;
   }
 
   .new-exercises-empty {
@@ -703,11 +797,7 @@ input[type="date"] {
     cursor: pointer;
   }
 
-  .green-border {
-    border-color: green;
-  }
-
-  .hidden {
+  .desktop-hidden {
     display: none;
   }
 }

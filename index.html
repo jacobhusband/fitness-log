@@ -27,11 +27,11 @@
   </head>
   <body>
     <header>
-      <div class="nav-1">
+      <div class="nav-1" data-view="upcoming-workouts">
         <div class="container margin-auto row">
           <h1 class="no-user-select">FITNESS LOGGER</h1>
           <form
-            class="nav-1-search-container row ml-auto hidden new-exercise-form row-ud-center"
+            class="nav-1-search-container row ml-auto new-exercise-form row-ud-center"
           >
             <select name="workoutSearch" id="workout-search-desktop">
               <option value="muscle-group">Select muscle group</option>
@@ -53,32 +53,25 @@
             </select>
             <button class="align-self-center">Search</button>
           </form>
-          <div
-            class="plus-icon-container-desktop pointer-cursor bright-hover ml-auto"
-          >
-            <img src="images/plus.png" alt="plus icon" />
-          </div>
-          <div
-            class="plus-icon-container-mobile pointer-cursor bright-hover ml-auto"
-          >
+          <div class="plus-icon-container pointer-cursor bright-hover ml-auto">
             <img src="images/plus.png" alt="plus icon" />
           </div>
         </div>
       </div>
-      <div class="nav-2">
+      <div class="nav-2" data-view="upcoming-workouts">
         <div class="container margin-auto row">
-          <h2
+          <a
             data-text="upcoming-workouts"
-            class="upcoming-workouts-text pointer-cursor dark-bg"
+            class="upcoming-workouts-text pointer-cursor"
           >
             UPCOMING WORKOUTS
-          </h2>
-          <h2
+          </a>
+          <a
             data-text="new-exercises"
-            class="new-exercises-text pointer-cursor bright-hover"
+            class="new-exercises-text pointer-cursor"
           >
             NEW EXERCISES
-          </h2>
+          </a>
           <form class="date-to-workout row row-ud-center">
             <input
               class="nav-2-date thick-border hidden"
@@ -98,17 +91,15 @@
         <div class="no-content row row-lr-center upcoming-workouts-empty">
           <p class="no-user-select">No exercises upcoming...</p>
         </div>
-        <div class="up-work-cont-desk"></div>
-        <div class="up-work-cont-mob"></div>
       </div>
-      <div
+      <ul
         data-view="new-exercises"
-        class="container margin-auto new-exercises-container hidden"
+        class="container margin-auto new-exercises-container desktop-hidden"
       >
-        <div class="no-content row row-lr-center new-exercises-empty">
+        <li class="no-content row row-lr-center new-exercises-empty">
           <p class="no-user-select">Search for an exercise up above...</p>
-        </div>
-      </div>
+        </li>
+      </ul>
       <div class="user-message hidden">
         <p>Select a valid date</p>
       </div>
@@ -142,7 +133,7 @@
                     <option value="soleus">soleus</option>
                   </select>
                 </div>
-                <div class="mod-search-cont row flex-col"></div>
+                <ul class="mod-search-cont row flex-col"></ul>
               </div>
               <div class="col row flex-col">
                 <button class="search-button">SEARCH</button>
@@ -161,11 +152,7 @@
                     />
                   </button>
                 </div>
-                <button
-                  disabled="true"
-                  type="button"
-                  class="add-button low-brightness"
-                >
+                <button disabled="true" class="add-button low-brightness">
                   ADD
                 </button>
               </div>
