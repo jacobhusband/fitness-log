@@ -209,6 +209,15 @@ function removeExerciseFromDOM(id) {
   var papa = element.parentElement;
   var grandpa = papa.parentElement;
   if (papa.children.length === 2) {
+    if (papa.nextElementSibling) {
+      papa.nextElementSibling.classList.remove('desktop-hidden');
+    } else if (grandpa.firstElementChild.nextElementSibling) {
+      grandpa.firstElementChild.nextElementSibling.classList.remove(
+        'desktop-hidden'
+      );
+    } else if (grandpa.children.length === 2) {
+      $noCont.classList.remove('hidden');
+    }
     papa.remove();
   } else {
     element.remove();
