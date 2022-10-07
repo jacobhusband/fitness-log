@@ -33,6 +33,7 @@ var dateValid = false;
 var searchString = null;
 var userYearMonthDay = null;
 var spinner = null;
+var dateButton = null;
 
 var muscleObj = {
   biceps: 1,
@@ -165,6 +166,7 @@ function handleModalContentClicks(event) {
     event.target.matches("[src='images/exit.webp']")
   ) {
     $workModal.classList.add('hidden');
+    resetExerModal();
   }
 }
 
@@ -189,6 +191,7 @@ function handleAddButtonClicks(event) {
   showUpcomingWorkoutsView();
   showOrHideAddButtonMobile();
   $workModal.classList.add('hidden');
+  resetExerModal();
 }
 
 function pushUlContainer(ulContainer) {
@@ -229,6 +232,13 @@ function removeExerciseFromDOM(id) {
   if (grandpa.children.length === 1) {
     $noCont.classList.remove('hidden');
   }
+}
+
+function resetExerModal() {
+  $addExerModForm.reset();
+  $dateButton.parentElement.replaceChild(dateButton, $dateButton);
+  removeSearchResults();
+  $dateButton = dateButton;
 }
 
 function checkContentMessage() {
@@ -277,6 +287,7 @@ function getTodaysDate(simple = false) {
 
 function showNewExerModal() {
   $workModal.classList.remove('hidden');
+  dateButton = $dateButton.cloneNode(true);
 }
 
 function changeDateButton(e) {
@@ -783,6 +794,7 @@ function showInvalidDate(event, li) {
     setTimeout(() => {
       $userMessage.classList.add('hidden');
     }, 2000);
+    window.scrollTo(0, 0);
     $n2Date.showPicker();
     $n2Date.style.outline = '3px solid red';
   }
