@@ -197,14 +197,7 @@ input[type="date"] {
 .no-content {
   margin: 1.5rem;
   font-size: 0.9rem;
-}
-
-.no-content p {
   color: #b7b7b7;
-}
-
-.dark-bg {
-  background-color: inherit;
 }
 
 .modal {
@@ -295,28 +288,6 @@ input[type="date"] {
   padding: 0;
 }
 
-.modal-search-result {
-  width: 12rem;
-  border-radius: 0.25rem;
-  border: 3px solid #0a0e11;
-}
-
-.modal-img-alignment img {
-  border: 2px solid #5e503f;
-  border-radius: 0.2rem;
-  width: 48px;
-  height: 48px;
-  object-fit: cover;
-}
-
-.modal-img-alignment {
-  padding: 0.5rem 0.5rem 0.25rem;
-}
-
-.modal-result-content {
-  margin: 0.4rem 0 0.4rem 0.1rem;
-}
-
 .title-and-buttons > h3 {
   font-size: 0.75rem;
   padding-right: 0.25rem;
@@ -333,11 +304,6 @@ input[type="date"] {
   display: none;
 }
 
-.modal-result-content > p {
-  font-size: 0.7rem;
-  font-weight: 300;
-}
-
 .mod-search-cont {
   max-height: 13.5rem;
   overflow: hidden;
@@ -350,11 +316,6 @@ input[type="date"] {
   border-radius: 0.2rem;
   padding: 0.1rem 0.2rem;
   margin-right: 0.4rem;
-}
-
-.modal-result-content > h3,
-.modal-result-content > p,
-.muscle-tag-container p {
   letter-spacing: 0.02rem;
 }
 
@@ -519,12 +480,10 @@ input[type="date"] {
   justify-content: space-between;
 }
 
-.row-lr-center,
-.col-ud-center {
+.row-lr-center {
   justify-content: center;
 }
 
-.col-lr-center,
 .row-ud-center {
   align-items: center;
 }
@@ -539,10 +498,6 @@ input[type="date"] {
 
 .margin-auto {
   margin: auto;
-}
-
-.gap-1r {
-  gap: 1rem;
 }
 
 .pointer-cursor {
@@ -561,10 +516,6 @@ input[type="date"] {
   user-select: none;
 }
 
-.flex-wrap {
-  flex-wrap: wrap;
-}
-
 .ml-auto {
   margin-left: auto;
 }
@@ -579,14 +530,6 @@ input[type="date"] {
 
 .p-1r {
   padding: 1rem;
-}
-
-.green-border {
-  border-color: green;
-}
-
-.red-border {
-  border-color: red;
 }
 
 .low-brightness {
@@ -681,40 +624,8 @@ input[type="date"] {
     font-size: 1.25rem;
   }
 
-  .no-content p {
-    color: #ced4da;
-  }
-
-  .modal-search-result {
-    width: auto;
-    margin: 0 1rem 1.5rem;
-    border-radius: 0.25rem;
-    padding: 1rem;
-    background-color: #0a0e11;
-    border: 3px solid #0a0e11;
-  }
-
-  .modal-img-alignment img {
-    width: 128px;
-    height: 128px;
-  }
-
-  .modal-img-alignment {
-    margin-right: 1.5rem;
-  }
-
   .title-and-buttons > h3 {
     font-size: 2rem;
-  }
-
-  .modal-result-content {
-    width: 100%;
-    margin: 0.4rem 0 0.4rem 0.1rem;
-  }
-
-  .modal-result-content > p {
-    font-size: 1.3rem;
-    font-weight: 300;
   }
 
   .day-separator {
