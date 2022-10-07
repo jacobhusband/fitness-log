@@ -6,7 +6,9 @@ body,
 form,
 button,
 input,
-p {
+p,
+label,
+textarea {
   font-family:
     "Source Sans Pro",
     sans-serif;
@@ -22,7 +24,6 @@ h3,
 h4,
 h5,
 h6,
-label,
 a {
   font-family: Oswald, sans-serif;
 }
@@ -66,6 +67,14 @@ input:focus {
 
 img {
   width: 100%;
+}
+
+textarea {
+  border: none;
+  overflow: auto;
+  outline: none;
+  resize: none;
+  border-radius: 0.2rem;
 }
 
 input[type="date"].modal-date-picker {
@@ -316,11 +325,20 @@ input[type="date"] {
   letter-spacing: 0.02rem;
 }
 
+button.save {
+  background-color: #104021;
+}
+
+button.cancel {
+  background-color: #5a2424;
+}
+
 .info-icon,
-.modal-x-icon,
-.edit-icon {
-  width: 16px;
-  height: 16px;
+.edit-icon,
+.exit-icon,
+.modal-x-icon {
+  width: 24px;
+  height: 24px;
   margin-right: 0.2rem;
 }
 
@@ -384,11 +402,6 @@ input[type="date"] {
   height: 75px;
   border: 1px solid #5e503f;
   margin-right: 1rem;
-}
-
-.exit-icon {
-  width: 1rem;
-  height: 1rem;
 }
 
 .info-button,
@@ -497,6 +510,18 @@ input[type="date"] {
   align-items: center;
 }
 
+.justify-self-center {
+  justify-self: center;
+}
+
+.text-align-left {
+  text-align: left;
+}
+
+.text-align-right {
+  text-align: right;
+}
+
 .text-align-center {
   text-align: center;
 }
@@ -529,16 +554,16 @@ input[type="date"] {
   margin-left: auto;
 }
 
-.text-align-left {
-  text-align: left;
-}
-
 .pos-rel {
   position: relative;
 }
 
 .p-1r {
   padding: 1rem;
+}
+
+.mt-1r {
+  margin-top: 1rem;
 }
 
 .low-brightness {
@@ -632,6 +657,35 @@ input[type="date"] {
     font-size: 1.25rem;
   }
 
+  .edit-modal label {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-right: 1rem;
+  }
+
+  .edit-modal .modal-content {
+    width: 625px;
+  }
+
+  .edit-modal .height {
+    height: 3rem;
+  }
+
+  .edit-modal .description-title {
+    margin-bottom: 2rem;
+  }
+
+  .edit-modal input,
+  .edit-modal textarea {
+    width: 90%;
+  }
+
+  .edit-modal button {
+    font-size: 1.25rem;
+    margin: 0.5rem;
+  }
+
   .title-and-buttons > h3 {
     font-size: 2rem;
   }
@@ -670,7 +724,9 @@ input[type="date"] {
   }
 
   .modal-x-icon {
-    margin-right: 1rem;
+    position: absolute;
+    top: 1rem;
+    margin-right: 0.5rem;
   }
 
   .new-exercises-container,
