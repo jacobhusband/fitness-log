@@ -743,7 +743,7 @@ function showInvalidDate(event, li) {
       $userMessage.classList.add('hidden');
     }, 2000);
     $n2Date.showPicker();
-    $n2Date.style.borderColor = 'red';
+    $n2Date.style.outline = '3px solid red';
   }
 }
 
@@ -904,9 +904,9 @@ function changeDate(e) {
   }
   dateValid = checkDateIsValid(userYearMonthDay);
   if (dateValid) {
-    e.target.style.borderColor = 'green';
+    e.target.style.outline = '3px solid #48ae5e';
   } else {
-    e.target.style.borderColor = 'red';
+    e.target.style.outline = '3px solid red';
   }
   checkAddButtonIsValid();
 }
