@@ -399,7 +399,7 @@ input[type="date"] {
 .new-exercises-container {
   display: none;
   min-height: 100vh;
-  padding-top: 2rem;
+  padding-top: 0.25rem;
   background-color: #2d2c30;
 }
 
@@ -621,7 +621,6 @@ input[type="date"] {
   }
 
   .no-content {
-    margin: 1.75rem;
     font-size: 1.25rem;
   }
 
@@ -669,7 +668,6 @@ input[type="date"] {
   .upcoming-workouts-container {
     display: block;
     min-height: 100vh;
-    padding-top: 2rem;
     background-color: #2d2c30;
   }
 
@@ -690,7 +688,7 @@ input[type="date"] {
   }
 
   .upcoming-workouts-container {
-    padding-top: 1rem;
+    padding-top: 0.25rem;
   }
 
   .separator-polygon {
@@ -699,10 +697,6 @@ input[type="date"] {
     align-self: center;
     margin: 0 1rem;
     display: block;
-  }
-
-  .new-exercises-empty {
-    margin-top: 0.75rem;
   }
 
   .separator-polygon:hover {
