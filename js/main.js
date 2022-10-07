@@ -175,17 +175,28 @@ function handleAddButtonClicks(event) {
   addExercisesToDataObj();
   resetSearchItems();
   tempSelection = {};
-
   var lis = createLiElements(data.recentExercises[data.recentDate]);
   var ulContainer = checkForUlContainer();
   if (!ulContainer) {
     ulContainer = createUlContainer(lis, data.recentDate);
-    $upWorkCont.appendChild(ulContainer);
+    pushUlContainer(ulContainer);
   } else {
     appendToUlContainer(lis, ulContainer);
   }
   checkContentMessage();
   showUpcomingWorkoutsView();
+}
+
+function pushUlContainer(ulContainer) {
+  var dateNum = parseInt(ulContainer.dataset.view);
+  for (var i = 0; i < $upWorkCont.children.length; i++) {
+    if (parseInt($upWorkCont.children[i].dataset.view) > dateNum) {
+      $upWorkCont.insertBefore(ulContainer, $upWorkCont.children[i]);
+      return;
+    } else {
+      $upWorkCont.appendChild(ulContainer);
+    }
+  }
 }
 
 function updateUserDate() {
