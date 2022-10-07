@@ -22,7 +22,8 @@ h3,
 h4,
 h5,
 h6,
-label {
+label,
+a {
   font-family: Oswald, sans-serif;
 }
 
@@ -30,7 +31,8 @@ h1,
 h2,
 h3,
 p,
-label {
+label,
+a {
   line-height: 1;
   margin: 0;
   color: #eaeaea;
@@ -182,7 +184,7 @@ input[type="date"] {
   border-bottom: 1px solid #334b61;
 }
 
-.nav-2 h2 {
+.nav-2 a {
   font-weight: 500;
   padding: 0.5rem 1rem;
   font-size: 1rem;
@@ -668,7 +670,7 @@ input[type="date"] {
     padding: 1.5rem 0.75rem;
   }
 
-  .nav-2 h2 {
+  .nav-2 a {
     font-weight: 500;
     padding: 1rem;
     font-size: 1.4rem;
