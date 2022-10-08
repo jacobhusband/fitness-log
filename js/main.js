@@ -366,6 +366,8 @@ function addExercisesToDataObj() {
       title: tempSelection[key].querySelector('h3').textContent,
       tag1: firstTagText,
       tag2: secondTagText,
+      reps: '',
+      sets: '',
       date: userYearMonthDay,
       description: tempSearchResults[tempSelection[key].dataset.id].description
         .split('<p>')
