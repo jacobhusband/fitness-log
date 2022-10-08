@@ -97,6 +97,8 @@ loadContentOntoPage();
 
 function handleEditFormSubmits(event) {
   event.preventDefault();
+  var elements = event.target.closest("form").elements;
+  updateDOM(elements);
 }
 
 function handleEditModalClicks(event) {
@@ -222,6 +224,7 @@ function handleAddButtonClicks(event) {
 function populateEditForm(li) {
   var exercise = getExerciseObjectGivenId(li.dataset.id);
   var form = $editForm.elements;
+  data.editing = exercise;
   form.title.value = exercise.title;
   form.reps.value = exercise.reps;
   form.sets.value = exercise.sets;
@@ -229,6 +232,8 @@ function populateEditForm(li) {
   form["muscle-group-2"].value = exercise.tag2;
   form.description.value = exercise.description;
 }
+
+function updateDOM(formEls) {}
 
 function pushUlContainer(ulContainer) {
   var dateNum = parseInt(ulContainer.dataset.view);

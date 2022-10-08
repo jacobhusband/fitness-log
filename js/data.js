@@ -1,23 +1,24 @@
 /* exported data */
 window.onbeforeunload = function (event) {
-  localStorage.setItem('data', JSON.stringify(data));
+  localStorage.setItem("data", JSON.stringify(data));
 };
 
-window.addEventListener('pagehide', function (event) {
-  localStorage.setItem('data', JSON.stringify(data));
+window.addEventListener("pagehide", function (event) {
+  localStorage.setItem("data", JSON.stringify(data));
 });
 
-var grabbedData = JSON.parse(localStorage.getItem('data'));
+var grabbedData = JSON.parse(localStorage.getItem("data"));
 var badData = false;
 
 var data = {
-  view: 'upcoming-workouts',
-  viewUpcoming: '',
+  view: "upcoming-workouts",
+  viewUpcoming: "",
   nextExerciseId: 1,
   desktopCurrentDayView: 0,
   exercises: {},
+  editing: null,
   recentExercises: {},
-  recentDate: null
+  recentDate: null,
 };
 
 for (var key in data) {
