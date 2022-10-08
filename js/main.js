@@ -107,6 +107,7 @@ function handleDateChange(event) {
 function handleEditFormSubmits(event) {
   event.preventDefault();
   var elements = event.target.closest("form").elements;
+  updateData(elements);
   updateDOM(elements);
 }
 
@@ -243,7 +244,37 @@ function populateEditForm(li) {
   form.description.value = exercise.description;
 }
 
+function updateData(formEls) {
+  var oldDate = data.editing.date.join("");
+  var newDate = formEls.date.value.split("-");
+  data.editing.title = formEls.title.value;
+  data.editing.date = newDate;
+  data.editing.reps = formEls.reps.value;
+  data.editing.sets = formEls.sets.value;
+  data.editing["muscle-group-1"] = formEls["muscle-group-1"].value;
+  data.editing["muscle-group-2"] = formEls["muscle-group-2"].value;
+  data.editing.description = formEls.description.value;
+  moveDataToDay(oldDate, newDate.join(""));
+}
+
 function updateDOM(formEls) {}
+
+function moveDataToDay(oldDate, newDate) {
+  data.exercises[oldDate].forEach((exercise, ind) => {
+    if (exercise.id === data.editing.id) {
+      data.exercises[oldDate].splice(ind, 1);
+      if (data.exercises[oldDate].length === 0) {
+        delete data.exercises[oldDate];
+      }
+      if (data.exercises[newDate]) {
+        data.exercises[newDate].push(data.editing);
+      } else {
+        data.exercises[newDate] = [data.editing];
+      }
+      return;
+    }
+  });
+}
 
 function pushUlContainer(ulContainer) {
   var dateNum = parseInt(ulContainer.dataset.view);
