@@ -24,6 +24,7 @@ var $modSearchCont = $modalContent.querySelector(".modal-search-and-result");
 var $dateButton = $addExerModForm.querySelector(".date-button");
 var $dateInput = $addExerModForm.querySelector(".modal-date-picker");
 var $addButton = $addExerModForm.querySelector(".add-button");
+var $editDate = $editForm.querySelector(".edit-date");
 var $modResCont = $modSearchCont.lastElementChild;
 
 var tempSelection = {};
@@ -108,6 +109,14 @@ function handleEditModalClicks(event) {
   ) {
     $editForm.reset();
     $editModal.classList.add("hidden");
+  }
+  if (event.target.matches(".up-arrow")) {
+    $editDate.stepUp();
+  } else if (event.target.matches(".down-arrow")) {
+    var dateDiff = getDateDifferenceInDays($editDate.value);
+    if (dateDiff !== "Today") {
+      $editDate.stepDown();
+    }
   }
 }
 
@@ -225,6 +234,7 @@ function populateEditForm(li) {
   var exercise = getExerciseObjectGivenId(li.dataset.id);
   var form = $editForm.elements;
   data.editing = exercise;
+  form.date.value = exercise.date.join("-");
   form.title.value = exercise.title;
   form.reps.value = exercise.reps;
   form.sets.value = exercise.sets;

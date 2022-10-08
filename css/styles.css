@@ -463,6 +463,26 @@ button.cancel {
   background-color: #2d2c30;
 }
 
+.down-arrow,
+.up-arrow {
+  user-select: none;
+  cursor: pointer;
+  font-size: 0.8rem;
+  left: 5.6rem;
+}
+
+.edit-date {
+  max-width: 5.6rem;
+}
+
+.down-arrow {
+  top: 0.75rem;
+}
+
+.up-arrow {
+  top: -0.2rem;
+}
+
 .nav-1-search-container button,
 .add-button-desktop {
   font-size: 1.25rem;
@@ -605,6 +625,10 @@ button.cancel {
   position: relative;
 }
 
+.pos-abs {
+  position: absolute;
+}
+
 .p-1r {
   padding: 1rem;
 }
@@ -692,6 +716,23 @@ button.cancel {
 
   .info-button {
     margin-left: auto;
+  }
+
+  .down-arrow,
+  .up-arrow {
+    font-size: 1rem;
+  }
+
+  .edit-date {
+    max-width: 5.6rem;
+  }
+
+  .up-arrow {
+    top: -0.35rem;
+  }
+
+  .down-arrow {
+    bottom: -0.25rem;
   }
 
   .info-button .nav-1 h1 {
