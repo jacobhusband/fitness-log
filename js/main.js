@@ -130,6 +130,7 @@ function handleUpcomingWorkoutClicks(event) {
     event.target.matches('.edit-icon')
   ) {
     $editModal.classList.remove('hidden');
+    populateEditForm(event.target.closest('li'));
   }
   if (
     event.target.matches('.exit-button') ||
@@ -216,6 +217,17 @@ function handleAddButtonClicks(event) {
   showOrHideAddButtonMobile();
   $workModal.classList.add('hidden');
   resetExerModal();
+}
+
+function populateEditForm(li) {
+  var exercise = getExerciseObjectGivenId(li.dataset.id);
+  var form = $editForm.elements;
+  form.title.value = exercise.title;
+  form.reps.value = exercise.reps;
+  form.sets.value = exercise.sets;
+  form['muscle-group-1'].value = exercise.tag1;
+  form['muscle-group-2'].value = exercise.tag2;
+  form.description.value = exercise.description;
 }
 
 function pushUlContainer(ulContainer) {
