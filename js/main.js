@@ -7,6 +7,7 @@ var $newExerCont = $main.querySelector('.new-exercises-container');
 var $workModal = $main.querySelector('.workout-modal');
 var $infoModal = $main.querySelector('.info-modal');
 var $userMessage = $main.querySelector('.user-message');
+var $editModal = $main.querySelector('.edit-modal');
 var $n1SearchCont = $nav1.querySelector('.nav-1-search-container');
 var $pIcon = $nav1.querySelector('.plus-icon-container');
 var $n2Date2Work = $nav2.querySelector('.date-to-workout');
@@ -16,6 +17,7 @@ var $noCont = $upWorkCont.querySelector('.upcoming-workouts-empty');
 var $modalContent = $workModal.querySelector('.work-mod-cont');
 var $descTitle = $infoModal.querySelector('.description-title');
 var $descText = $infoModal.querySelector('.description-text');
+var $editForm = $editModal.querySelector('form');
 var $n1Search = $n1SearchCont.querySelector('#workout-search-desktop');
 var $addExerModForm = $modalContent.querySelector('.add-exercise-modal-form');
 var $modSearchCont = $modalContent.querySelector('.modal-search-and-result');
@@ -80,6 +82,8 @@ $upWorkCont.addEventListener('click', handleUpcomingWorkoutClicks);
 $modSearchCont.addEventListener('click', listenForSearchResultClicks);
 $n1Search.addEventListener('input', removeSearchBorder);
 $n2Date.addEventListener('input', changeDate);
+$editModal.addEventListener('click', handleEditModalClicks);
+$editForm.addEventListener('submit', handleEditFormSubmits);
 $n2Date2Work.addEventListener('submit', handleAddButtonClicks);
 $addExerModForm.addEventListener('submit', handleAddButtonClicks);
 $n1SearchCont.addEventListener('submit', function () {
@@ -90,6 +94,20 @@ $addExerModForm.addEventListener('submit', function () {
 });
 
 loadContentOntoPage();
+
+function handleEditFormSubmits(event) {
+  event.preventDefault();
+}
+
+function handleEditModalClicks(event) {
+  if (
+    event.target.matches('.cancel') ||
+    event.target.matches('.modal-x-icon')
+  ) {
+    $editForm.reset();
+    $editModal.classList.add('hidden');
+  }
+}
 
 function handlePlusIconClicks(event) {
   var mobile = window.innerWidth < 768;
@@ -106,6 +124,12 @@ function handleUpcomingWorkoutClicks(event) {
     event.target.matches('.info-button')
   ) {
     showUpcomingWorkoutInfoModal(event);
+  }
+  if (
+    event.target.matches('.edit-button') ||
+    event.target.matches('.edit-icon')
+  ) {
+    $editModal.classList.remove('hidden');
   }
   if (
     event.target.matches('.exit-button') ||
