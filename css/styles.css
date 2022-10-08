@@ -212,7 +212,7 @@ input[type="date"] {
 }
 
 .modal {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
@@ -231,6 +231,9 @@ input[type="date"] {
   border: 0.4rem solid #5e503f;
   min-height: 6rem;
   padding-bottom: 1rem;
+  margin-top: 7rem;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .modal-content h2 {
@@ -349,6 +352,22 @@ button.cancel {
 
 .edit-icon {
   margin-right: 1rem;
+}
+
+.edit-modal label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-right: 1rem;
+}
+
+.edit-modal .height {
+  height: 2.5rem;
+}
+
+.edit-modal input,
+.edit-modal textarea {
+  width: 90%;
 }
 
 .info-modal,
@@ -676,11 +695,6 @@ button.cancel {
     margin-bottom: 2rem;
   }
 
-  .edit-modal input,
-  .edit-modal textarea {
-    width: 90%;
-  }
-
   .edit-modal button {
     font-size: 1.25rem;
     margin: 0.5rem;
@@ -710,11 +724,6 @@ button.cancel {
     padding: 0 1rem;
     padding-top: 0.1rem;
     margin-right: 1rem;
-  }
-
-  .modal-content {
-    width: 725px;
-    margin-top: 7rem;
   }
 
   .modal-content h2 {
