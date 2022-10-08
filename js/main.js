@@ -86,10 +86,10 @@ $editModal.addEventListener('click', handleEditModalClicks);
 $editForm.addEventListener('submit', handleEditFormSubmits);
 $n2Date2Work.addEventListener('submit', handleAddButtonClicks);
 $addExerModForm.addEventListener('submit', handleAddButtonClicks);
-$n1SearchCont.addEventListener('submit', function () {
+$n1SearchCont.addEventListener('submit', function (event) {
   searchForExercise(event, 'desktop');
 });
-$addExerModForm.addEventListener('submit', function () {
+$addExerModForm.addEventListener('submit', function (event) {
   searchForExercise(event, 'mobile');
 });
 
