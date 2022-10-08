@@ -85,6 +85,7 @@ $n1Search.addEventListener("input", removeSearchBorder);
 $n2Date.addEventListener("input", changeDate);
 $editModal.addEventListener("click", handleEditModalClicks);
 $editForm.addEventListener("submit", handleEditFormSubmits);
+$editDate.addEventListener("input", handleDateChange);
 $n2Date2Work.addEventListener("submit", handleAddButtonClicks);
 $addExerModForm.addEventListener("submit", handleAddButtonClicks);
 $n1SearchCont.addEventListener("submit", function (event) {
@@ -95,6 +96,13 @@ $addExerModForm.addEventListener("submit", function (event) {
 });
 
 loadContentOntoPage();
+
+function handleDateChange(event) {
+  if (parseInt(getDateDifferenceInDays(event.target.value).split(" ")[1]) < 0) {
+    var today = getTodaysDate("yes").join("-");
+    $editDate.value = today;
+  }
+}
 
 function handleEditFormSubmits(event) {
   event.preventDefault();
@@ -109,14 +117,6 @@ function handleEditModalClicks(event) {
   ) {
     $editForm.reset();
     $editModal.classList.add("hidden");
-  }
-  if (event.target.matches(".up-arrow")) {
-    $editDate.stepUp();
-  } else if (event.target.matches(".down-arrow")) {
-    var dateDiff = getDateDifferenceInDays($editDate.value);
-    if (dateDiff !== "Today") {
-      $editDate.stepDown();
-    }
   }
 }
 
@@ -327,6 +327,9 @@ function getTodaysDate(simple = false) {
     }
     return x;
   });
+  if (simple === "yes") {
+    return today;
+  }
   if (simple) {
     return today.join("");
   }
