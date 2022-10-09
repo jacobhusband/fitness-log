@@ -37,6 +37,7 @@ var searchString = null;
 var userYearMonthDay = null;
 var spinner = null;
 var dateButton = null;
+var tempEditLi = null;
 
 var muscleObj = {
   biceps: 1,
@@ -109,6 +110,8 @@ function handleEditFormSubmits(event) {
   var elements = event.target.closest("form").elements;
   updateData(elements);
   updateDOM(elements);
+  $editForm.reset();
+  $editModal.classList.add("hidden");
 }
 
 function handleEditModalClicks(event) {
@@ -234,6 +237,7 @@ function handleAddButtonClicks(event) {
 function populateEditForm(li) {
   var exercise = getExerciseObjectGivenId(li.dataset.id);
   var form = $editForm.elements;
+  tempEditLi = li;
   data.editing = exercise;
   form.date.value = exercise.date.join("-");
   form.title.value = exercise.title;
@@ -257,7 +261,21 @@ function updateData(formEls) {
   moveDataToDay(oldDate, newDate.join(""));
 }
 
-function updateDOM(formEls) {}
+function updateDOM(formEls) {
+  var tagContainer = tempEditLi.querySelector(".muscle-tag-container");
+  var repsAndSets = tempEditLi.querySelector(".reps-and-sets");
+  tempEditLi.querySelector("h3").textContent = data.editing.title;
+  tagContainer.firstElementChild.textContent = data.editing.tag1;
+  tagContainer.lastElementChild.textContent = data.editing.tag2;
+  if (data.editing.reps && data.editing.sets) {
+    repsAndSets.classList.remove("hidden");
+  } else {
+    repsAndSets.classList.add("hidden");
+  }
+  tempEditLi.querySelector(
+    "h4"
+  ).textContent = `reps ${data.editing.reps} x sets ${data.editing.sets}`;
+}
 
 function moveDataToDay(oldDate, newDate) {
   data.exercises[oldDate].forEach((exercise, ind) => {
