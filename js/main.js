@@ -220,13 +220,8 @@ function handleAddButtonClicks(event) {
   tempSelection = {};
   selCount = 0;
   var lis = createLiElements(data.recentExercises[data.recentDate]);
-  var ulContainer = checkForUlContainer();
-  if (!ulContainer) {
-    ulContainer = createUlContainer(lis, data.recentDate);
-    pushUlContainer(ulContainer);
-  } else {
-    appendToUlContainer(lis, ulContainer);
-  }
+  var ulContainer = checkForUlContainer(data.recentDate);
+  pushOrMakeUlContainer(ulContainer, lis, data.recentDate);
   checkContentMessage();
   showUpcomingWorkoutsView();
   showOrHideAddButtonMobile();
@@ -275,6 +270,19 @@ function updateDOM(formEls) {
   tempEditLi.querySelector(
     "h4"
   ).textContent = `reps ${data.editing.reps} x sets ${data.editing.sets}`;
+  removeExerciseFromDOM(tempEditLi.dataset.id);
+  var ulContainer = checkForUlContainer(tempEditLi.dataset.date);
+  pushOrMakeUlContainer(ulContainer, [tempEditLi], data.editing.date.join(""));
+  checkContentMessage();
+}
+
+function pushOrMakeUlContainer(ulContainer, lis, date) {
+  if (!ulContainer) {
+    ulContainer = createUlContainer(lis, date);
+    pushUlContainer(ulContainer);
+  } else {
+    appendToUlContainer(lis, ulContainer);
+  }
 }
 
 function moveDataToDay(oldDate, newDate) {
@@ -473,9 +481,9 @@ function createElementForDaySeparator(text) {
   ]);
 }
 
-function checkForUlContainer() {
+function checkForUlContainer(date) {
   for (var i = 0; i < $upWorkCont.children.length; i++) {
-    if ($upWorkCont.children[i].dataset.view === data.recentDate) {
+    if ($upWorkCont.children[i].dataset.view === date) {
       return $upWorkCont.children[i];
     }
   }
