@@ -271,7 +271,7 @@ function updateDOM(formEls) {
     "h4"
   ).textContent = `reps ${data.editing.reps} x sets ${data.editing.sets}`;
   removeExerciseFromDOM(tempEditLi.dataset.id);
-  var ulContainer = checkForUlContainer(tempEditLi.dataset.date);
+  var ulContainer = checkForUlContainer(data.editing.date.join(""));
   pushOrMakeUlContainer(ulContainer, [tempEditLi], data.editing.date.join(""));
   checkContentMessage();
 }
