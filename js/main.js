@@ -38,6 +38,7 @@ var userYearMonthDay = null;
 var spinner = null;
 var dateButton = null;
 var tempEditLi = null;
+var spinner2 = null;
 
 var muscleObj = {
   biceps: 1,
@@ -700,6 +701,10 @@ function searchForExercise(event, target) {
   }
   data.desktopCurrentDayView = 0;
   removeSearchResults();
+  spinner2 = createElements("div", {
+    class: "lds-hourglass align-self-center",
+  });
+  $addExerModForm.querySelector(".mod-search-cont").appendChild(spinner2);
   addWaitingSpinner();
   getExercises();
   document.documentElement.classList.add("wait-cursor");
@@ -740,6 +745,7 @@ function getExercises() {
 
     tempSearchResults = results;
     spinner.remove();
+    spinner2.remove();
 
     for (var i = 0; i < results.length; i++) {
       title = results[i].name;
