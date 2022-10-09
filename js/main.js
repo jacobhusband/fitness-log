@@ -271,8 +271,10 @@ function updateDOM(formEls) {
     "h4"
   ).textContent = `reps ${data.editing.reps} x sets ${data.editing.sets}`;
   removeExerciseFromDOM(tempEditLi.dataset.id);
-  var ulContainer = checkForUlContainer(data.editing.date.join(""));
-  pushOrMakeUlContainer(ulContainer, [tempEditLi], data.editing.date.join(""));
+  var date = data.editing.date.join("");
+  var ulContainer = checkForUlContainer(date);
+  pushOrMakeUlContainer(ulContainer, [tempEditLi], date);
+  hideAllButSpecific(date);
   checkContentMessage();
 }
 
@@ -1070,6 +1072,22 @@ function hideAllButMostRecent() {
         $upWorkCont.children[i].classList.remove("desktop-hidden");
       }
       notFirst = true;
+    }
+  }
+}
+
+function hideAllButSpecific(date) {
+  for (var i = 0; i < $upWorkCont.children.length; i++) {
+    if (
+      $upWorkCont.children[i].classList.contains("day-container") &&
+      $upWorkCont.children[i].dataset.view !== date
+    ) {
+      $upWorkCont.children[i].classList.add("desktop-hidden");
+    } else if (
+      $upWorkCont.children[i].classList.contains("day-container") &&
+      $upWorkCont.children[i].dataset.view === date
+    ) {
+      $upWorkCont.children[i].classList.remove("desktop-hidden");
     }
   }
 }
