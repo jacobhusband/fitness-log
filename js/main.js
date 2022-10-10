@@ -247,7 +247,11 @@ function populateEditForm(li) {
 function updateData(formEls) {
   var oldDate = data.editing.date.join('');
   var newDate = formEls.date.value.split('-');
+  var oldTitle = data.editing.title;
   data.editing.title = formEls.title.value;
+  if (oldTitle !== data.editing.title) {
+    getImages(data.editing.title, tempEditLi, false, false);
+  }
   data.editing.date = newDate;
   data.editing.reps = formEls.reps.value;
   data.editing.sets = formEls.sets.value;
@@ -300,7 +304,6 @@ function moveDataToDay(oldDate, newDate) {
       } else {
         data.exercises[newDate] = [data.editing];
       }
-
     }
   });
 }
@@ -766,7 +769,7 @@ function getExercises() {
   xhr.send();
 }
 
-function getImagesBackup(exercise, el, el2) {
+function getImagesBackup(exercise, el, el2 = false, search = true) {
   const data = null;
   var resultingImgURL = null;
 
@@ -778,17 +781,32 @@ function getImagesBackup(exercise, el, el2) {
     if (this.readyState === this.DONE) {
       if (xhr.status !== 200) {
         resultingImgURL = 'images/image-not-found.webp';
-        setImgOfEl(resultingImgURL, el);
-        setImgOfEl(resultingImgURL, el2);
-        return;
+        if (search) {
+          if (el2) {
+            setImgOfEl(resultingImgURL, el2);
+          }
+          setImgOfEl(resultingImgURL, el);
+        } else {
+          data.editing.imgURL = resultingImgURL;
+        }
       }
       imageCount++;
       if (imageCount % 3 === 0) {
         document.documentElement.classList.remove('wait-cursor');
       }
       resultingImgURL = this.response.value[0].thumbnailUrl;
-      setImgOfEl(resultingImgURL, el);
-      setImgOfEl(resultingImgURL, el2);
+      if (search) {
+        if (el2) {
+          setImgOfEl(resultingImgURL, el2);
+        }
+        setImgOfEl(resultingImgURL, el);
+      } else {
+        el.firstElementChild.firstElementChild.setAttribute(
+          'src',
+          resultingImgURL
+        );
+        data.editing.imgURL = resultingImgURL;
+      }
     }
   });
 
@@ -805,7 +823,7 @@ function getImagesBackup(exercise, el, el2) {
   xhr.send(data);
 }
 
-function getImages(exercise, el, el2) {
+function getImages(exercise, el, el2 = false, search = true) {
   var xhr = new XMLHttpRequest();
   var workoutQuery = exercise.split(' ').join('_');
   var resultingImgURL = null;
@@ -819,7 +837,11 @@ function getImages(exercise, el, el2) {
 
   xhr.addEventListener('load', function () {
     if (xhr.status !== 200) {
-      getImagesBackup(exercise, el, el2);
+      if (el2) {
+        getImagesBackup(exercise, el, el2);
+      } else {
+        getImagesBackup(exercise, el, false, false);
+      }
       return;
     }
     imageCount++;
@@ -827,8 +849,18 @@ function getImages(exercise, el, el2) {
       document.documentElement.classList.remove('wait-cursor');
     }
     resultingImgURL = xhr.response.results[0];
-    setImgOfEl(resultingImgURL, el);
-    setImgOfEl(resultingImgURL, el2);
+    if (search) {
+      if (el2) {
+        setImgOfEl(resultingImgURL, el2);
+      }
+      setImgOfEl(resultingImgURL, el);
+    } else {
+      el.firstElementChild.firstElementChild.setAttribute(
+        'src',
+        resultingImgURL
+      );
+      data.editing.imgURL = resultingImgURL;
+    }
   });
 
   xhr.send();
