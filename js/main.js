@@ -266,7 +266,8 @@ function updateDOM(formEls) {
   var repsAndSets = tempEditLi.querySelector('.reps-and-sets');
   tempEditLi.querySelector('h3').textContent = data.editing.title;
   tagContainer.firstElementChild.textContent = data.editing.tag1;
-  tagContainer.lastElementChild.textContent = data.editing.tag2;
+  tagContainer.firstElementChild.nextElementSibling.textContent =
+    data.editing.tag2;
   if (data.editing.reps && data.editing.sets) {
     repsAndSets.classList.remove('hidden');
   } else {
