@@ -109,8 +109,17 @@ function handleDateChange(event) {
 function handleEditFormSubmits(event) {
   event.preventDefault();
   var elements = event.target.closest('form').elements;
-  updateData(elements);
-  updateDOM(elements);
+  var { date, description, reps, sets, tag1, tag2, title } = elements;
+  updateData(
+    date.value,
+    description.value,
+    reps.value,
+    sets.value,
+    tag1.value,
+    tag2.value,
+    title.value
+  );
+  updateDOM();
   $editForm.reset();
   $editModal.classList.add('hidden');
 }
@@ -146,7 +155,8 @@ function handleUpcomingWorkoutClicks(event) {
     event.target.matches('.edit-icon')
   ) {
     $editModal.classList.remove('hidden');
-    populateEditForm(event.target.closest('li'));
+    tempEditLi = event.target.closest('li');
+    populateEditForm(tempEditLi.dataset.id);
   }
   if (
     event.target.matches('.exit-button') ||
@@ -230,55 +240,58 @@ function handleAddButtonClicks(event) {
   resetExerModal();
 }
 
-function populateEditForm(li) {
-  var exercise = getExerciseObjectGivenId(li.dataset.id);
+function populateEditForm(id) {
+  var exercise = getExerciseObjectGivenId(id);
   var form = $editForm.elements;
-  tempEditLi = li;
   data.editing = exercise;
   form.date.value = exercise.date.join('-');
   form.title.value = exercise.title;
   form.reps.value = exercise.reps;
   form.sets.value = exercise.sets;
-  form['muscle-group-1'].value = exercise.tag1;
-  form['muscle-group-2'].value = exercise.tag2;
+  form.tag1.value = exercise.tag1;
+  form.tag2.value = exercise.tag2;
   form.description.value = exercise.description;
 }
 
-function updateData(formEls) {
+function updateData(date, description, reps, sets, tag1, tag2, title) {
   var oldDate = data.editing.date.join('');
-  var newDate = formEls.date.value.split('-');
+  var newDate = date.split('-');
   var oldTitle = data.editing.title;
-  data.editing.title = formEls.title.value;
-  if (oldTitle !== data.editing.title) {
-    getImages(data.editing.title, tempEditLi, false, false);
-  }
+
+  data.editing.title = title;
   data.editing.date = newDate;
-  data.editing.reps = formEls.reps.value;
-  data.editing.sets = formEls.sets.value;
-  data.editing.tag1 = formEls['muscle-group-1'].value;
-  data.editing.tag2 = formEls['muscle-group-2'].value;
-  data.editing.description = formEls.description.value;
+  data.editing.reps = reps;
+  data.editing.sets = sets;
+  data.editing.tag1 = tag1;
+  data.editing.tag2 = tag2;
+  data.editing.description = description;
+
+  if (oldTitle !== data.editing.title) { getImages(data.editing.title, tempEditLi, false, false); }
+
   moveDataToDay(oldDate, newDate.join(''));
 }
 
-function updateDOM(formEls) {
+function updateDOM() {
+  var date = data.editing.date.join('');
   var tagContainer = tempEditLi.querySelector('.muscle-tag-container');
   var repsAndSets = tempEditLi.querySelector('.reps-and-sets');
+  var ulContainer = checkForUlContainer(date);
+
   tempEditLi.querySelector('h3').textContent = data.editing.title;
+  tempEditLi.querySelector(
+    'h4'
+  ).textContent = `reps ${data.editing.reps} x sets ${data.editing.sets}`;
   tagContainer.firstElementChild.textContent = data.editing.tag1;
   tagContainer.firstElementChild.nextElementSibling.textContent =
     data.editing.tag2;
+
   if (data.editing.reps && data.editing.sets) {
     repsAndSets.classList.remove('hidden');
   } else {
     repsAndSets.classList.add('hidden');
   }
-  tempEditLi.querySelector(
-    'h4'
-  ).textContent = `reps ${data.editing.reps} x sets ${data.editing.sets}`;
+
   removeExerciseFromDOM(tempEditLi.dataset.id);
-  var date = data.editing.date.join('');
-  var ulContainer = checkForUlContainer(date);
   pushOrMakeUlContainer(ulContainer, [tempEditLi], date);
   hideAllButSpecific(date);
   checkContentMessage();
