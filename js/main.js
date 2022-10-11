@@ -110,7 +110,7 @@ function handleEditFormSubmits(event) {
   var form = event.target.closest('form');
   var id = form.dataset.id;
   var { date, description, reps, sets, tag1, tag2, title } = form.elements;
-  updateData(
+  var oldDate = updateData(
     date.value,
     description.value,
     reps.value,
@@ -120,7 +120,7 @@ function handleEditFormSubmits(event) {
     title.value,
     id
   );
-  updateDOM(id);
+  updateDOM(id, oldDate);
   $editForm.reset();
   $editModal.classList.add('hidden');
 }
@@ -272,9 +272,11 @@ function updateData(date, description, reps, sets, tag1, tag2, title, id) {
   }
 
   moveDataToDay(oldDate, newDate.join(''));
+
+  return oldDate;
 }
 
-function updateDOM(id) {
+function updateDOM(id, oldDate) {
   var li = $upWorkCont.querySelector(`[data-id='${id}']`);
   var date = data.editing.date.join('');
   var tagContainer = li.querySelector('.muscle-tag-container');
@@ -295,7 +297,9 @@ function updateDOM(id) {
     repsAndSets.classList.add('hidden');
   }
 
-  removeExerciseFromDOM(li.dataset.id);
+  if (oldDate !== date) {
+    removeExerciseFromDOM(li.dataset.id);
+  }
   pushOrMakeUlContainer(ulContainer, [li], date);
   hideAllButSpecific(date);
   checkContentMessage();
