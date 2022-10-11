@@ -37,7 +37,6 @@ var searchString = null;
 var userYearMonthDay = null;
 var spinner = null;
 var dateButton = null;
-var tempEditLi = null;
 var spinner2 = null;
 
 var muscleObj = {
@@ -108,8 +107,9 @@ function handleDateChange(event) {
 
 function handleEditFormSubmits(event) {
   event.preventDefault();
-  var elements = event.target.closest('form').elements;
-  var { date, description, reps, sets, tag1, tag2, title } = elements;
+  var form = event.target.closest('form');
+  var id = form.dataset.id;
+  var { date, description, reps, sets, tag1, tag2, title } = form.elements;
   updateData(
     date.value,
     description.value,
@@ -117,9 +117,10 @@ function handleEditFormSubmits(event) {
     sets.value,
     tag1.value,
     tag2.value,
-    title.value
+    title.value,
+    id
   );
-  updateDOM();
+  updateDOM(id);
   $editForm.reset();
   $editModal.classList.add('hidden');
 }
@@ -155,8 +156,7 @@ function handleUpcomingWorkoutClicks(event) {
     event.target.matches('.edit-icon')
   ) {
     $editModal.classList.remove('hidden');
-    tempEditLi = event.target.closest('li');
-    populateEditForm(tempEditLi.dataset.id);
+    populateEditForm(event.target.closest('li').dataset.id);
   }
   if (
     event.target.matches('.exit-button') ||
@@ -251,9 +251,10 @@ function populateEditForm(id) {
   form.tag1.value = exercise.tag1;
   form.tag2.value = exercise.tag2;
   form.description.value = exercise.description;
+  $editForm.dataset.id = id;
 }
 
-function updateData(date, description, reps, sets, tag1, tag2, title) {
+function updateData(date, description, reps, sets, tag1, tag2, title, id) {
   var oldDate = data.editing.date.join('');
   var newDate = date.split('-');
   var oldTitle = data.editing.title;
@@ -266,19 +267,22 @@ function updateData(date, description, reps, sets, tag1, tag2, title) {
   data.editing.tag2 = tag2;
   data.editing.description = description;
 
-  if (oldTitle !== data.editing.title) { getImages(data.editing.title, tempEditLi, false, false); }
+  if (oldTitle !== data.editing.title) {
+    getImages(data.editing.title, id, true);
+  }
 
   moveDataToDay(oldDate, newDate.join(''));
 }
 
-function updateDOM() {
+function updateDOM(id) {
+  var li = $upWorkCont.querySelector(`[data-id='${id}']`);
   var date = data.editing.date.join('');
-  var tagContainer = tempEditLi.querySelector('.muscle-tag-container');
-  var repsAndSets = tempEditLi.querySelector('.reps-and-sets');
+  var tagContainer = li.querySelector('.muscle-tag-container');
+  var repsAndSets = li.querySelector('.reps-and-sets');
   var ulContainer = checkForUlContainer(date);
 
-  tempEditLi.querySelector('h3').textContent = data.editing.title;
-  tempEditLi.querySelector(
+  li.querySelector('h3').textContent = data.editing.title;
+  li.querySelector(
     'h4'
   ).textContent = `reps ${data.editing.reps} x sets ${data.editing.sets}`;
   tagContainer.firstElementChild.textContent = data.editing.tag1;
@@ -291,8 +295,8 @@ function updateDOM() {
     repsAndSets.classList.add('hidden');
   }
 
-  removeExerciseFromDOM(tempEditLi.dataset.id);
-  pushOrMakeUlContainer(ulContainer, [tempEditLi], date);
+  removeExerciseFromDOM(li.dataset.id);
+  pushOrMakeUlContainer(ulContainer, [li], date);
   hideAllButSpecific(date);
   checkContentMessage();
 }
@@ -757,8 +761,6 @@ function getExercises() {
     var title = null;
     var tag1 = null;
     var tag2 = null;
-    var el;
-    var el2;
 
     tempSearchResults = results;
     spinner.remove();
@@ -771,19 +773,15 @@ function getExercises() {
       if (!tag2) {
         tag2 = muscleObjReverse[results[i].muscles[1]];
       }
-      el = createLiElement(title, tag1, tag2);
-      el2 = createLiElement(title, tag1, tag2);
-      el.dataset.id = i;
-      el2.dataset.id = i;
-      pushWorkoutElement(el, el2);
-      getImages(results[i].name, el, el2);
+
+      getImages(title, i, false, tag1, tag2);
     }
   });
 
   xhr.send();
 }
 
-function getImagesBackup(exercise, el, el2 = false, search = true) {
+function getImagesBackup(query, id, edit = false) {
   const data = null;
   var resultingImgURL = null;
 
@@ -795,30 +793,18 @@ function getImagesBackup(exercise, el, el2 = false, search = true) {
     if (this.readyState === this.DONE) {
       if (xhr.status !== 200) {
         resultingImgURL = 'images/image-not-found.webp';
-        if (search) {
-          if (el2) {
-            setImgOfEl(resultingImgURL, el2);
-          }
-          setImgOfEl(resultingImgURL, el);
-        } else {
-          data.editing.imgURL = resultingImgURL;
-        }
-      }
-      imageCount++;
-      if (imageCount % 3 === 0) {
-        document.documentElement.classList.remove('wait-cursor');
+        setImgOfEl(resultingImgURL, id);
       }
       resultingImgURL = this.response.value[0].thumbnailUrl;
-      if (search) {
-        if (el2) {
-          setImgOfEl(resultingImgURL, el2);
-        }
-        setImgOfEl(resultingImgURL, el);
+      if (!edit) {
+        setImgOfEl(resultingImgURL, id);
       } else {
-        el.firstElementChild.firstElementChild.setAttribute(
-          'src',
-          resultingImgURL
-        );
+        $upWorkCont
+          .querySelector(`[data-id='${id}']`)
+          .firstElementChild.firstElementChild.setAttribute(
+            'src',
+            resultingImgURL
+          );
         data.editing.imgURL = resultingImgURL;
       }
     }
@@ -826,7 +812,7 @@ function getImagesBackup(exercise, el, el2 = false, search = true) {
 
   xhr.open(
     'GET',
-    `https://bing-image-search1.p.rapidapi.com/images/search?q=person_doing_${exercise}_gym_workout`
+    `https://bing-image-search1.p.rapidapi.com/images/search?q=person_doing_${query}_gym_workout`
   );
   xhr.setRequestHeader(
     'X-RapidAPI-Key',
@@ -837,10 +823,14 @@ function getImagesBackup(exercise, el, el2 = false, search = true) {
   xhr.send(data);
 }
 
-function getImages(exercise, el, el2 = false, search = true) {
+function getImages(query, id, edit = false, tag1 = false, tag2 = false) {
   var xhr = new XMLHttpRequest();
-  var workoutQuery = exercise.split(' ').join('_');
+  var workoutQuery = query.split(' ').join('_');
   var resultingImgURL = null;
+
+  if (!edit) {
+    pushWorkoutElement(id, query, tag1, tag2);
+  }
 
   var targetUrl = encodeURIComponent(
     `https://imsea.herokuapp.com/api/1?q=person_doing_${workoutQuery}_exercise`
@@ -851,28 +841,27 @@ function getImages(exercise, el, el2 = false, search = true) {
 
   xhr.addEventListener('load', function () {
     if (xhr.status !== 200) {
-      if (el2) {
-        getImagesBackup(exercise, el, el2);
+      if (edit) {
+        getImagesBackup(query, id, true);
       } else {
-        getImagesBackup(exercise, el, false, false);
+        getImagesBackup(query, id);
       }
       return;
     }
     imageCount++;
-    if (imageCount % 3 === 0) {
+    if (imageCount % 9 === 0) {
       document.documentElement.classList.remove('wait-cursor');
     }
     resultingImgURL = xhr.response.results[0];
-    if (search) {
-      if (el2) {
-        setImgOfEl(resultingImgURL, el2);
-      }
-      setImgOfEl(resultingImgURL, el);
+    if (!edit) {
+      setImgOfEl(resultingImgURL, id);
     } else {
-      el.firstElementChild.firstElementChild.setAttribute(
-        'src',
-        resultingImgURL
-      );
+      $upWorkCont
+        .querySelector(`[data-id='${id}']`)
+        .firstElementChild.firstElementChild.setAttribute(
+          'src',
+          resultingImgURL
+        );
       data.editing.imgURL = resultingImgURL;
     }
   });
@@ -905,9 +894,15 @@ function getDateDifferenceInDays(date) {
   }
 }
 
-function pushWorkoutElement(el, el2) {
-  $modResCont.appendChild(el2);
-  $newExerCont.appendChild(el);
+function pushWorkoutElement(id, title, tag1, tag2) {
+  var desktopElement = createLiElement(title, tag1, tag2);
+  var mobileElement = createLiElement(title, tag1, tag2);
+
+  desktopElement.dataset.id = id;
+  mobileElement.dataset.id = id;
+
+  $newExerCont.appendChild(desktopElement);
+  $modResCont.appendChild(mobileElement);
 }
 
 function changeDayView(event, direction) {
@@ -1059,9 +1054,10 @@ function removeSearchResults() {
   }
 }
 
-function setImgOfEl(url, el) {
+function setImgOfEl(url, id) {
   var searchEntriesMobile = null;
   var searchEntriesDesktop = null;
+  var el = $modSearchCont.querySelector(`[data-id='${id}']`);
 
   searchEntriesMobile = $modResCont.children;
   searchEntriesDesktop = $newExerCont.children;
@@ -1075,6 +1071,8 @@ function setImgOfEl(url, el) {
       break;
     }
   }
+
+  el = $newExerCont.querySelector(`[data-id='${id}']`);
 
   for (var j = 0; j < searchEntriesDesktop.length; j++) {
     if (searchEntriesDesktop[j] === el) {
