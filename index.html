@@ -99,7 +99,6 @@
       <div class="user-message hidden">
         <p>Select a valid date</p>
       </div>
-
       <div class="workout-modal modal hidden">
         <div class="modal-layout row row-lr-center">
           <div class="modal-content work-mod-cont text-align-center">
@@ -168,6 +167,56 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="edit-modal modal hidden">
+        <form class="modal-content text-align-center">
+          <div class="row row-lr-center row-ud-center pos-rel">
+            <h2 class="description-title">EDITING</h2>
+            <img class="modal-x-icon" src="images/x.webp" alt="x-icon" />
+          </div>
+          <div class="row row-lr-center">
+            <div class="col-fourth text-align-right">
+              <label class="height" for="title">Title*</label>
+              <label class="height" for="date">Date</label>
+              <label class="height" for="reps">Reps</label>
+              <label class="height" for="sets">Sets</label>
+              <label class="height" for="tag1">Muscle Group 1</label>
+              <label class="height" for="tag2">Muscle Group 2</label>
+              <label for="description" class="height">Description</label>
+            </div>
+            <div class="col-half text-align-left">
+              <div class="height">
+                <input type="text" id="title" />
+              </div>
+              <div class="height row flex-start">
+                <input
+                  class="edit-date"
+                  type="date"
+                  step="1"
+                  id="date"
+                  min="2020-10-10"
+                />
+              </div>
+              <div class="height">
+                <input type="text" id="reps" />
+              </div>
+              <div class="height">
+                <input type="text" id="sets" />
+              </div>
+              <div class="height">
+                <input type="text" id="tag1" />
+              </div>
+              <div class="height">
+                <input type="text" id="tag2" />
+              </div>
+              <textarea name="description" rows="6" id="description"></textarea>
+            </div>
+          </div>
+          <div class="row row-lr-center mt-1r">
+            <button class="save">SAVE</button>
+            <button type="button" class="cancel">CANCEL</button>
+          </div>
+        </form>
       </div>
     </main>
     <script src="js/data.js"></script>

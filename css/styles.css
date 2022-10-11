@@ -6,10 +6,10 @@ body,
 form,
 button,
 input,
-p {
-  font-family:
-    "Source Sans Pro",
-    sans-serif;
+p,
+label,
+textarea {
+  font-family: "Source Sans Pro", sans-serif;
 }
 
 body {
@@ -22,7 +22,6 @@ h3,
 h4,
 h5,
 h6,
-label,
 a {
   font-family: Oswald, sans-serif;
 }
@@ -30,6 +29,7 @@ a {
 h1,
 h2,
 h3,
+h4,
 p,
 label,
 a {
@@ -68,6 +68,14 @@ img {
   width: 100%;
 }
 
+textarea {
+  border: none;
+  overflow: auto;
+  outline: none;
+  resize: none;
+  border-radius: 0.2rem;
+}
+
 input[type="date"].modal-date-picker {
   width: 75px;
   height: 20px;
@@ -80,6 +88,8 @@ input[type="date"].modal-date-picker {
 button,
 .exit-button,
 .exit-icon,
+.edit-button,
+.edit-icon,
 .info-button,
 .info-icon,
 .add-button,
@@ -168,6 +178,23 @@ input[type="date"] {
   }
 }
 
+input[type="date"] {
+  position: relative;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background: transparent;
+  bottom: 0;
+  color: transparent;
+  cursor: pointer;
+  height: auto;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: auto;
+}
+
 .nav-1 {
   background-color: #222f3b;
   filter: drop-shadow(0 0 0.1rem rgb(53, 53, 53));
@@ -201,7 +228,7 @@ input[type="date"] {
 }
 
 .modal {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   height: 100vh;
@@ -213,6 +240,12 @@ input[type="date"] {
   margin-top: 7rem;
 }
 
+.upcoming-workout-entry h4 {
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin-left: 0.1rem;
+}
+
 .modal-content {
   width: 336px;
   background-color: #0a0e11;
@@ -220,6 +253,9 @@ input[type="date"] {
   border: 0.4rem solid #5e503f;
   min-height: 6rem;
   padding-bottom: 1rem;
+  margin-top: 7rem;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .modal-content h2 {
@@ -242,6 +278,10 @@ input[type="date"] {
   border: 3px solid #334b61;
   border-radius: 3px;
   width: 12rem;
+}
+
+.mod-search-cont .edit-icon {
+  display: none;
 }
 
 .mod-search-cont .image-container > img {
@@ -288,20 +328,11 @@ input[type="date"] {
   padding: 0;
 }
 
-.title-and-buttons > h3 {
-  font-size: 0.75rem;
+.title-and-buttons h3 {
+  font-size: 1rem;
   padding-right: 0.25rem;
   font-weight: 400;
   margin-top: 0.25rem;
-}
-
-.info-button {
-  margin-left: auto;
-  font-size: 1.5rem;
-  height: 2rem;
-  padding: 0 0.75rem;
-  border: none;
-  display: none;
 }
 
 .mod-search-cont {
@@ -319,16 +350,51 @@ input[type="date"] {
   letter-spacing: 0.02rem;
 }
 
+button.save {
+  background-color: #104021;
+}
+
+button.cancel {
+  background-color: #5a2424;
+}
+
 .info-icon,
+.edit-icon,
+.exit-icon,
 .modal-x-icon {
-  width: 16px;
-  height: 16px;
+  width: 24px;
+  height: 24px;
   margin-right: 0.2rem;
 }
 
 .modal-x-icon {
   position: absolute;
   right: 10px;
+}
+
+.edit-icon {
+  margin-right: 1rem;
+}
+
+.edit-modal label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+  padding-top: 0.25rem;
+  margin-right: 1rem;
+}
+
+.modal-content .info-icon {
+  margin-right: 0;
+}
+
+.edit-modal .height {
+  height: 2.5rem;
+}
+
+.edit-modal input,
+.edit-modal textarea {
+  width: 90%;
 }
 
 .info-modal,
@@ -384,22 +450,16 @@ input[type="date"] {
   margin-right: 1rem;
 }
 
-.exit-icon {
-  width: 1rem;
-  height: 1rem;
-}
-
-.exit-button {
-  width: 2rem;
-  height: 2rem;
-  margin: 0 0 0 0.5rem;
+.info-button,
+.exit-button,
+.edit-button {
   display: none;
 }
 
 .new-exercises-container {
   display: none;
   min-height: 100vh;
-  padding-top: 2rem;
+  padding-top: 0.25rem;
   background-color: #2d2c30;
 }
 
@@ -426,6 +486,7 @@ input[type="date"] {
 }
 
 .nav-2-date {
+  width: 8.15rem;
   border: none;
   padding: 0 0 0 0.5rem;
 }
@@ -466,6 +527,9 @@ input[type="date"] {
 
 .info-icon {
   margin-left: auto;
+  margin-right: 1.35rem;
+  position: relative;
+  top: 2px;
 }
 
 .info-button:hover,
@@ -481,6 +545,10 @@ input[type="date"] {
   flex-direction: column;
 }
 
+.flex-start {
+  align-items: flex-start;
+}
+
 .space-between {
   justify-content: space-between;
 }
@@ -491,6 +559,18 @@ input[type="date"] {
 
 .row-ud-center {
   align-items: center;
+}
+
+.justify-self-center {
+  justify-self: center;
+}
+
+.text-align-left {
+  text-align: left;
+}
+
+.text-align-right {
+  text-align: right;
 }
 
 .text-align-center {
@@ -525,16 +605,20 @@ input[type="date"] {
   margin-left: auto;
 }
 
-.text-align-left {
-  text-align: left;
-}
-
 .pos-rel {
   position: relative;
 }
 
+.pos-abs {
+  position: absolute;
+}
+
 .p-1r {
   padding: 1rem;
+}
+
+.mt-1r {
+  margin-top: 1rem;
 }
 
 .low-brightness {
@@ -558,30 +642,25 @@ input[type="date"] {
     max-width: 720px;
   }
 
-  .nav-1[data-view="upcoming-workouts"] .nav-1-search-container {
+  .nav-1[data-view="upcoming-workouts"] .nav-1-search-container,
+  .nav-1[data-view="new-exercises"] .plus-icon-container,
+  .new-exercises-container .edit-button,
+  .exit-icon,
+  .info-icon,
+  .edit-icon {
     display: none;
   }
 
-  .nav-1[data-view="upcoming-workouts"] .plus-icon-container {
-    display: flex;
-  }
-
+  .nav-1[data-view="upcoming-workouts"] .plus-icon-container,
   .nav-1[data-view="new-exercises"] .nav-1-search-container {
     display: flex;
-  }
-
-  .nav-1[data-view="new-exercises"] .plus-icon-container {
-    display: none;
   }
 
   .nav-2 .new-exercises-text {
     display: block;
   }
 
-  .nav-2[data-view="upcoming-workouts"] .upcoming-workouts-text {
-    background-color: #564b3e;
-  }
-
+  .nav-2[data-view="upcoming-workouts"] .upcoming-workouts-text,
   .nav-2[data-view="new-exercises"] .new-exercises-text {
     background-color: #564b3e;
   }
@@ -592,23 +671,38 @@ input[type="date"] {
     margin-left: auto;
   }
 
-  .exit-icon {
-    display: none;
+  .exit-button,
+  .edit-button,
+  .info-button {
+    display: block;
+    margin: 0 0 0 0.5rem;
   }
 
-  .info-icon {
-    display: none;
+  .upcoming-workout-entry h4 {
+    font-size: 1.25rem;
+    bottom: 1rem;
+    margin-left: 0.2rem;
   }
 
   .exit-button {
-    display: block;
+    width: 28px;
+    height: 28px;
+    border-radius: 0.2rem;
+  }
+
+  .info-button,
+  .edit-button {
+    border: none;
+    height: 28px;
+    padding: 0.1rem 0.5rem;
+    font-size: 1.25rem;
   }
 
   .info-button {
-    display: block;
+    margin-left: auto;
   }
 
-  .nav-1 h1 {
+  .info-button .nav-1 h1 {
     font-size: 1.6rem;
     letter-spacing: 0.5px;
     padding: 1.5rem 0.75rem;
@@ -621,15 +715,39 @@ input[type="date"] {
   }
 
   .no-content {
-    margin: 1.75rem;
     font-size: 1.25rem;
   }
 
-  .title-and-buttons > h3 {
+  .edit-modal label {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: 500;
+    margin-right: 1rem;
+  }
+
+  .edit-modal .modal-content {
+    width: 625px;
+  }
+
+  .edit-modal .height {
+    height: 3rem;
+  }
+
+  .edit-modal .description-title {
+    margin-bottom: 2rem;
+  }
+
+  .edit-modal button {
+    font-size: 1.25rem;
+    margin: 0.5rem;
+  }
+
+  .title-and-buttons h3 {
     font-size: 2rem;
   }
 
   .day-separator {
+    margin-top: 0.5rem;
     padding: 0 1rem;
   }
 
@@ -650,11 +768,6 @@ input[type="date"] {
     margin-right: 1rem;
   }
 
-  .modal-content {
-    width: 725px;
-    margin-top: 7rem;
-  }
-
   .modal-content h2 {
     margin: 1.5rem 0 0.9rem;
     font-size: 1.75rem;
@@ -662,14 +775,15 @@ input[type="date"] {
   }
 
   .modal-x-icon {
-    margin-right: 1rem;
+    position: absolute;
+    top: 1rem;
+    margin-right: 0.5rem;
   }
 
   .new-exercises-container,
   .upcoming-workouts-container {
     display: block;
     min-height: 100vh;
-    padding-top: 2rem;
     background-color: #2d2c30;
   }
 
@@ -690,7 +804,7 @@ input[type="date"] {
   }
 
   .upcoming-workouts-container {
-    padding-top: 1rem;
+    padding-top: 0.25rem;
   }
 
   .separator-polygon {
@@ -699,10 +813,6 @@ input[type="date"] {
     align-self: center;
     margin: 0 1rem;
     display: block;
-  }
-
-  .new-exercises-empty {
-    margin-top: 0.75rem;
   }
 
   .separator-polygon:hover {
