@@ -237,6 +237,7 @@ function handleAddButtonClicks(event) {
   showUpcomingWorkoutsView();
   showOrHideAddButtonMobile();
   $workModal.classList.add('hidden');
+  $n2Date.style.outline = 'none';
   resetExerModal();
 }
 
@@ -869,7 +870,6 @@ function getImages(query, id, edit = false, tag1 = false, tag2 = false) {
       data.editing.imgURL = resultingImgURL;
     }
   });
-
   xhr.send();
 }
 
