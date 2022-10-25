@@ -429,7 +429,6 @@ button.cancel {
 
 .day-separator {
   padding: 0.5rem 1rem;
-  background-color: #2d2c30;
 }
 
 .day-separator > h1 {
@@ -458,7 +457,6 @@ button.cancel {
   display: none;
   min-height: 100vh;
   padding-top: 0.25rem;
-  background-color: #2d2c30;
 }
 
 .nav-1-search-container button,
@@ -493,6 +491,7 @@ button.cancel {
   display: none;
   align-self: center;
   margin-left: auto;
+  padding: 0 0.6rem 0 0;
 }
 
 .muscle-tag-container {
@@ -782,15 +781,14 @@ button.cancel {
   .upcoming-workouts-container {
     display: block;
     min-height: 100vh;
-    background-color: #2d2c30;
   }
 
   .upcoming-workouts-container li.upcoming-workout-entry,
   .new-exercises-container li.upcoming-workout-entry {
-    background-color: #0a0e11;
+    background-color: #1f1f1f;
     margin: 1rem;
     border-radius: 0.25rem;
-    border: 3px solid #0a0e11;
+    border: 3px solid #5b5b5b;
   }
 
   .upcoming-workouts-container .image-container > img,
