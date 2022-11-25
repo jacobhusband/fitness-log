@@ -20,18 +20,40 @@
     <link rel="stylesheet" href="css/styles.css" />
   </head>
   <body>
-    <header>
-      <div class="row logo">
-        <div class="row title">
-          <h1>FITNESS LOG</h1>
-          <i class="fa-solid fa-book-open"></i>
-        </div>
-        <div class="row icons">
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </div>
+    <header class="row">
+      <div class="row title">
+        <h1>FITNESS LOG</h1>
+        <i class="fa-solid fa-book-open"></i>
+      </div>
+      <div class="row icons">
+        <i class="fa-solid fa-magnifying-glass"></i>
       </div>
     </header>
-    <main></main>
+    <main>
+      <form class="search row">
+        <div class="selectdiv">
+          <select>
+            <option selected>Choose Muscle Group</option>
+            <option value="arms">arms</option>
+            <option value="legs">legs</option>
+            <option value="chest">chest</option>
+            <option value="quads">quads</option>
+            <option value="lats">lats</option>
+            <option value="abs">abs</option>
+            <option value="calves">calves</option>
+            <option value="hamstrings">hamstrings</option>
+            <option value="glutes">glutes</option>
+            <option value="triceps">triceps</option>
+            <option value="obliques">obliques</option>
+            <option value="biceps">biceps</option>
+            <option value="shoulder">shoulder</option>
+            <option value="serratus-anterior">serratus anterior</option>
+            <option value="soleus">soleus</option>
+          </select>
+        </div>
+        <button type="submit">Submit</button>
+      </form>
+    </main>
     <script src="js/data.js"></script>
     <script src="js/main.js"></script>
   </body>
