@@ -13,7 +13,8 @@ var data = {
   view: 'upcoming-workouts',
   nextExerciseId: 1,
   exercises: [],
-  editing: null
+  editing: null,
+  storedImages: {}
 };
 
 data = grabbedData || data;

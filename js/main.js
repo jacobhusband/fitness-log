@@ -80,25 +80,29 @@ function getWorkouts(event) {
 function getImages(results) {
   let waitTime = 0;
   results.forEach((obj, index) => {
-    const url = `https://imsea.herokuapp.com/api/1?q=person_doing_${obj.name}_gym_workout`;
+    if (!data.storedImages[obj.id]) {
+      const url = `https://imsea.herokuapp.com/api/1?q=person_doing_${obj.name}_gym_workout`;
 
-    fetch('https://lfz-cors.herokuapp.com/?url=' + encodeURIComponent(url), {
-      method: 'GET',
-      mode: 'cors',
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    }).then(result => result.json())
-      .then(images => {
-        obj.images = images.results;
-        swapSpinner(obj.images[0], obj.id);
-      })
-      .catch(() => {
-        setTimeout(() => {
-          getBackupImages(obj);
-        }, waitTime);
-        waitTime += 500;
-      });
+      fetch('https://lfz-cors.herokuapp.com/?url=' + encodeURIComponent(url), {
+        method: 'GET',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(result => result.json())
+        .then(images => {
+          data.storedImages[obj.id] = images.results[0];
+          swapSpinner(images.results[0], obj.id);
+        })
+        .catch(() => {
+          setTimeout(() => {
+            getBackupImages(obj);
+          }, waitTime);
+          waitTime += 500;
+        });
+    } else {
+      swapSpinner(data.storedImages[obj.id], obj.id);
+    }
   });
 }
 
@@ -116,8 +120,9 @@ function getBackupImages(obj) {
         swapSpinner('images/image-not-found.webp', obj.id);
         return;
       }
-      obj.images = images.value.map(obj => obj.contentUrl);
-      swapSpinner(obj.images[0], obj.id);
+      const newImages = images.value.map(obj => obj.contentUrl);
+      data.storedImages[obj.id] = newImages[0];
+      swapSpinner(newImages[0], obj.id);
     })
     .catch(err => {
       swapSpinner('images/image-not-found.webp', obj.id);
@@ -223,7 +228,9 @@ function createSpinner(id) {
 function swapSpinner(img, id) {
   const image = (img) || '/images/image-not-found.webp';
   const spinner = searchUl.querySelector(`.lds-ring[data-id="${id}"]`);
-  const papa = spinner.parentElement;
-  spinner.remove();
-  papa.appendChild(buildElement('img', { src: image }));
+  const papa = spinner?.parentElement;
+  if (papa) {
+    spinner.remove();
+    papa.appendChild(buildElement('img', { src: image }));
+  }
 }
