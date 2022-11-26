@@ -1,0 +1,59 @@
+form {
+  padding: 0 1rem;
+  gap: 1rem;
+  margin-top: 0.6rem;
+}
+
+select,
+button {
+  color: white;
+  background-color: #151515;
+  border: none;
+}
+
+.selectdiv {
+  position: relative;
+  flex-grow: 2;
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+.selectdiv::after {
+  content: "<>";
+  font: 0.9rem Consolas, monospace;
+  color: white;
+  transform: rotate(90deg);
+  right: 10px;
+  top: 6px;
+  padding: 0 0 4px;
+  border-bottom: 1px solid #999;
+  position: absolute;
+  pointer-events: none;
+}
+
+.selectdiv select {
+  width: 100%;
+  text-align: right;
+  appearance: none;
+  height: 34px;
+  padding: 0 40px;
+  color: white;
+  background-image: none;
+  -ms-word-break: normal;
+  word-break: normal;
+  font-family: inherit;
+  font-size: 0.75rem;
+}
+
+form.search button {
+  font-family: "Work Sans", sans-serif;
+  padding: 0 1rem;
+  font-size: 0.75rem;
+}
+
+.selectdiv select,
+form.search button {
+  border-radius: 0.25rem;
+}

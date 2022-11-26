@@ -2,8 +2,11 @@ body {
   background-color: #0e0e0e;
 }
 
+img {
+  width: 100%;
+}
+
 header {
-  color: white;
   justify-content: space-between;
   padding: 1.1rem 1rem;
 }
@@ -30,62 +33,41 @@ header .icons {
   margin-right: 0.25rem;
 }
 
-form {
-  padding: 0 1rem;
-  gap: 1rem;
-  margin-top: 0.6rem;
+.content {
+  margin-top: 0.5rem;
 }
 
-select,
-button {
-  color: white;
-  background-color: #151515;
-  border: none;
+li.search-item {
+  height: 120px;
+  padding: 0.25rem;
 }
 
-.selectdiv {
-  position: relative;
-  flex-grow: 2;
+li.search-item:hover {
+  outline: 1px solid green;
 }
 
-select::-ms-expand {
-  display: none;
+li.search-item img {
+  width: 112px;
+  height: 112px;
+  object-fit: cover;
 }
 
-.selectdiv::after {
-  content: "<>";
-  font: 0.9rem Consolas, monospace;
-  color: white;
-  transform: rotate(90deg);
-  right: 10px;
-  top: 6px;
-  padding: 0 0 4px;
-  border-bottom: 1px solid #999;
-  position: absolute;
-  pointer-events: none;
-}
-
-.selectdiv select {
-  width: 100%;
-  text-align: right;
-  appearance: none;
-  height: 34px;
-  padding: 0 40px;
-  color: white;
-  background-image: none;
-  -ms-word-break: normal;
-  word-break: normal;
-  font-family: inherit;
+li.search-item h3 {
   font-size: 0.75rem;
+  font-weight: 500;
+  margin-right: 0.25rem;
 }
 
-form.search button {
-  font-family: "Work Sans", sans-serif;
-  padding: 0 1rem;
-  font-size: 0.75rem;
+li.search-item span {
+  font-size: 0.7rem;
 }
 
-.selectdiv select,
-form.search button {
-  border-radius: 0.25rem;
+li.search-item p {
+  font-size: 0.65rem;
+  margin-bottom: 0;
+}
+
+li.search-item .col:last-child {
+  padding: 0.25rem;
+  overflow-y: scroll;
 }
