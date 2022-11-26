@@ -42,10 +42,6 @@ li.search-item {
   padding: 0.25rem;
 }
 
-li.search-item:hover {
-  outline: 1px solid green;
-}
-
 li.search-item img {
   width: 112px;
   height: 112px;

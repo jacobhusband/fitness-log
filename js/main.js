@@ -38,7 +38,22 @@ var muscleObjReverse = {
   15: 'Soleus'
 };
 
+const selectedWorkouts = {};
+
 searchForm.addEventListener('submit', getWorkouts);
+searchUl.addEventListener('click', selectWorkout);
+
+function selectWorkout(event) {
+  const li = event.target.closest('li');
+  const id = li.dataset.id;
+  if (selectedWorkouts[id]) {
+    delete selectedWorkouts[id];
+    li.style.border = '';
+  } else {
+    selectedWorkouts[id] = li;
+    li.style.border = '1px solid green';
+  }
+}
 
 function getWorkouts(event) {
   event.preventDefault();
