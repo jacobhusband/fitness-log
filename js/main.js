@@ -38,8 +38,6 @@ var muscleObjReverse = {
   15: 'Soleus'
 };
 
-const tempStorage = {};
-
 searchForm.addEventListener('submit', getWorkouts);
 
 function getWorkouts(event) {
@@ -77,7 +75,7 @@ function getImages(results) {
     }).then(result => result.json())
       .then(images => {
         obj.images = images.results;
-        tempStorage[obj.id] = obj;
+        swapSpinner(obj.images[0], obj.id);
       })
       .catch(err => console.error(err));
   });
@@ -123,9 +121,11 @@ function buildLi(data) {
         ? `(${muscleObjReverse[muscles[0]]})`
         : null;
 
+  const spinner = createSpinner(id);
+
   return buildElement('li', { class: 'search-item row', 'dataset-id': id }, [
     buildElement('div', { class: 'col' }, [
-      buildElement('img', { src: 'images/image-not-found.webp' })
+      spinner
     ]),
     buildElement('div', { class: 'col' }, [
       buildElement('div', { class: 'row' }, [
@@ -165,4 +165,21 @@ function buildElement(tag, attr, children) {
     });
   }
   return el;
+}
+
+function createSpinner(id) {
+  return buildElement('div', { class: 'lds-ring', 'dataset-id': id }, [
+    buildElement('div', {}),
+    buildElement('div', {}),
+    buildElement('div', {}),
+    buildElement('div', {})
+  ]);
+}
+
+function swapSpinner(img, id) {
+  const image = (img) || '/images/image-not-found.webp';
+  const spinner = searchUl.querySelector(`.lds-ring[data-id="${id}"]`);
+  const papa = spinner.parentElement;
+  spinner.remove();
+  papa.appendChild(buildElement('img', { src: image }));
 }
