@@ -89,6 +89,7 @@ function cleanData(data) {
   data.results.forEach(result => {
     if (!flag[result.id]) {
       flag[result.id] = true;
+      result.description = result.description.replace(/<\/?p[^>]*>/g, '\n');
       results.push(result);
     }
   });
@@ -100,11 +101,15 @@ function buildUl(data) {
     const muscles = (obj.muscles.length === 1)
       ? [obj.muscles[0], obj.muscles_secondary[0]]
       : [obj.muscles[0], obj.muscles[1]];
+    const muscleArr = muscles.filter(x => x !== undefined);
+    const desc = (obj.description === '' || obj.description.length < 10)
+      ? 'No description received...'
+      : obj.description;
     searchUl.appendChild(buildLi({
       id: obj.id,
-      description: obj.description,
+      description: desc,
       name: obj.name,
-      muscles
+      muscles: muscleArr
     }));
   });
 }
