@@ -1,4 +1,5 @@
 const searchForm = document.querySelector('form.search');
+const searchUl = document.querySelector('ul.search');
 
 var muscleObj = {
   biceps: 1,
@@ -19,23 +20,23 @@ var muscleObj = {
   soleus: 15
 };
 
-// var muscleObjReverse = {
-//   1: 'Biceps',
-//   2: 'Shoulders',
-//   3: 'Serratus Anterior',
-//   4: 'Chest',
-//   5: 'Triceps',
-//   6: 'Abs',
-//   7: 'Calves',
-//   8: 'Glutes',
-//   9: 'Traps',
-//   10: 'Quads',
-//   11: 'Hamstrings',
-//   12: 'Lats',
-//   13: 'Brachialis',
-//   14: 'Obliques',
-//   15: 'Soleus'
-// };
+var muscleObjReverse = {
+  1: 'Biceps',
+  2: 'Shoulders',
+  3: 'Serratus Anterior',
+  4: 'Chest',
+  5: 'Triceps',
+  6: 'Abs',
+  7: 'Calves',
+  8: 'Glutes',
+  9: 'Traps',
+  10: 'Quads',
+  11: 'Hamstrings',
+  12: 'Lats',
+  13: 'Brachialis',
+  14: 'Obliques',
+  15: 'Soleus'
+};
 
 const tempStorage = {};
 
@@ -57,7 +58,7 @@ function getWorkouts(event) {
   }).then(result => result.json())
     .then(data => {
       newData = cleanData(data);
-      buildElements(newData);
+      buildUl(newData);
       getImages(newData);
     })
     .catch(err => console.error(err));
@@ -94,20 +95,69 @@ function cleanData(data) {
   return results;
 }
 
-function buildElements(data) {
+function buildUl(data) {
   data.forEach(obj => {
     const muscles = (obj.muscles.length === 1)
       ? [obj.muscles[0], obj.muscles_secondary[0]]
       : [obj.muscles[0], obj.muscles[1]];
-    buildElement({
+    searchUl.appendChild(buildLi({
       id: obj.id,
       description: obj.description,
       name: obj.name,
       muscles
-    });
+    }));
   });
 }
 
-function buildElement(data) {
+function buildLi(data) {
+  const { id, name, description, muscles } = data;
 
+  const muscleText = (muscles.length === 2)
+    ? `(${muscleObjReverse[muscles[0]]}/${muscleObjReverse[muscles[1]]})`
+    : (muscles.length === 1)
+        ? `(${muscleObjReverse[muscles[0]]})`
+        : null;
+
+  return buildElement('li', { class: 'search-item row', 'dataset-id': id }, [
+    buildElement('div', { class: 'col' }, [
+      buildElement('img', { src: 'images/image-not-found.webp' })
+    ]),
+    buildElement('div', { class: 'col' }, [
+      buildElement('div', { class: 'row' }, [
+        buildElement('h3', { textContent: name.toUpperCase() }),
+        buildElement('span', { textContent: muscleText })
+      ]),
+      buildElement('div', { class: 'row' }, [
+        buildElement('span', { textContent: 'sets x reps' })
+      ]),
+      buildElement('div', { class: 'row' }, [
+        buildElement('p', { textContent: description })
+      ])
+    ])
+  ]);
+}
+
+function buildElement(tag, attr, children) {
+  const el = document.createElement(tag);
+  for (var key in attr) {
+    if (key === 'textContent') {
+      el.textContent = attr[key];
+    } else if (key === 'dataset-id') {
+      el.dataset.id = attr[key];
+    } else if (key === 'dataset-view') {
+      el.dataset.view = attr[key];
+    } else if (key === 'dataset-date') {
+      el.dataset.date = attr[key];
+    } else {
+      el.setAttribute(key, attr[key]);
+    }
+  }
+  if (children) {
+    children.forEach(child => {
+      if (child) {
+        el.appendChild(child);
+      }
+    });
+  }
+  return el;
 }
