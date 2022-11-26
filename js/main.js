@@ -48,7 +48,7 @@ function selectWorkout(event) {
   const id = li.dataset.id;
   if (selectedWorkouts[id]) {
     delete selectedWorkouts[id];
-    li.style.border = '';
+    li.style.border = '1px solid #0e0e0e';
   } else {
     selectedWorkouts[id] = li;
     li.style.border = '1px solid green';
@@ -78,8 +78,9 @@ function getWorkouts(event) {
 }
 
 function getImages(results) {
+  let waitTime = 0;
   results.forEach((obj, index) => {
-    const url = `https://imsea.herokuapp.com/api/1?q=person_doing_${obj.name}_exercise`;
+    const url = `https://imsea.herokuapp.com/api/1?q=person_doing_${obj.name}_gym_workout`;
 
     fetch('https://lfz-cors.herokuapp.com/?url=' + encodeURIComponent(url), {
       method: 'GET',
@@ -92,8 +93,36 @@ function getImages(results) {
         obj.images = images.results;
         swapSpinner(obj.images[0], obj.id);
       })
-      .catch(err => console.error(err));
+      .catch(() => {
+        setTimeout(() => {
+          getBackupImages(obj);
+        }, waitTime);
+        waitTime += 500;
+      });
   });
+}
+
+function getBackupImages(obj) {
+  fetch(`https://bing-image-search1.p.rapidapi.com/images/search?q=person_doing_${obj.name}_gym_workout`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-RapidAPI-Key': '7554e57ef3msh1833d2c439a50a2p14b399jsnab00643335db',
+      'X-RapidAPI-Host': 'bing-image-search1.p.rapidapi.com'
+    }
+  }).then(result => result.json())
+    .then(images => {
+      if (!images.value) {
+        swapSpinner('images/image-not-found.webp', obj.id);
+        return;
+      }
+      obj.images = images.value.map(obj => obj.contentUrl);
+      swapSpinner(obj.images[0], obj.id);
+    })
+    .catch(err => {
+      swapSpinner('images/image-not-found.webp', obj.id);
+      console.error(err);
+    });
 }
 
 function cleanData(data) {
@@ -102,7 +131,7 @@ function cleanData(data) {
   data.results.forEach(result => {
     if (!flag[result.id]) {
       flag[result.id] = true;
-      result.description = result.description.replace(/<\/?p[^>]*>/g, '\n');
+      result.description = result.description.replace(/<\/?p[^>]*>/g, '').split('-').join('').replaceAll('\n', '. ');
       results.push(result);
     }
   });

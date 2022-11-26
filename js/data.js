@@ -12,7 +12,7 @@ var grabbedData = JSON.parse(localStorage.getItem('workoutData'));
 var data = {
   view: 'upcoming-workouts',
   nextExerciseId: 1,
-  exercises: {},
+  exercises: [],
   editing: null
 };
 
