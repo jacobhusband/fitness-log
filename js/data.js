@@ -10,10 +10,8 @@ window.addEventListener('pagehide', function (event) {
 var grabbedData = JSON.parse(localStorage.getItem('workoutData'));
 
 var data = {
-  view: 'upcoming-workouts',
-  nextExerciseId: 1,
+  view: 'home',
   exercises: {},
-  editing: null,
   storedImages: {}
 };
 

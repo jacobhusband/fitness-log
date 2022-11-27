@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="css/spinner.css" />
     <link rel="stylesheet" href="css/styles.css" />
   </head>
-  <body data-view="search">
+  <body>
     <header class="row">
       <div class="row top-row">
         <div class="row title">
@@ -37,6 +37,8 @@
           <i class="fa-solid fa-book-open"></i>
         </div>
         <div class="row icons">
+          <a href="#home"><i class="fa-solid fa-home"></i></a>
+          <a href="#create"><i class="fa-solid fa-plus"></i></a>
           <a href="#search"><i class="fa-solid fa-magnifying-glass"></i></a>
         </div>
       </div>
@@ -72,8 +74,10 @@
         <a href="#create">Create</a>
         <a href="#search">Search</a>
       </nav>
-      <div class="search flex-col">
-        <ul class="search content col"></ul>
+      <div class="search flex-col hidden">
+        <ul class="search content col">
+          <li style="color: white; text-align: center">No search made...</li>
+        </ul>
         <div class="buttons row hidden">
           <button class="more">More Results</button
           ><button class="add hidden">Add Selected Workouts</button>

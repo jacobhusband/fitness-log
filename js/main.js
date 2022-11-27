@@ -4,6 +4,8 @@ const buttonsUl = document.querySelector('.buttons');
 const searchModal = document.querySelector('.modal');
 const calendarForm = document.querySelector('form.calendar');
 const addButton = document.querySelector('button.add');
+const body = document.querySelector('body');
+const searchOptions = searchForm.querySelector('select');
 
 const muscleObj = {
   biceps: 1,
@@ -66,6 +68,32 @@ searchForm.addEventListener('submit', getWorkouts);
 calendarForm.addEventListener('submit', saveWorkouts);
 searchUl.addEventListener('click', selectWorkout);
 buttonsUl.addEventListener('click', modifySearchItems);
+window.addEventListener('hashchange', event => {
+  const search = searchUl.parentElement;
+  if (window.location.hash === '#home') {
+    body.dataset.view = 'home';
+    data.view = 'home';
+    search.classList.add('hidden');
+  } else if (window.location.hash === '#create') {
+    body.dataset.view = 'create';
+    data.view = 'create';
+    search.classList.add('hidden');
+  } else if (window.location.hash === '#search') {
+    body.dataset.view = 'search';
+    data.view = 'search';
+    search.classList.remove('hidden');
+    searchOptions.focus();
+  }
+});
+
+window.location.hash = `#${data.view}`;
+body.dataset.view = data.view;
+
+if (data.view === 'search') searchUl.parentElement.classList.remove('hidden');
+
+buildHomepage();
+
+function buildHomepage() { }
 
 function saveWorkouts(event) {
   event.preventDefault();
@@ -143,7 +171,6 @@ function getWorkouts(event, url) {
   if (event) {
     event.preventDefault();
     while (searchUl.lastElementChild) searchUl.lastElementChild.remove();
-    buttonsUl.classList.remove('hidden');
     const input = event.target.elements.search.value;
     url = `https://wger.de/api/v2/exercise/?language=2&limit=5&muscles=${muscleObj[input]}`;
   }
@@ -160,6 +187,7 @@ function getWorkouts(event, url) {
       newData = cleanData(data);
       buildUl(newData);
       getImages(newData);
+      buttonsUl.classList.remove('hidden');
     })
     .catch(err => console.error(err));
 }
