@@ -30,3 +30,8 @@ span,
 i {
   color: white;
 }
+
+button,
+a {
+  cursor: pointer;
+}

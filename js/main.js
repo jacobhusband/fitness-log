@@ -1,5 +1,6 @@
 const searchForm = document.querySelector('form.search');
 const searchUl = document.querySelector('ul.search');
+const buttonsUl = document.querySelector('.buttons');
 
 var muscleObj = {
   biceps: 1,
@@ -39,9 +40,24 @@ var muscleObjReverse = {
 };
 
 const selectedWorkouts = {};
+// let selectedDate = null;
+let nextFetch = null;
 
 searchForm.addEventListener('submit', getWorkouts);
 searchUl.addEventListener('click', selectWorkout);
+buttonsUl.addEventListener('click', modifySearchItems);
+
+function modifySearchItems(event) {
+  if (event.target.matches('.add')) {
+    addWorkouts();
+  } else if (event.target.matches('.more')) {
+    getWorkouts(null, nextFetch);
+  }
+}
+
+function addWorkouts() {
+
+}
 
 function selectWorkout(event) {
   const li = event.target.closest('li');
@@ -55,12 +71,16 @@ function selectWorkout(event) {
   }
 }
 
-function getWorkouts(event) {
-  event.preventDefault();
-
-  const input = event.target.elements.search.value;
-  const url = `https://wger.de/api/v2/exercise/?language=2&limit=5&muscles=${muscleObj[input]}`;
+function getWorkouts(event, url) {
   let newData;
+
+  if (event) {
+    event.preventDefault();
+    while (searchUl.lastElementChild) searchUl.lastElementChild.remove();
+    buttonsUl.classList.remove('hidden');
+    const input = event.target.elements.search.value;
+    url = `https://wger.de/api/v2/exercise/?language=2&limit=5&muscles=${muscleObj[input]}`;
+  }
 
   fetch('https://lfz-cors.herokuapp.com/?url=' + encodeURIComponent(url), {
     method: 'GET',
@@ -70,6 +90,7 @@ function getWorkouts(event) {
     }
   }).then(result => result.json())
     .then(data => {
+      nextFetch = data.next;
       newData = cleanData(data);
       buildUl(newData);
       getImages(newData);
@@ -136,7 +157,7 @@ function cleanData(data) {
   data.results.forEach(result => {
     if (!flag[result.id]) {
       flag[result.id] = true;
-      result.description = result.description.replace(/<\/?p[^>]*>/g, '').split('-').join('').replaceAll('\n', '. ');
+      result.description = result.description.replace(/<\/?(?:p|ol|li|ul|em|strong)[^>]*>/g, '').split('-').join('').replaceAll('\n', '. ').replaceAll('..', '.');
       results.push(result);
     }
   });

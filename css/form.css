@@ -48,16 +48,14 @@ select::-ms-expand {
   word-break: normal;
   font-family: inherit;
   font-size: 0.75rem;
+  border-radius: 0.25rem;
 }
 
+.buttons button,
 form.search button {
   font-family: "Work Sans", sans-serif;
   padding: 0 1rem;
   font-size: 0.75rem;
-}
-
-.selectdiv select,
-form.search button {
   border-radius: 0.25rem;
 }
 

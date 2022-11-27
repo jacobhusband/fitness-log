@@ -21,7 +21,7 @@ header i {
   font-size: 1.3rem;
 }
 
-header i {
+header i.fa-book-open {
   position: relative;
   top: 2.5px;
 }
@@ -42,8 +42,29 @@ header .icons {
   margin-right: 0.25rem;
 }
 
+.buttons {
+  gap: 0.5rem;
+  justify-content: space-between;
+  margin: 0 1rem 1rem;
+}
+
+.buttons button {
+  padding: 0.75rem;
+  background-color: #0e0e0e;
+  text-decoration: underline;
+}
+
+[data-view="search"] i.fa-magnifying-glass {
+  text-decoration: underline red;
+  text-underline-offset: 0.5rem;
+}
+
 .content {
   margin-top: 0.5rem;
+}
+
+ul.search {
+  margin-bottom: 1rem;
 }
 
 li.search-item {
@@ -82,13 +103,36 @@ nav {
   display: none;
 }
 
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.hidden {
+  display: none;
+}
+
 @media only screen and (min-width: 768px) {
   ul.search {
     display: flex;
     flex-direction: column;
     gap: 1.125rem;
     margin-right: 3rem;
-    margin-bottom: 4rem;
+  }
+
+  .buttons {
+    gap: 1rem;
+    justify-content: space-between;
+    margin-right: 3rem;
+    margin-bottom: 1rem;
+    margin-left: 0;
+  }
+
+  .buttons button {
+    padding: 0.75rem;
+    font-size: 1rem;
+    background-color: #1a1a1a;
+    text-decoration: none;
   }
 
   li.search-item {
