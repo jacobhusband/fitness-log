@@ -23,16 +23,16 @@
   </head>
   <body>
     <header class="row">
-      <div class="row title">
-        <h1>FITNESS LOG</h1>
-        <i class="fa-solid fa-book-open"></i>
+      <div class="row top-row">
+        <div class="row title">
+          <h1>FITNESS LOG</h1>
+          <i class="fa-solid fa-book-open"></i>
+        </div>
+        <div class="row icons">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
       </div>
-      <div class="row icons">
-        <i class="fa-solid fa-magnifying-glass"></i>
-      </div>
-    </header>
-    <main data-view="search">
-      <form class="search row">
+      <form class="search row bottom-row">
         <div class="selectdiv">
           <select name="search">
             <option value="default" selected disabled>
@@ -57,7 +57,14 @@
         </div>
         <button type="submit">Submit</button>
       </form>
-      <ul class="search content"></ul>
+    </header>
+    <main data-view="search" class="row">
+      <nav class="col">
+        <a href="#home">Home</a>
+        <a href="#create">Create</a>
+        <a href="#search">Search</a>
+      </nav>
+      <ul class="search content col"></ul>
     </main>
     <script src="js/data.js"></script>
     <script src="js/main.js"></script>

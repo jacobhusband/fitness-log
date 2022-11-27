@@ -7,8 +7,13 @@ img {
 }
 
 header {
-  justify-content: space-between;
   padding: 1.1rem 1rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+header .top-row {
+  width: 100%;
 }
 
 header h1,
@@ -25,12 +30,36 @@ header h1 {
   font-weight: 700;
 }
 
+header .row:first-child {
+  justify-content: space-between;
+}
+
 header .title {
   gap: 12px;
 }
 
 header .icons {
   margin-right: 0.25rem;
+}
+
+nav {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  margin: 0.25rem 2.5rem;
+}
+
+nav a {
+  color: white;
+  font-family: "Work Sans", sans-serif;
+  font-size: 0.875rem;
+  text-decoration: none;
+}
+
+[data-view="search"] nav a[href="#search"] {
+  text-decoration: underline red;
+  text-decoration-thickness: 0.125rem;
+  text-underline-offset: 0.5rem;
 }
 
 .content {
@@ -67,4 +96,31 @@ li.search-item p {
 li.search-item .col:last-child {
   padding: 0.25rem;
   overflow-y: scroll;
+}
+
+@media only screen and (min-width: 768px) {
+  header .row .row:last-child {
+    display: none;
+  }
+
+  header .top-row {
+    width: inherit;
+  }
+
+  header {
+    padding: 1.85rem 2.5rem;
+  }
+
+  header h1,
+  header i {
+    font-size: 2rem;
+  }
+
+  header i {
+    top: 4px;
+  }
+
+  header .title {
+    gap: 1.5rem;
+  }
 }
