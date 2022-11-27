@@ -97,6 +97,7 @@ nav {
     border-radius: 1.5rem;
     background-color: #1a1a1a;
     border: 1px solid #0e0e0e;
+    gap: 1rem;
   }
 
   li.search-item img {
@@ -104,6 +105,24 @@ nav {
     height: 180px;
     border-radius: 0.75rem;
     object-fit: cover;
+  }
+
+  li.search-item h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-right: 0.5rem;
+  }
+
+  li.search-item span {
+    font-size: 1rem;
+    font-weight: 300;
+    position: relative;
+    top: 3px;
+  }
+
+  li.search-item p {
+    font-size: 0.875rem;
+    margin-bottom: 0;
   }
 
   nav {
@@ -136,6 +155,7 @@ nav {
 
   header {
     padding: 1.85rem 2.5rem;
+    justify-content: space-between;
   }
 
   header h1,
