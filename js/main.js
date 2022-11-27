@@ -1,8 +1,11 @@
 const searchForm = document.querySelector('form.search');
 const searchUl = document.querySelector('ul.search');
 const buttonsUl = document.querySelector('.buttons');
+const searchModal = document.querySelector('.modal');
+const calendarForm = document.querySelector('form.calendar');
+const addButton = document.querySelector('button.add');
 
-var muscleObj = {
+const muscleObj = {
   biceps: 1,
   shoulders: 2,
   'serratus anterior': 3,
@@ -21,7 +24,7 @@ var muscleObj = {
   soleus: 15
 };
 
-var muscleObjReverse = {
+const muscleObjReverse = {
   1: 'Biceps',
   2: 'Shoulders',
   3: 'Serratus Anterior',
@@ -39,13 +42,53 @@ var muscleObjReverse = {
   15: 'Soleus'
 };
 
+const months = {
+  Jan: 1,
+  Feb: 2,
+  Mar: 3,
+  Apr: 4,
+  May: 5,
+  Jun: 6,
+  Jul: 7,
+  Aug: 8,
+  Sep: 9,
+  Oct: 10,
+  Nov: 11,
+  Dec: 12
+};
+
 const selectedWorkouts = {};
-// let selectedDate = null;
+const workoutInfo = {};
+let selectedDate = null;
 let nextFetch = null;
 
 searchForm.addEventListener('submit', getWorkouts);
+calendarForm.addEventListener('submit', saveWorkouts);
 searchUl.addEventListener('click', selectWorkout);
 buttonsUl.addEventListener('click', modifySearchItems);
+
+function saveWorkouts(event) {
+  event.preventDefault();
+
+  let date;
+  if (event.submitter.className === 'cancel') {
+    selectedDate = null;
+  } else {
+    for (const key in selectedWorkouts) selectedWorkouts[key] = workoutInfo[key];
+    const month = (selectedDate[1].toString().length === 1)
+      ? '0' + selectedDate[1].toString()
+      : selectedDate[1].toString();
+    const day = (selectedDate[0].toString().length === 1)
+      ? '0' + selectedDate[0].toString()
+      : selectedDate[0].toString();
+    date = Number(`${selectedDate[2]}${month}${day}`);
+    selectedWorkouts.date = selectedDate;
+    selectedWorkouts.sort = date;
+    data.exercises.push(selectedWorkouts);
+    data.exercises.sort((x, y) => y.sort - x.sort);
+  }
+  searchModal.classList.add('hidden');
+}
 
 function modifySearchItems(event) {
   if (event.target.matches('.add')) {
@@ -56,7 +99,26 @@ function modifySearchItems(event) {
 }
 
 function addWorkouts() {
+  searchModal.classList.remove('hidden');
 
+  /* eslint-disable-next-line */
+  let myCalendar = new VanillaCalendar({
+    selector: '#myCalendar',
+    pastDates: false,
+    availableWeekDays: [
+      { day: 'monday' },
+      { day: 'tuesday' },
+      { day: 'wednesday' },
+      { day: 'thursday' },
+      { day: 'friday' },
+      { day: 'saturday' },
+      { day: 'sunday' }
+    ],
+    onSelect: (data, elem) => {
+      const date = data.date.split(' ');
+      selectedDate = [Number(date[2]), months[date[1]], Number(date[3])];
+    }
+  });
 }
 
 function selectWorkout(event) {
@@ -65,9 +127,11 @@ function selectWorkout(event) {
   if (selectedWorkouts[id]) {
     delete selectedWorkouts[id];
     li.style.border = '1px solid #0e0e0e';
+    if (!Object.keys(selectedWorkouts).length) addButton.classList.add('hidden');
   } else {
     selectedWorkouts[id] = li;
     li.style.border = '1px solid green';
+    addButton.classList.remove('hidden');
   }
 }
 
@@ -173,12 +237,14 @@ function buildUl(data) {
     const desc = (obj.description === '' || obj.description.length < 10)
       ? 'No description received...'
       : obj.description;
-    searchUl.appendChild(buildLi({
+    const content = {
       id: obj.id,
       description: desc,
       name: obj.name,
       muscles: muscleArr
-    }));
+    };
+    workoutInfo[content.id] = content;
+    searchUl.appendChild(buildLi(content));
   });
 }
 

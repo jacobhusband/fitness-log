@@ -10,6 +10,14 @@
       rel="stylesheet"
     />
     <script
+      type="text/javascript"
+      src="calendar/vanilla-calendar-master/src/js/vanilla-calendar-min.js"
+    ></script>
+    <link
+      href="calendar/vanilla-calendar-master/src/css/vanilla-calendar-min.css"
+      rel="stylesheet"
+    />
+    <script
       src="https://kit.fontawesome.com/bcc0cc06ce.js"
       crossorigin="anonymous"
     ></script>
@@ -64,11 +72,21 @@
         <a href="#create">Create</a>
         <a href="#search">Search</a>
       </nav>
-      <div class="flex-col">
+      <div class="search flex-col">
         <ul class="search content col"></ul>
         <div class="buttons row hidden">
           <button class="more">More Results</button
-          ><button class="add">Add Selected Workouts</button>
+          ><button class="add hidden">Add Selected Workouts</button>
+        </div>
+        <div class="modal row hidden">
+          <div class="workout-date">
+            <h2>Choose a workout date</h2>
+            <div id="myCalendar" class="vanilla-calendar"></div>
+            <form class="buttons calendar">
+              <button type="submit" class="submit">Submit</button>
+              <button class="cancel">Cancel</button>
+            </form>
+          </div>
         </div>
       </div>
     </main>

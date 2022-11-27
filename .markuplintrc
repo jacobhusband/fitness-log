@@ -56,5 +56,6 @@
         "indentation": false
       }
     }
-  ]
+  ],
+  "excludeFiles": ["./calendar/vanilla-calendar-master/index.html"]
 }

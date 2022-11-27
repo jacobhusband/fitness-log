@@ -63,8 +63,39 @@ header .icons {
   margin-top: 0.5rem;
 }
 
+.search .modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  align-items: center;
+  justify-content: center;
+}
+
+.search .modal .workout-date {
+  background-color: #0e0e0e;
+  padding: 1rem;
+  text-align: center;
+  border-radius: 0.5rem;
+}
+
 ul.search {
   margin-bottom: 1rem;
+}
+
+.vanilla-calendar {
+  width: 300px;
+  margin: 0.5rem;
+}
+
+.vanilla-calendar span {
+  color: black;
+}
+
+.workout-date .buttons {
+  margin: 0;
 }
 
 li.search-item {
@@ -113,6 +144,10 @@ nav {
 }
 
 @media only screen and (min-width: 768px) {
+  button:hover {
+    filter: brightness(120%);
+  }
+
   ul.search {
     display: flex;
     flex-direction: column;
@@ -133,6 +168,10 @@ nav {
     font-size: 1rem;
     background-color: #1a1a1a;
     text-decoration: none;
+  }
+
+  .workout-date .buttons button {
+    margin: 0.5rem 0.25rem 0;
   }
 
   li.search-item {
@@ -169,6 +208,10 @@ nav {
     margin-bottom: 0;
   }
 
+  li.search-item:hover {
+    filter: brightness(120%);
+  }
+
   nav {
     display: flex;
     flex-direction: column;
@@ -181,6 +224,10 @@ nav {
     font-family: "Work Sans", sans-serif;
     font-size: 0.875rem;
     text-decoration: none;
+  }
+
+  a:hover {
+    filter: brightness(80%);
   }
 
   [data-view="search"] nav a[href="#search"] {
