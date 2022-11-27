@@ -69,11 +69,13 @@ buttonsUl.addEventListener('click', modifySearchItems);
 
 function saveWorkouts(event) {
   event.preventDefault();
-
-  let date;
   if (event.submitter.className === 'cancel') {
+    searchModal.classList.add('hidden');
     selectedDate = null;
-  } else {
+    return;
+  }
+  if (!selectedDate) return;
+  if (event.submitter.className === 'submit') {
     for (const key in selectedWorkouts) selectedWorkouts[key] = workoutInfo[key];
     const month = (selectedDate[1].toString().length === 1)
       ? '0' + selectedDate[1].toString()
@@ -81,13 +83,13 @@ function saveWorkouts(event) {
     const day = (selectedDate[0].toString().length === 1)
       ? '0' + selectedDate[0].toString()
       : selectedDate[0].toString();
-    date = Number(`${selectedDate[2]}${month}${day}`);
+    const date = Number(`${selectedDate[2]}${month}${day}`);
     selectedWorkouts.date = selectedDate;
-    selectedWorkouts.sort = date;
-    data.exercises.push(selectedWorkouts);
-    data.exercises.sort((x, y) => y.sort - x.sort);
+    if (data.exercises[date]) data.exercises[date] = Object.assign({}, data.exercises[date], selectedWorkouts);
+    if (!data.exercises[date]) data.exercises[date] = selectedWorkouts;
+    searchModal.classList.add('hidden');
+    selectedDate = null;
   }
-  searchModal.classList.add('hidden');
 }
 
 function modifySearchItems(event) {
