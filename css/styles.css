@@ -42,26 +42,6 @@ header .icons {
   margin-right: 0.25rem;
 }
 
-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-  margin: 0.25rem 2.5rem;
-}
-
-nav a {
-  color: white;
-  font-family: "Work Sans", sans-serif;
-  font-size: 0.875rem;
-  text-decoration: none;
-}
-
-[data-view="search"] nav a[href="#search"] {
-  text-decoration: underline red;
-  text-decoration-thickness: 0.125rem;
-  text-underline-offset: 0.5rem;
-}
-
 .content {
   margin-top: 0.5rem;
 }
@@ -98,7 +78,54 @@ li.search-item .col:last-child {
   overflow-y: scroll;
 }
 
+nav {
+  display: none;
+}
+
 @media only screen and (min-width: 768px) {
+  ul.search {
+    display: flex;
+    flex-direction: column;
+    gap: 1.125rem;
+    margin-right: 3rem;
+    margin-bottom: 4rem;
+  }
+
+  li.search-item {
+    height: 204px;
+    padding: 0.75rem 1.125rem 0.75rem 0.75rem;
+    border-radius: 1.5rem;
+    background-color: #1a1a1a;
+    border: 1px solid #0e0e0e;
+  }
+
+  li.search-item img {
+    width: 180px;
+    height: 180px;
+    border-radius: 0.75rem;
+    object-fit: cover;
+  }
+
+  nav {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    margin: 0.25rem 2.5rem;
+  }
+
+  nav a {
+    color: white;
+    font-family: "Work Sans", sans-serif;
+    font-size: 0.875rem;
+    text-decoration: none;
+  }
+
+  [data-view="search"] nav a[href="#search"] {
+    text-decoration: underline red;
+    text-decoration-thickness: 0.125rem;
+    text-underline-offset: 0.5rem;
+  }
+
   header .row .row:last-child {
     display: none;
   }
