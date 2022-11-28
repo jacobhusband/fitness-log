@@ -6,6 +6,7 @@ const calendarForm = document.querySelector('form.calendar');
 const addButton = document.querySelector('button.add');
 const body = document.querySelector('body');
 const searchOptions = searchForm.querySelector('select');
+const homeDiv = document.querySelector('.home');
 
 const muscleObj = {
   biceps: 1,
@@ -93,7 +94,49 @@ if (data.view === 'search') searchUl.parentElement.classList.remove('hidden');
 
 buildHomepage();
 
-function buildHomepage() { }
+function buildHomepage() {
+  const remove = [];
+  const output = [];
+  for (const key in data.exercises) {
+    const ul = buildElement('ul', { class: 'search content col' });
+    const text = getSeparatorText(key);
+    if (!text) {
+      remove.push(key);
+      continue;
+    }
+    const separator = buildSeparator(text);
+    const arr = [];
+    for (const workout in data.exercises[key]) {
+      if (workout === 'date') continue;
+      arr.push(data.exercises[key][workout]);
+    }
+    buildUl(arr, ul);
+    ul.insertBefore(separator, ul.firstChild);
+    homeDiv.appendChild(ul);
+    output.push(ul);
+  }
+}
+
+function buildSeparator(text) {
+  return buildElement('div', { class: 'separator' }, [
+    buildElement('h2', { class: 'separator-text', textContent: text })
+  ]);
+}
+
+function getSeparatorText(workoutTime) {
+  const d = new Date();
+  const today = Number(`${d.getFullYear()}${d.getMonth() + 1}${d.getDate()}`);
+  const future = Number(workoutTime);
+  if (future - today < 0) {
+    return null;
+  } else if (future - today === 0) {
+    return 'Today';
+  } else if (future - today === 1) {
+    return 'Tomorrow';
+  } else {
+    return `In ${future - today} days`;
+  }
+}
 
 function saveWorkouts(event) {
   event.preventDefault();
@@ -117,6 +160,7 @@ function saveWorkouts(event) {
     if (!data.exercises[date]) data.exercises[date] = selectedWorkouts;
     searchModal.classList.add('hidden');
     selectedDate = null;
+    window.location.hash = 'home';
   }
 }
 
@@ -185,8 +229,9 @@ function getWorkouts(event, url) {
     .then(data => {
       nextFetch = data.next;
       newData = cleanData(data);
-      buildUl(newData);
+      buildUl(newData, searchUl);
       getImages(newData);
+      window.location.hash = 'search';
       buttonsUl.classList.remove('hidden');
     })
     .catch(err => console.error(err));
@@ -258,7 +303,7 @@ function cleanData(data) {
   return results;
 }
 
-function buildUl(data) {
+function buildUl(data, ul) {
   data.forEach(obj => {
     const muscles = (obj.muscles.length === 1)
       ? [obj.muscles[0], obj.muscles_secondary[0]]
@@ -274,7 +319,7 @@ function buildUl(data) {
       muscles: muscleArr
     };
     workoutInfo[content.id] = content;
-    searchUl.appendChild(buildLi(content));
+    ul.appendChild(buildLi(content));
   });
 }
 
