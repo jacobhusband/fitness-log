@@ -7,6 +7,7 @@ const addButton = document.querySelector('button.add');
 const body = document.querySelector('body');
 const searchOptions = searchForm.querySelector('select');
 const homeDiv = document.querySelector('.home');
+const createDiv = document.querySelector('.create');
 
 const muscleObj = {
   biceps: 1,
@@ -71,21 +72,21 @@ searchUl.addEventListener('click', selectWorkout);
 buttonsUl.addEventListener('click', modifySearchItems);
 window.addEventListener('hashchange', event => {
   const search = searchUl.parentElement;
+  search.classList.add('hidden');
+  homeDiv.classList.add('hidden');
+  createDiv.classList.add('hidden');
   if (window.location.hash === '#home') {
     body.dataset.view = 'home';
     data.view = 'home';
-    search.classList.add('hidden');
     homeDiv.classList.remove('hidden');
   } else if (window.location.hash === '#create') {
     body.dataset.view = 'create';
     data.view = 'create';
-    search.classList.add('hidden');
-    homeDiv.classList.add('hidden');
+    createDiv.classList.remove('hidden');
   } else if (window.location.hash === '#search') {
     body.dataset.view = 'search';
     data.view = 'search';
     search.classList.remove('hidden');
-    homeDiv.classList.add('hidden');
     searchOptions.focus();
   }
 });
@@ -95,6 +96,7 @@ body.dataset.view = data.view;
 
 if (data.view === 'search') searchUl.parentElement.classList.remove('hidden');
 if (data.view === 'home') homeDiv.classList.remove('hidden');
+if (data.view === 'create') createDiv.classList.remove('hidden');
 
 buildHomepage();
 
@@ -186,6 +188,7 @@ function saveWorkouts(event) {
       createDateUl(date, true);
     }
     searchModal.classList.add('hidden');
+    homeDiv.classList.remove('hidden');
     selectedDate = null;
     window.location.hash = 'home';
   }

@@ -60,6 +60,23 @@ header .icons {
 [data-view="home"] i.fa-home {
   text-decoration: underline red;
   text-underline-offset: 0.5rem;
+  text-decoration-line: underline !important;
+  text-decoration-color: red !important;
+  text-decoration-style: solid !important;
+  -webkit-text-decoration-thickness: 2px !important;
+}
+
+.views {
+  margin-left: 1rem;
+}
+
+.views button {
+  padding: 0.25rem 1rem;
+  background-color: rgb(31, 31, 31);
+}
+
+.views button.muted {
+  color: #747474;
 }
 
 .content {
