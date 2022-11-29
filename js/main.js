@@ -60,8 +60,8 @@ const months = {
   Dec: 12
 };
 
-const selectedWorkouts = {};
 const workoutInfo = {};
+let selectedWorkouts = {};
 let selectedDate = null;
 let nextFetch = null;
 
@@ -94,26 +94,43 @@ window.location.hash = `#${data.view}`;
 body.dataset.view = data.view;
 
 if (data.view === 'search') searchUl.parentElement.classList.remove('hidden');
+if (data.view === 'home') homeDiv.classList.remove('hidden');
 
 buildHomepage();
 
 function buildHomepage() {
-  const remove = [];
-  for (const key in data.exercises) {
-    const ul = buildElement('ul', { class: 'search content col' });
-    const text = getSeparatorText(key);
-    if (!text) {
-      remove.push(key);
-      continue;
+  for (const date in data.exercises) {
+    createDateUl(date);
+  }
+}
+
+function addToUl(date, exercise) {
+  const li = buildLi(exercise, true);
+  const ul = homeDiv.querySelector(`[data-id="${date}"]`);
+  ul.appendChild(li);
+}
+
+function createDateUl(date, insert = false) {
+  const text = getSeparatorText(data.exercises[date].date);
+  if (!text) return;
+  const ul = buildElement('ul', { class: 'search content col', 'dataset-id': date });
+  const separator = buildSeparator(text);
+  const arr = [];
+  for (const workout in data.exercises[date]) {
+    if (workout === 'date') continue;
+    arr.push(data.exercises[date][workout]);
+  }
+  buildUl(arr, ul, true);
+  ul.insertBefore(separator, ul.firstChild);
+  if (insert) {
+    for (let i = 0; i < homeDiv.children.length; i++) {
+      if (homeDiv.children[i].dataset.id > ul.dataset.id) {
+        homeDiv.insertBefore(ul, homeDiv.children[i]);
+      } else {
+        homeDiv.appendChild(ul);
+      }
     }
-    const separator = buildSeparator(text);
-    const arr = [];
-    for (const workout in data.exercises[key]) {
-      if (workout === 'date') continue;
-      arr.push(data.exercises[key][workout]);
-    }
-    buildUl(arr, ul, true);
-    ul.insertBefore(separator, ul.firstChild);
+  } else {
     homeDiv.appendChild(ul);
   }
 }
@@ -125,9 +142,8 @@ function buildSeparator(text) {
 }
 
 function getSeparatorText(workoutTime) {
-  const d = new Date();
-  const today = Number(`${d.getFullYear()}${d.getMonth() + 1}${d.getDate()}`);
-  const future = Number(workoutTime);
+  const today = Math.trunc(new Date().getTime() / 86400000);
+  const future = Math.trunc(new Date(`${workoutTime[2]}-${workoutTime[1]}-${workoutTime[0]}T00:00:00`) / 86400000);
   if (future - today < 0) {
     return null;
   } else if (future - today === 0) {
@@ -155,10 +171,20 @@ function saveWorkouts(event) {
     const day = (selectedDate[0].toString().length === 1)
       ? '0' + selectedDate[0].toString()
       : selectedDate[0].toString();
-    const date = Number(`${selectedDate[2]}${month}${day}`);
-    selectedWorkouts.date = selectedDate;
-    if (data.exercises[date]) data.exercises[date] = Object.assign({}, data.exercises[date], selectedWorkouts);
-    if (!data.exercises[date]) data.exercises[date] = selectedWorkouts;
+    const date = Number(`${selectedDate[2]}${month}${day} `);
+    selectedWorkouts.date = [day, month, selectedDate[2].toString()];
+    if (data.exercises[date]) {
+      const placeholder = data.exercises[date];
+      data.exercises[date] = Object.assign({}, data.exercises[date], selectedWorkouts);
+      selectedWorkouts = {};
+      for (const key in data.exercises[date]) {
+        if (!placeholder[key]) addToUl(date, data.exercises[date][key]);
+      }
+    } else {
+      data.exercises[date] = selectedWorkouts;
+      selectedWorkouts = {};
+      createDateUl(date, true);
+    }
     searchModal.classList.add('hidden');
     selectedDate = null;
     window.location.hash = 'home';
