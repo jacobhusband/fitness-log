@@ -96,7 +96,6 @@ buildHomepage();
 
 function buildHomepage() {
   const remove = [];
-  const output = [];
   for (const key in data.exercises) {
     const ul = buildElement('ul', { class: 'search content col' });
     const text = getSeparatorText(key);
@@ -110,10 +109,9 @@ function buildHomepage() {
       if (workout === 'date') continue;
       arr.push(data.exercises[key][workout]);
     }
-    buildUl(arr, ul);
+    buildUl(arr, ul, true);
     ul.insertBefore(separator, ul.firstChild);
     homeDiv.appendChild(ul);
-    output.push(ul);
   }
 }
 
@@ -303,7 +301,7 @@ function cleanData(data) {
   return results;
 }
 
-function buildUl(data, ul) {
+function buildUl(data, ul, home = false) {
   data.forEach(obj => {
     const muscles = (obj.muscles.length === 1)
       ? [obj.muscles[0], obj.muscles_secondary[0]]
@@ -319,12 +317,13 @@ function buildUl(data, ul) {
       muscles: muscleArr
     };
     workoutInfo[content.id] = content;
-    ul.appendChild(buildLi(content));
+    ul.appendChild(buildLi(content, home));
   });
 }
 
-function buildLi(data) {
-  const { id, name, description, muscles } = data;
+function buildLi(info, home = false) {
+  const { id, name, description, muscles } = info;
+  const image = (home) && data.storedImages[id];
 
   const muscleText = (muscles.length === 2)
     ? `(${muscleObjReverse[muscles[0]]}/${muscleObjReverse[muscles[1]]})`
@@ -332,7 +331,9 @@ function buildLi(data) {
         ? `(${muscleObjReverse[muscles[0]]})`
         : null;
 
-  const spinner = createSpinner(id);
+  const spinner = (!home)
+    ? createSpinner(id)
+    : buildElement('img', { src: image });
 
   return buildElement('li', { class: 'search-item row', 'dataset-id': id }, [
     buildElement('div', { class: 'col' }, [
