@@ -66,6 +66,10 @@ header .icons {
   margin-top: 0.5rem;
 }
 
+.search {
+  width: 100%;
+}
+
 .search .modal {
   position: fixed;
   top: 0;
@@ -137,6 +141,19 @@ nav {
   display: none;
 }
 
+.home .separator {
+  height: 33px;
+  display: flex;
+  align-items: center;
+  padding-left: 1rem;
+  background-color: #131313;
+}
+
+.home h2.separator-text {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
 .flex-col {
   display: flex;
   flex-direction: column;
@@ -149,6 +166,11 @@ nav {
 @media only screen and (min-width: 768px) {
   button:hover {
     filter: brightness(120%);
+  }
+
+  .home,
+  .search {
+    margin-right: 3rem;
   }
 
   ul.search {
@@ -239,6 +261,16 @@ nav {
     text-decoration: underline red;
     text-decoration-thickness: 0.125rem;
     text-underline-offset: 0.5rem;
+  }
+
+  .home .separator {
+    height: 40px;
+    justify-content: center;
+    padding-left: 0;
+  }
+
+  .home h2.separator-text {
+    font-size: 1.5rem;
   }
 
   header .row .row:last-child {
