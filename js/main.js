@@ -8,6 +8,7 @@ const body = document.querySelector('body');
 const searchOptions = searchForm.querySelector('select');
 const homeDiv = document.querySelector('.home');
 const createDiv = document.querySelector('.create');
+const savedDiv = document.querySelector('.saved');
 
 const muscleObj = {
   biceps: 1,
@@ -75,6 +76,7 @@ window.addEventListener('hashchange', event => {
   search.classList.add('hidden');
   homeDiv.classList.add('hidden');
   createDiv.classList.add('hidden');
+  savedDiv.classList.add('hidden');
   if (window.location.hash === '#home') {
     body.dataset.view = 'home';
     data.view = 'home';
@@ -88,6 +90,10 @@ window.addEventListener('hashchange', event => {
     data.view = 'search';
     search.classList.remove('hidden');
     searchOptions.focus();
+  } else if (window.location.hash === '#saved') {
+    body.dataset.view = 'saved';
+    data.view = 'saved';
+    savedDiv.classList.remove('hidden');
   }
 });
 
@@ -97,6 +103,7 @@ body.dataset.view = data.view;
 if (data.view === 'search') searchUl.parentElement.classList.remove('hidden');
 if (data.view === 'home') homeDiv.classList.remove('hidden');
 if (data.view === 'create') createDiv.classList.remove('hidden');
+if (data.view === 'saved') savedDiv.classList.remove('hidden');
 
 buildHomepage();
 
@@ -227,7 +234,8 @@ function addWorkouts() {
 
 function selectWorkout(event) {
   const li = event.target.closest('li');
-  const id = li.dataset.id;
+  const id = li?.dataset.id;
+  if (!id) return;
   if (selectedWorkouts[id]) {
     delete selectedWorkouts[id];
     li.style.border = '1px solid #0e0e0e';

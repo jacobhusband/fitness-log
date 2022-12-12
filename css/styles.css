@@ -57,7 +57,8 @@ header .icons {
 
 [data-view="search"] i.fa-magnifying-glass,
 [data-view="create"] i.fa-plus,
-[data-view="home"] i.fa-home {
+[data-view="home"] i.fa-home,
+[data-view="saved"] i.fa-bookmark {
   text-decoration: underline red;
   text-underline-offset: 0.5rem;
   text-decoration-line: underline !important;
@@ -274,7 +275,8 @@ nav {
 
   [data-view="search"] nav a[href="#search"],
   [data-view="create"] nav a[href="#create"],
-  [data-view="home"] nav a[href="#home"] {
+  [data-view="home"] nav a[href="#home"],
+  [data-view="saved"] nav a[href="#saved"] {
     text-decoration: underline red;
     text-decoration-thickness: 0.125rem;
     text-underline-offset: 0.5rem;
