@@ -67,19 +67,6 @@ header .icons {
   -webkit-text-decoration-thickness: 2px !important;
 }
 
-.views {
-  margin-left: 1rem;
-}
-
-.views button {
-  padding: 0.25rem 1rem;
-  background-color: rgb(31, 31, 31);
-}
-
-.views button.muted {
-  color: #747474;
-}
-
 .content {
   margin-top: 0.5rem;
 }
