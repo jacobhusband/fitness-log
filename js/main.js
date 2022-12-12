@@ -120,6 +120,7 @@ function addToUl(date, exercise) {
 }
 
 function createDateUl(date, insert = false) {
+  let inserted = false;
   const text = getSeparatorText(data.exercises[date].date);
   if (!text) return;
   const ul = buildElement('ul', { class: 'search content col', 'dataset-id': date });
@@ -133,12 +134,13 @@ function createDateUl(date, insert = false) {
   ul.insertBefore(separator, ul.firstChild);
   if (insert) {
     for (let i = 0; i < homeDiv.children.length; i++) {
-      if (homeDiv.children[i].dataset.id > ul.dataset.id) {
+      if (Number(homeDiv.children[i].dataset.id) > Number(ul.dataset.id)) {
         homeDiv.insertBefore(ul, homeDiv.children[i]);
-      } else {
-        homeDiv.appendChild(ul);
+        inserted = true;
+        break;
       }
     }
+    if (!inserted) homeDiv.appendChild(ul);
   } else {
     homeDiv.appendChild(ul);
   }
@@ -180,7 +182,7 @@ function saveWorkouts(event) {
     const day = (selectedDate[0].toString().length === 1)
       ? '0' + selectedDate[0].toString()
       : selectedDate[0].toString();
-    const date = Number(`${selectedDate[2]}${month}${day} `);
+    const date = Number(`${selectedDate[2]}${month}${day}`);
     selectedWorkouts.date = [day, month, selectedDate[2].toString()];
     if (data.exercises[date]) {
       const placeholder = data.exercises[date];
