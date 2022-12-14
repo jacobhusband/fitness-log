@@ -77,6 +77,7 @@ window.addEventListener('hashchange', event => {
   homeDiv.classList.add('hidden');
   createDiv.classList.add('hidden');
   savedDiv.classList.add('hidden');
+  searchForm.classList.remove('hidden');
   if (window.location.hash === '#home') {
     body.dataset.view = 'home';
     data.view = 'home';
@@ -85,6 +86,7 @@ window.addEventListener('hashchange', event => {
     body.dataset.view = 'create';
     data.view = 'create';
     createDiv.classList.remove('hidden');
+    searchForm.classList.add('hidden');
   } else if (window.location.hash === '#search') {
     body.dataset.view = 'search';
     data.view = 'search';

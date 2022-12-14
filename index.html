@@ -76,7 +76,7 @@
         <a href="#saved">Saved</a>
         <a href="#search">Search</a>
       </nav>
-      <div class="search flex-col hidden">
+      <div class="search w-100 flex-col hidden">
         <ul class="search content col">
           <li style="color: white; text-align: center">No search made...</li>
         </ul>
@@ -97,8 +97,37 @@
       </div>
       <div class="home flex-col hidden"></div>
       <div class="saved flex-col hidden"></div>
-      <div class="create flex-col hidden">
-        <form class="new"></form>
+      <div class="create w-100 flex-col hidden">
+        <form class="create w-100">
+          <div>
+            <label for="title">TITLE</label>
+            <input type="text" name="title" />
+          </div>
+          <div>
+            <label for="muscle-group-1">MUSCLE GROUP 1</label>
+            <input type="text" name="muscle-group-1" />
+          </div>
+          <div>
+            <label for="muscle-group-2">MUSCLE GROUP 2</label>
+            <input type="text" name="muscle-group-2" />
+          </div>
+          <div>
+            <label for="reps">REPS</label>
+            <input type="text" name="reps" />
+          </div>
+          <div>
+            <label for="sets">SETS</label>
+            <input type="text" name="sets" />
+          </div>
+          <div>
+            <label for="description">DESCRIPTION</label>
+            <textarea class="w-100" name="description" rows="10"></textarea>
+          </div>
+          <div>
+            <button class="submit">Submit</button>
+            <button class="cancel">Cancel</button>
+          </div>
+        </form>
       </div>
     </main>
     <script src="js/data.js"></script>
