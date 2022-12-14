@@ -1,15 +1,15 @@
-const searchForm = document.querySelector('form.search');
-const createForm = document.querySelector('form.create');
-const searchUl = document.querySelector('ul.search');
-const buttonsUl = document.querySelector('.buttons');
-const searchModal = document.querySelector('.modal');
-const calendarForm = document.querySelector('form.calendar');
-const addButton = document.querySelector('button.add');
-const body = document.querySelector('body');
-const searchOptions = searchForm.querySelector('select');
-const homeDiv = document.querySelector('.home');
-const createDiv = document.querySelector('.create');
-const savedDiv = document.querySelector('.saved');
+const $body = document.querySelector('body');
+const $searchForm = document.querySelector('form.search');
+const $createForm = document.querySelector('form.create');
+const $searchContentUl = document.querySelector('ul.search.content');
+const $calendarButtons = document.querySelector('.buttons.calendar');
+const $calendarModal = document.querySelector('.modal.calendar');
+const $calendarForm = $calendarModal.querySelector('form.calendar');
+const $selectedWorkoutAddButton = document.querySelector('button.add.workout');
+const $muscleSearchOptions = $searchForm.querySelector('select');
+const $viewHome = document.querySelector('.home.view');
+const $viewCreate = document.querySelector('.create.view');
+const $viewSaved = document.querySelector('.saved.view');
 
 const muscleObj = {
   biceps: 1,
@@ -68,49 +68,49 @@ let selectedWorkouts = {};
 let selectedDate = null;
 let nextFetch = null;
 
-searchForm.addEventListener('submit', getWorkouts);
-createForm.addEventListener('submit', createWorkout);
-calendarForm.addEventListener('submit', saveWorkouts);
-searchUl.addEventListener('click', selectWorkout);
-buttonsUl.addEventListener('click', modifySearchItems);
+$searchForm.addEventListener('submit', getWorkouts);
+$createForm.addEventListener('submit', createWorkout);
+$calendarForm.addEventListener('submit', saveWorkouts);
+$searchContentUl.addEventListener('click', selectWorkout);
+$calendarButtons.addEventListener('click', modifySearchItems);
 window.addEventListener('hashchange', event => {
-  const search = searchUl.parentElement;
+  const search = $searchContentUl.parentElement;
   search.classList.add('hidden');
-  homeDiv.classList.add('hidden');
-  createDiv.classList.add('hidden');
-  savedDiv.classList.add('hidden');
-  searchForm.classList.remove('hidden');
+  $viewHome.classList.add('hidden');
+  $viewCreate.classList.add('hidden');
+  $viewSaved.classList.add('hidden');
+  $searchForm.classList.remove('hidden');
   if (window.location.hash === '#home') {
-    body.dataset.view = 'home';
+    $body.dataset.view = 'home';
     data.view = 'home';
-    homeDiv.classList.remove('hidden');
+    $viewHome.classList.remove('hidden');
   } else if (window.location.hash === '#create') {
-    body.dataset.view = 'create';
+    $body.dataset.view = 'create';
     data.view = 'create';
-    createDiv.classList.remove('hidden');
-    searchForm.classList.add('hidden');
+    $viewCreate.classList.remove('hidden');
+    $searchForm.classList.add('hidden');
   } else if (window.location.hash === '#search') {
-    body.dataset.view = 'search';
+    $body.dataset.view = 'search';
     data.view = 'search';
     search.classList.remove('hidden');
-    searchOptions.focus();
+    $muscleSearchOptions.focus();
   } else if (window.location.hash === '#saved') {
-    body.dataset.view = 'saved';
+    $body.dataset.view = 'saved';
     data.view = 'saved';
-    savedDiv.classList.remove('hidden');
+    $viewSaved.classList.remove('hidden');
   }
 });
 
 window.location.hash = `#${data.view}`;
-body.dataset.view = data.view;
+$body.dataset.view = data.view;
 
-if (data.view === 'search') searchUl.parentElement.classList.remove('hidden');
-if (data.view === 'home') homeDiv.classList.remove('hidden');
+if (data.view === 'search') $searchContentUl.parentElement.classList.remove('hidden');
+if (data.view === 'home') $viewHome.classList.remove('hidden');
 if (data.view === 'create') {
-  createDiv.classList.remove('hidden');
-  searchForm.classList.add('hidden');
+  $viewCreate.classList.remove('hidden');
+  $searchForm.classList.add('hidden');
 }
-if (data.view === 'saved') savedDiv.classList.remove('hidden');
+if (data.view === 'saved') $viewSaved.classList.remove('hidden');
 
 buildHomepage();
 
@@ -136,7 +136,7 @@ function buildHomepage() {
 
 function addToUl(date, exercise) {
   const li = buildLi(exercise, true);
-  const ul = homeDiv.querySelector(`[data-id="${date}"]`);
+  const ul = $viewHome.querySelector(`[data-id="${date}"]`);
   ul.appendChild(li);
 }
 
@@ -154,16 +154,16 @@ function createDateUl(date, insert = false) {
   buildUl(arr, ul, true);
   ul.insertBefore(separator, ul.firstChild);
   if (insert) {
-    for (let i = 0; i < homeDiv.children.length; i++) {
-      if (Number(homeDiv.children[i].dataset.id) > Number(ul.dataset.id)) {
-        homeDiv.insertBefore(ul, homeDiv.children[i]);
+    for (let i = 0; i < $viewHome.children.length; i++) {
+      if (Number($viewHome.children[i].dataset.id) > Number(ul.dataset.id)) {
+        $viewHome.insertBefore(ul, $viewHome.children[i]);
         inserted = true;
         break;
       }
     }
-    if (!inserted) homeDiv.appendChild(ul);
+    if (!inserted) $viewHome.appendChild(ul);
   } else {
-    homeDiv.appendChild(ul);
+    $viewHome.appendChild(ul);
   }
 }
 
@@ -190,7 +190,7 @@ function getSeparatorText(workoutTime) {
 function saveWorkouts(event) {
   event.preventDefault();
   if (event.submitter.className === 'cancel') {
-    searchModal.classList.add('hidden');
+    $calendarModal.classList.add('hidden');
     selectedDate = null;
     return;
   }
@@ -217,8 +217,8 @@ function saveWorkouts(event) {
       selectedWorkouts = {};
       createDateUl(date, true);
     }
-    searchModal.classList.add('hidden');
-    homeDiv.classList.remove('hidden');
+    $calendarModal.classList.add('hidden');
+    $viewHome.classList.remove('hidden');
     selectedDate = null;
     window.location.hash = 'home';
   }
@@ -233,7 +233,7 @@ function modifySearchItems(event) {
 }
 
 function addWorkouts() {
-  searchModal.classList.remove('hidden');
+  $calendarModal.classList.remove('hidden');
 
   /* eslint-disable-next-line */
   let myCalendar = new VanillaCalendar({
@@ -262,11 +262,11 @@ function selectWorkout(event) {
   if (selectedWorkouts[id]) {
     delete selectedWorkouts[id];
     li.style.border = '1px solid #0e0e0e';
-    if (!Object.keys(selectedWorkouts).length) addButton.classList.add('hidden');
+    if (!Object.keys(selectedWorkouts).length) $selectedWorkoutAddButton.classList.add('hidden');
   } else {
     selectedWorkouts[id] = li;
     li.style.border = '1px solid green';
-    addButton.classList.remove('hidden');
+    $selectedWorkoutAddButton.classList.remove('hidden');
   }
 }
 
@@ -275,7 +275,7 @@ function getWorkouts(event, url) {
 
   if (event) {
     event.preventDefault();
-    while (searchUl.lastElementChild) searchUl.lastElementChild.remove();
+    while ($searchContentUl.lastElementChild) $searchContentUl.lastElementChild.remove();
     const input = event.target.elements.search.value;
     url = `https://wger.de/api/v2/exercise/?language=2&limit=5&muscles=${muscleObj[input]}`;
   }
@@ -290,10 +290,10 @@ function getWorkouts(event, url) {
     .then(data => {
       nextFetch = data.next;
       newData = cleanData(data);
-      buildUl(newData, searchUl);
+      buildUl(newData, $searchContentUl);
       getImages(newData);
       window.location.hash = 'search';
-      buttonsUl.classList.remove('hidden');
+      $calendarButtons.classList.remove('hidden');
     })
     .catch(err => console.error(err));
 }
@@ -453,7 +453,7 @@ function createSpinner(id) {
 
 function swapSpinner(img, id) {
   const image = (img) || '/images/image-not-found.webp';
-  const spinner = searchUl.querySelector(`.lds-ring[data-id="${id}"]`);
+  const spinner = $searchContentUl.querySelector(`.lds-ring[data-id="${id}"]`);
   const papa = spinner?.parentElement;
   if (papa) {
     spinner.remove();
