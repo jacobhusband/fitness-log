@@ -101,15 +101,15 @@
         <form class="create w-100">
           <div>
             <label for="title">TITLE</label>
-            <input type="text" name="title" />
+            <input type="text" name="title" required />
           </div>
           <div>
             <label for="muscle-group-1">MUSCLE GROUP 1</label>
-            <input type="text" name="muscle-group-1" />
+            <input type="text" name="muscle-group-1" required />
           </div>
           <div>
             <label for="muscle-group-2">MUSCLE GROUP 2</label>
-            <input type="text" name="muscle-group-2" />
+            <input type="text" name="muscle-group-2" required />
           </div>
           <div>
             <label for="reps">REPS</label>
@@ -121,7 +121,12 @@
           </div>
           <div>
             <label for="description">DESCRIPTION</label>
-            <textarea class="w-100" name="description" rows="10"></textarea>
+            <textarea
+              class="w-100"
+              name="description"
+              rows="10"
+              required
+            ></textarea>
           </div>
           <div>
             <button class="submit">Submit</button>

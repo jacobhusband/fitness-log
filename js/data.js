@@ -13,9 +13,8 @@ var data = {
   view: 'home',
   exercises: {},
   storedImages: {},
-  nextCreatedId: 1,
-  userCreatedImages: {},
-  userCreated: {}
+  nextCreatedId: -1,
+  created: []
 };
 
 data = grabbedData || data;

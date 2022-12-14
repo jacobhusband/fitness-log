@@ -1,4 +1,5 @@
 const searchForm = document.querySelector('form.search');
+const createForm = document.querySelector('form.create');
 const searchUl = document.querySelector('ul.search');
 const buttonsUl = document.querySelector('.buttons');
 const searchModal = document.querySelector('.modal');
@@ -68,6 +69,7 @@ let selectedDate = null;
 let nextFetch = null;
 
 searchForm.addEventListener('submit', getWorkouts);
+createForm.addEventListener('submit', createWorkout);
 calendarForm.addEventListener('submit', saveWorkouts);
 searchUl.addEventListener('click', selectWorkout);
 buttonsUl.addEventListener('click', modifySearchItems);
@@ -104,10 +106,27 @@ body.dataset.view = data.view;
 
 if (data.view === 'search') searchUl.parentElement.classList.remove('hidden');
 if (data.view === 'home') homeDiv.classList.remove('hidden');
-if (data.view === 'create') createDiv.classList.remove('hidden');
+if (data.view === 'create') {
+  createDiv.classList.remove('hidden');
+  searchForm.classList.add('hidden');
+}
 if (data.view === 'saved') savedDiv.classList.remove('hidden');
 
 buildHomepage();
+
+function createWorkout(event) {
+  event.preventDefault();
+  if (event.submitter.className === 'cancel') {
+    event.target.reset();
+    window.history.go(-1);
+  }
+  const { title, description, reps, sets } = event.target.elements;
+  const muscleGroup1 = event.target.elements['muscle-group-1'];
+  const muscleGroup2 = event.target.elements['muscle-group-2'];
+  const info = { title: title.value, description: description.value, reps: reps.value, sets: sets.value, muscleGroup1: muscleGroup1.value, muscleGroup2: muscleGroup2.value, id: data.nextCreatedId };
+  data.nextCreatedId--;
+  data.created.push(info);
+}
 
 function buildHomepage() {
   for (const date in data.exercises) {
