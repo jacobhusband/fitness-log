@@ -123,16 +123,18 @@ function createWorkout(event) {
   const { title, description, reps, sets } = event.target.elements;
   const muscleGroup1 = event.target.elements['muscle-group-1'];
   const muscleGroup2 = event.target.elements['muscle-group-2'];
-  const muscles = [muscleGroup1, muscleGroup2];
-  const info = { title: title.value, description: description.value, reps: reps.value, sets: sets.value, muscles, id: data.nextCreatedId };
+  const muscles = [muscleGroup1.value, muscleGroup2.value];
+  const info = { name: title.value, description: description.value, reps: reps.value, sets: sets.value, muscles, id: data.nextCreatedId };
   data.nextCreatedId--;
   data.created.push(info);
-  getImages([{ id: info.id, name: info.title }]);
-
+  getImages([{ id: info.id, name: info.name }]);
+  $viewSaved.appendChild(buildLi(info));
+  window.location.hash = '#saved';
 }
 
 function buildHomepage() {
   for (const date in data.exercises) createDateUl(date);
+  createSavedUl(data.created);
 }
 
 function addToUl(date, exercise) {
@@ -141,13 +143,19 @@ function addToUl(date, exercise) {
   ul.appendChild(li);
 }
 
+function createSavedUl(info) {
+  const ul = buildElement('ul', { class: 'saved content col', 'dataset-id': info.id });
+  buildUl(info, ul, true);
+  $viewSaved.appendChild(ul);
+}
+
 function createDateUl(date, insert = false) {
   let inserted = false;
+  const arr = [];
   const text = getSeparatorText(data.exercises[date].date);
   if (!text) return;
   const ul = buildElement('ul', { class: 'search content col', 'dataset-id': date });
   const separator = buildSeparator(text);
-  const arr = [];
   for (const workout in data.exercises[date]) {
     if (workout === 'date') continue;
     arr.push(data.exercises[date][workout]);
@@ -342,9 +350,9 @@ function getBackupImages(obj) {
         swapSpinner('images/image-not-found.webp', obj.id);
         return;
       }
-      const newImages = images.value.map(obj => obj.contentUrl);
-      data.storedImages[obj.id] = newImages[0];
-      swapSpinner(newImages[0], obj.id);
+      const image = images.value[0].contentUrl;
+      data.storedImages[obj.id] = image;
+      swapSpinner(image, obj.id);
     })
     .catch(err => {
       swapSpinner('images/image-not-found.webp', obj.id);
@@ -447,7 +455,7 @@ function createSpinner(id) {
 
 function swapSpinner(img, id) {
   const image = (img) || '/images/image-not-found.webp';
-  const spinner = $searchContentUl.querySelector(`.lds-ring[data-id="${id}"]`);
+  const spinner = document.querySelector(`.lds-ring[data-id="${id}"]`);
   const papa = spinner?.parentElement;
   if (papa) {
     spinner.remove();
