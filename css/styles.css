@@ -129,6 +129,10 @@ ul {
   margin-bottom: 1rem;
 }
 
+.saved.view {
+  width: 100%;
+}
+
 .vanilla-calendar {
   width: 300px;
   margin: 0.5rem;
@@ -214,7 +218,8 @@ nav {
     margin-right: 3rem;
   }
 
-  ul.search {
+  ul.search,
+  ul.saved {
     display: flex;
     flex-direction: column;
     gap: 1.125rem;
