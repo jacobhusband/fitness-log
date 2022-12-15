@@ -1,6 +1,7 @@
 const $body = document.querySelector('body');
 const $searchForm = document.querySelector('form.search');
 const $createForm = document.querySelector('form.create');
+const $cancelButton = $createForm.querySelector('button.cancel');
 const $searchContentUl = document.querySelector('ul.search.content');
 const $searchContentButtons = document.querySelector('.buttons.search');
 const $calendarModal = document.querySelector('.modal.calendar');
@@ -73,6 +74,7 @@ $createForm.addEventListener('submit', createWorkout);
 $calendarForm.addEventListener('submit', saveWorkouts);
 $searchContentUl.addEventListener('click', selectWorkout);
 $searchContentButtons.addEventListener('click', modifySearchItems);
+$cancelButton.addEventListener('click', createWorkout);
 window.addEventListener('hashchange', event => {
   const search = $searchContentUl.parentElement;
   search.classList.add('hidden');
@@ -116,9 +118,10 @@ buildHomepage();
 
 function createWorkout(event) {
   event.preventDefault();
-  if (event.submitter.className === 'cancel') {
-    event.target.reset();
+  if (event.target.className === 'cancel') {
+    $createForm.reset();
     window.history.go(-1);
+    return;
   }
   const { title, description, reps, sets } = event.target.elements;
   const muscleGroup1 = event.target.elements['muscle-group-1'];

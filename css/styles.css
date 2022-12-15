@@ -133,6 +133,11 @@ ul {
   width: 100%;
 }
 
+.create {
+  max-width: 600px;
+  margin: auto;
+}
+
 .vanilla-calendar {
   width: 300px;
   margin: 0.5rem;
@@ -214,8 +219,13 @@ nav {
   }
 
   .home,
-  .search {
+  .search,
+  .create {
     margin-right: 3rem;
+  }
+
+  .create {
+    margin: auto;
   }
 
   ul.search,
