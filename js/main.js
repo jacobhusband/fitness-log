@@ -75,7 +75,7 @@ $createForm.addEventListener('submit', createWorkout);
 $calendarForm.addEventListener('submit', saveWorkouts);
 $searchContentUl.addEventListener('click', selectWorkout);
 $searchContentButtons.addEventListener('click', modifySearchItems);
-$cancelButton.addEventListener('click', createWorkout);
+$cancelButton.addEventListener('click', cancelWorkoutCreation);
 window.addEventListener('hashchange', makePageSwaps);
 
 initializePage();
@@ -152,23 +152,33 @@ function hideAllViews() {
   $searchField.classList.remove('hidden');
 }
 
+function cancelWorkoutCreation(event) {
+  $createForm.reset();
+  window.history.go(-1);
+}
+
 function createWorkout(event) {
   event.preventDefault();
-  if (event.target.className === 'cancel') {
-    $createForm.reset();
-    window.history.go(-1);
-    return;
-  }
-  const { title, description, reps, sets } = event.target.elements;
-  const muscleGroup1 = event.target.elements['muscle-group-1'];
-  const muscleGroup2 = event.target.elements['muscle-group-2'];
-  const muscles = [muscleGroup1.value, muscleGroup2.value];
-  const info = { name: title.value, description: description.value, reps: reps.value, sets: sets.value, muscles, id: data.nextCreatedId };
-  data.nextCreatedId--;
-  data.created.push(info);
-  getImages([{ id: info.id, name: info.name }]);
-  $viewSaved.appendChild(buildLi(info));
+  const workoutObj = getWorkoutFormInfo(event);
+  getImages([{ id: workoutObj.id, name: workoutObj.name }]);
+  $viewSaved.appendChild(buildLi(workoutObj));
+  saveWorkoutInfo(workoutObj);
+  hashToSavedView();
+}
+
+function hashToSavedView() {
   window.location.hash = '#saved';
+}
+
+function saveWorkoutInfo(workoutObj) {
+  data.nextCreatedId--;
+  data.created.push(workoutObj);
+}
+
+function getWorkoutFormInfo(event) {
+  const { title, description, reps, sets, mg1, mg2 } = event.target.elements;
+  const muscles = [mg1.value, mg2.value];
+  return { name: title.value, description: description.value, reps: reps.value, sets: sets.value, muscles, id: data.nextCreatedId };
 }
 
 function buildHomepage() {
