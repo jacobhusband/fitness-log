@@ -1,13 +1,14 @@
 const $body = document.querySelector('body');
-const $searchForm = document.querySelector('form.search');
+const $searchField = document.querySelector('form.search');
 const $createForm = document.querySelector('form.create');
 const $cancelButton = $createForm.querySelector('button.cancel');
 const $searchContentUl = document.querySelector('ul.search.content');
+const $viewSearch = $searchContentUl.parentElement;
 const $searchContentButtons = document.querySelector('.buttons.search');
 const $calendarModal = document.querySelector('.modal.calendar');
 const $calendarForm = $calendarModal.querySelector('form.calendar');
 const $selectedWorkoutAddButton = document.querySelector('button.add.workout');
-const $muscleSearchOptions = $searchForm.querySelector('select');
+const $muscleSearchOptions = $searchField.querySelector('select');
 const $viewHome = document.querySelector('.home.view');
 const $viewCreate = document.querySelector('.create.view');
 const $viewSaved = document.querySelector('.saved.view');
@@ -69,52 +70,87 @@ let selectedWorkouts = {};
 let selectedDate = null;
 let nextFetch = null;
 
-$searchForm.addEventListener('submit', getWorkouts);
+$searchField.addEventListener('submit', getWorkouts);
 $createForm.addEventListener('submit', createWorkout);
 $calendarForm.addEventListener('submit', saveWorkouts);
 $searchContentUl.addEventListener('click', selectWorkout);
 $searchContentButtons.addEventListener('click', modifySearchItems);
 $cancelButton.addEventListener('click', createWorkout);
-window.addEventListener('hashchange', event => {
-  const search = $searchContentUl.parentElement;
-  search.classList.add('hidden');
+window.addEventListener('hashchange', makePageSwaps);
+
+initializePage();
+buildHomepage();
+
+function initializePage() {
+  showViewFromDataObject();
+
+  if (data.view === 'search') showSearchView();
+  else if (data.view === 'home') showHomeView();
+  else if (data.view === 'create') {
+    showCreateView();
+    hideSearchField();
+  } else if (data.view === 'saved') showSavedView();
+}
+
+function showViewFromDataObject() {
+  window.location.hash = `#${data.view}`;
+  $body.dataset.view = data.view;
+}
+
+function makePageSwaps(event) {
+  hideAllViews();
+  if (window.location.hash === '#home') {
+    showHomeView();
+  } else if (window.location.hash === '#create') {
+    showCreateView();
+    hideSearchField();
+  } else if (window.location.hash === '#search') {
+    showSearchView();
+    focusSearchField();
+  } else if (window.location.hash === '#saved') {
+    showSavedView();
+  }
+}
+
+function showSavedView() {
+  $body.dataset.view = 'saved';
+  data.view = 'saved';
+  $viewSaved.classList.remove('hidden');
+}
+
+function focusSearchField() {
+  $muscleSearchOptions.focus();
+}
+
+function showSearchView() {
+  $body.dataset.view = 'search';
+  data.view = 'search';
+  $viewSearch.classList.remove('hidden');
+}
+
+function showCreateView() {
+  $body.dataset.view = 'create';
+  data.view = 'create';
+  $viewCreate.classList.remove('hidden');
+}
+
+function hideSearchField() {
+  $searchField.classList.add('hidden');
+}
+
+function showHomeView() {
+  $body.dataset.view = 'home';
+  data.view = 'home';
+  $viewHome.classList.remove('hidden');
+}
+
+function hideAllViews() {
+  $viewSearch.classList.add('hidden');
   $viewHome.classList.add('hidden');
   $viewCreate.classList.add('hidden');
   $viewSaved.classList.add('hidden');
-  $searchForm.classList.remove('hidden');
-  if (window.location.hash === '#home') {
-    $body.dataset.view = 'home';
-    data.view = 'home';
-    $viewHome.classList.remove('hidden');
-  } else if (window.location.hash === '#create') {
-    $body.dataset.view = 'create';
-    data.view = 'create';
-    $viewCreate.classList.remove('hidden');
-    $searchForm.classList.add('hidden');
-  } else if (window.location.hash === '#search') {
-    $body.dataset.view = 'search';
-    data.view = 'search';
-    search.classList.remove('hidden');
-    $muscleSearchOptions.focus();
-  } else if (window.location.hash === '#saved') {
-    $body.dataset.view = 'saved';
-    data.view = 'saved';
-    $viewSaved.classList.remove('hidden');
-  }
-});
-
-window.location.hash = `#${data.view}`;
-$body.dataset.view = data.view;
-
-if (data.view === 'search') $searchContentUl.parentElement.classList.remove('hidden');
-if (data.view === 'home') $viewHome.classList.remove('hidden');
-if (data.view === 'create') {
-  $viewCreate.classList.remove('hidden');
-  $searchForm.classList.add('hidden');
+  $searchField.classList.remove('hidden');
 }
-if (data.view === 'saved') $viewSaved.classList.remove('hidden');
-
-buildHomepage();
 
 function createWorkout(event) {
   event.preventDefault();
