@@ -2,7 +2,7 @@ const $body = document.querySelector('body');
 const $searchForm = document.querySelector('form.search');
 const $createForm = document.querySelector('form.create');
 const $searchContentUl = document.querySelector('ul.search.content');
-const $calendarButtons = document.querySelector('.buttons.calendar');
+const $searchContentButtons = document.querySelector('.buttons.search');
 const $calendarModal = document.querySelector('.modal.calendar');
 const $calendarForm = $calendarModal.querySelector('form.calendar');
 const $selectedWorkoutAddButton = document.querySelector('button.add.workout');
@@ -72,7 +72,7 @@ $searchForm.addEventListener('submit', getWorkouts);
 $createForm.addEventListener('submit', createWorkout);
 $calendarForm.addEventListener('submit', saveWorkouts);
 $searchContentUl.addEventListener('click', selectWorkout);
-$calendarButtons.addEventListener('click', modifySearchItems);
+$searchContentButtons.addEventListener('click', modifySearchItems);
 window.addEventListener('hashchange', event => {
   const search = $searchContentUl.parentElement;
   search.classList.add('hidden');
@@ -123,15 +123,16 @@ function createWorkout(event) {
   const { title, description, reps, sets } = event.target.elements;
   const muscleGroup1 = event.target.elements['muscle-group-1'];
   const muscleGroup2 = event.target.elements['muscle-group-2'];
-  const info = { title: title.value, description: description.value, reps: reps.value, sets: sets.value, muscleGroup1: muscleGroup1.value, muscleGroup2: muscleGroup2.value, id: data.nextCreatedId };
+  const muscles = [muscleGroup1, muscleGroup2];
+  const info = { title: title.value, description: description.value, reps: reps.value, sets: sets.value, muscles, id: data.nextCreatedId };
   data.nextCreatedId--;
   data.created.push(info);
+  getImages([{ id: info.id, name: info.title }]);
+
 }
 
 function buildHomepage() {
-  for (const date in data.exercises) {
-    createDateUl(date);
-  }
+  for (const date in data.exercises) createDateUl(date);
 }
 
 function addToUl(date, exercise) {
@@ -293,7 +294,7 @@ function getWorkouts(event, url) {
       buildUl(newData, $searchContentUl);
       getImages(newData);
       window.location.hash = 'search';
-      $calendarButtons.classList.remove('hidden');
+      $searchContentButtons.classList.remove('hidden');
     })
     .catch(err => console.error(err));
 }
@@ -387,12 +388,17 @@ function buildUl(data, ul, home = false) {
 function buildLi(info, home = false) {
   const { id, name, description, muscles } = info;
   const image = (home) && data.storedImages[id];
+  let muscleText;
 
-  const muscleText = (muscles.length === 2)
-    ? `(${muscleObjReverse[muscles[0]]}/${muscleObjReverse[muscles[1]]})`
-    : (muscles.length === 1)
-        ? `(${muscleObjReverse[muscles[0]]})`
-        : null;
+  if (typeof muscles[0] === 'string') {
+    muscleText = `${muscles[0]}/${muscles[1]}`;
+  } else {
+    muscleText = (muscles.length === 2)
+      ? `(${muscleObjReverse[muscles[0]]}/${muscleObjReverse[muscles[1]]})`
+      : (muscles.length === 1)
+          ? `(${muscleObjReverse[muscles[0]]})`
+          : null;
+  }
 
   const spinner = (!home)
     ? createSpinner(id)
@@ -420,25 +426,13 @@ function buildLi(info, home = false) {
 function buildElement(tag, attr, children) {
   const el = document.createElement(tag);
   for (var key in attr) {
-    if (key === 'textContent') {
-      el.textContent = attr[key];
-    } else if (key === 'dataset-id') {
-      el.dataset.id = attr[key];
-    } else if (key === 'dataset-view') {
-      el.dataset.view = attr[key];
-    } else if (key === 'dataset-date') {
-      el.dataset.date = attr[key];
-    } else {
-      el.setAttribute(key, attr[key]);
-    }
+    (key === 'textContent')
+      ? el.textContent = attr[key]
+      : key.includes('dataset')
+        ? el.dataset[key.split('-')[1]] = attr[key]
+        : el.setAttribute(key, attr[key]);
   }
-  if (children) {
-    children.forEach(child => {
-      if (child) {
-        el.appendChild(child);
-      }
-    });
-  }
+  if (children) children.forEach(child => (child) && el.appendChild(child));
   return el;
 }
 
