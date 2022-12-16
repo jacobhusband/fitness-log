@@ -70,9 +70,10 @@ let selectedWorkouts = {};
 let selectedDate = null;
 let nextFetch = null;
 
-$searchField.addEventListener("submit", getWorkouts);
+$searchField.addEventListener("submit", handleSearchFieldSubmit);
 $createForm.addEventListener("submit", createWorkout);
-$calendarForm.addEventListener("submit", saveWorkouts);
+$calendarForm.addEventListener("click", handleCalendarCancelClick);
+$calendarForm.addEventListener("submit", handleCalendarFormSubmit);
 $searchContentUl.addEventListener("click", selectWorkout);
 $searchContentButtons.addEventListener("click", modifySearchItems);
 $cancelButton.addEventListener("click", cancelWorkoutCreation);
@@ -92,11 +93,6 @@ function initializePage() {
   } else if (data.view === "saved") showSavedView();
 }
 
-function showViewFromDataObject() {
-  window.location.hash = `#${data.view}`;
-  $body.dataset.view = data.view;
-}
-
 function makePageSwaps(event) {
   hideAllViews();
   if (window.location.hash === "#home") {
@@ -110,6 +106,20 @@ function makePageSwaps(event) {
   } else if (window.location.hash === "#saved") {
     showSavedView();
   }
+}
+
+function createWorkout(event) {
+  event.preventDefault();
+  const workoutObj = getWorkoutFormInfo(event);
+  getImages([{ id: workoutObj.id, name: workoutObj.name }]);
+  $viewSaved.appendChild(buildLi(workoutObj));
+  saveWorkoutInfo(workoutObj);
+  hashToSavedView();
+}
+
+function showViewFromDataObject() {
+  window.location.hash = `#${data.view}`;
+  $body.dataset.view = data.view;
 }
 
 function showSavedView() {
@@ -157,15 +167,6 @@ function cancelWorkoutCreation(event) {
   window.history.go(-1);
 }
 
-function createWorkout(event) {
-  event.preventDefault();
-  const workoutFormInfo = getWorkoutFormInfo(event);
-  getImages([{ id: workoutFormInfo.id, name: workoutFormInfo.name }]);
-  $viewSaved.appendChild(buildLi(workoutFormInfo));
-  saveWorkoutInfo(workoutFormInfo);
-  hashToSavedView();
-}
-
 function hashToSavedView() {
   window.location.hash = "#saved";
 }
@@ -193,10 +194,8 @@ function buildHomepage() {
   createSavedUl(data.created);
 }
 
-function addToUl(date, exercise) {
-  const li = buildLi(exercise, true);
-  const ul = $viewHome.querySelector(`[data-id="${date}"]`);
-  ul.appendChild(li);
+function addLiToUl(ul, li) {
+  return ul.appendChild(li);
 }
 
 function createSavedUl(info) {
@@ -211,19 +210,19 @@ function createSavedUl(info) {
 function createDateUl(date, insert = false) {
   let inserted = false;
   const arr = [];
-  const text = getSeparatorText(data.exercises[date].date);
-  if (!text) return;
   const ul = buildElement("ul", {
     class: "search content col",
     "dataset-id": date,
   });
-  const separator = buildSeparator(text);
   for (const workout in data.exercises[date]) {
     if (workout === "date") continue;
     arr.push(data.exercises[date][workout]);
   }
   buildUl(arr, ul, true);
-  ul.insertBefore(separator, ul.firstChild);
+  ul.insertBefore(
+    buildSeparator(getSeparatorText(data.exercises[date].date)),
+    ul.firstChild
+  );
   if (insert) {
     for (let i = 0; i < $viewHome.children.length; i++) {
       if (Number($viewHome.children[i].dataset.id) > Number(ul.dataset.id)) {
@@ -250,66 +249,92 @@ function getSeparatorText(workoutTime) {
     new Date(`${workoutTime[2]}-${workoutTime[1]}-${workoutTime[0]}T00:00:00`) /
       86400000
   );
-  if (future - today < 0) {
-    return null;
-  } else if (future - today === 0) {
-    return "Today";
-  } else if (future - today === 1) {
-    return "Tomorrow";
-  } else {
-    return `In ${future - today} days`;
-  }
+  if (future - today < 0) return null;
+  else if (future - today === 0) return "Today";
+  else if (future - today === 1) return "Tomorrow";
+  else return `In ${future - today} days`;
 }
 
-function saveWorkouts(event) {
+function handleCalendarCancelClick(event) {
+  $calendarModal.classList.add("hidden");
+  selectedDate = null;
+}
+
+function handleCalendarFormSubmit(event) {
   event.preventDefault();
-  if (event.submitter.className === "cancel") {
-    $calendarModal.classList.add("hidden");
-    selectedDate = null;
-    return;
-  }
   if (!selectedDate) return;
-  if (event.submitter.className === "submit") {
-    for (const key in selectedWorkouts)
-      selectedWorkouts[key] = workoutInfo[key];
-    const month =
-      selectedDate[1].toString().length === 1
-        ? "0" + selectedDate[1].toString()
-        : selectedDate[1].toString();
-    const day =
-      selectedDate[0].toString().length === 1
-        ? "0" + selectedDate[0].toString()
-        : selectedDate[0].toString();
-    const date = Number(`${selectedDate[2]}${month}${day}`);
-    selectedWorkouts.date = [day, month, selectedDate[2].toString()];
-    if (data.exercises[date]) {
-      const placeholder = data.exercises[date];
-      data.exercises[date] = Object.assign(
-        {},
-        data.exercises[date],
-        selectedWorkouts
-      );
-      selectedWorkouts = {};
-      for (const key in data.exercises[date]) {
-        if (!placeholder[key]) addToUl(date, data.exercises[date][key]);
-      }
-    } else {
-      data.exercises[date] = selectedWorkouts;
-      selectedWorkouts = {};
-      createDateUl(date, true);
-    }
-    $calendarModal.classList.add("hidden");
-    $viewHome.classList.remove("hidden");
-    selectedDate = null;
-    window.location.hash = "home";
+  for (const key in selectedWorkouts) selectedWorkouts[key] = workoutInfo[key];
+  const [year, month, day, date] = convertSelectedDateToStandardDate();
+  saveDateInSelectedWorkout(year, month, day);
+  if (data.exercises[date]) {
+    addWorkoutsToExistingUl();
+  } else {
+    addWorkoutsToNewUl();
   }
+  $calendarModal.classList.add("hidden");
+  $viewHome.classList.remove("hidden");
+  selectedDate = null;
+  window.location.hash = "home";
+}
+
+function addWorkoutsToNewUl() {
+  data.exercises[date] = selectedWorkouts;
+  clearSelectedWorkouts();
+  createDateUl(date, true);
+}
+
+function addWorkoutsToExistingUl() {
+  const placeholder = data.exercises[date];
+  mergeSelectedWorkoutsWithDataObjectWorkouts(date);
+  clearSelectedWorkouts();
+  for (const key in data.exercises[date])
+    addNewSelectedWorkouts(placeholder, key);
+}
+
+function addNewSelectedWorkouts(placeholder, key) {
+  if (!placeholder[key])
+    addLiToUl(getHomeViewUlWithDate(date), buildLi(data.exercises[date][key]));
+}
+
+function clearSelectedWorkouts() {
+  selectedWorkouts = {};
+}
+
+function mergeSelectedWorkoutsWithDataObjectWorkouts(date) {
+  data.exercises[date] = Object.assign(
+    {},
+    data.exercises[date],
+    selectedWorkouts
+  );
+}
+
+function saveDateInSelectedWorkout(year, month, day) {
+  selectedWorkouts.date = [day, month, year];
+}
+
+function convertSelectedDateToStandardDate() {
+  const month =
+    selectedDate[1].toString().length === 1
+      ? "0" + selectedDate[1].toString()
+      : selectedDate[1].toString();
+  const day =
+    selectedDate[0].toString().length === 1
+      ? "0" + selectedDate[0].toString()
+      : selectedDate[0].toString();
+  const date = Number(`${selectedDate[2]}${month}${day}`);
+  const year = selectedDate[2].toString();
+  return [year, month, day, date];
+}
+
+function getHomeViewUlWithDate(date) {
+  return $viewHome.querySelector(`[data-id="${date}"]`);
 }
 
 function modifySearchItems(event) {
   if (event.target.matches(".add")) {
     addWorkouts();
   } else if (event.target.matches(".more")) {
-    getWorkouts(null, nextFetch);
+    getWorkouts(nextFetch);
   }
 }
 
@@ -341,27 +366,48 @@ function selectWorkout(event) {
   const id = li?.dataset.id;
   if (!id) return;
   if (selectedWorkouts[id]) {
-    delete selectedWorkouts[id];
-    li.style.border = "1px solid #0e0e0e";
-    if (!Object.keys(selectedWorkouts).length)
-      $selectedWorkoutAddButton.classList.add("hidden");
+    removeSelectedWorkout(id);
+    makeBorderMatchBackground(li);
   } else {
-    selectedWorkouts[id] = li;
-    li.style.border = "1px solid green";
-    $selectedWorkoutAddButton.classList.remove("hidden");
+    addSelectedWorkout(id, li);
+    makeBorderGreen(li);
   }
+  hideOrShowWorkoutButton();
 }
 
-function getWorkouts(event, url) {
-  let newData;
+function hideOrShowWorkoutButton() {
+  !Object.keys(selectedWorkouts).length
+    ? $selectedWorkoutAddButton.classList.add("hidden")
+    : $selectedWorkoutAddButton.classList.remove("hidden");
+}
 
-  if (event) {
-    event.preventDefault();
-    while ($searchContentUl.lastElementChild)
-      $searchContentUl.lastElementChild.remove();
-    const input = event.target.elements.search.value;
-    url = `https://wger.de/api/v2/exercise/?language=2&limit=5&muscles=${muscleObj[input]}`;
-  }
+function makeBorderGreen(li) {
+  li.style.border = "1px solid green";
+}
+
+function makeBorderMatchBackground(li) {
+  li.style.border = "1px solid #0e0e0e";
+}
+
+function addSelectedWorkout(id, li) {
+  selectedWorkouts[id] = li;
+}
+
+function removeSelectedWorkout(id) {
+  delete selectedWorkouts[id];
+}
+
+function handleSearchFieldSubmit(event) {
+  event.preventDefault();
+  while ($searchContentUl.lastElementChild)
+    $searchContentUl.lastElementChild.remove();
+  const input = event.target.elements.search.value;
+  url = `https://wger.de/api/v2/exercise/?language=2&limit=5&muscles=${muscleObj[input]}`;
+  getWorkouts(url);
+}
+
+function getWorkouts(url) {
+  let newData;
 
   fetch("https://lfz-cors.herokuapp.com/?url=" + encodeURIComponent(url), {
     method: "GET",
@@ -476,45 +522,39 @@ function buildUl(data, ul, home = false) {
       muscles: muscleArr,
     };
     workoutInfo[content.id] = content;
-    ul.appendChild(buildLi(content, home));
+    ul.appendChild(buildLi(content));
   });
 }
 
-function buildLi(info, home = false) {
-  const { id, name, description, muscles } = info;
-  const image = home && data.storedImages[id];
-  let muscleText;
-
-  if (typeof muscles[0] === "string") {
-    muscleText = `${muscles[0]}/${muscles[1]}`;
-  } else {
-    muscleText =
-      muscles.length === 2
-        ? `(${muscleObjReverse[muscles[0]]}/${muscleObjReverse[muscles[1]]})`
-        : muscles.length === 1
-        ? `(${muscleObjReverse[muscles[0]]})`
-        : null;
-  }
-
-  const spinner = !home
-    ? createSpinner(id)
-    : buildElement("img", { src: image });
+function buildLi(exerciseObj) {
+  const { id, name, description, muscles } = exerciseObj;
+  const muscleText = convertMuscleDataToText(muscles);
 
   return buildElement("li", { class: "search-item row", "dataset-id": id }, [
-    buildElement("div", { class: "col" }, [spinner]),
+    buildElement("div", { class: "col" }, [
+      data.storedImages[id]
+        ? buildElement("img", { src: data.storedImages[id] })
+        : createSpinner(id),
+    ]),
     buildElement("div", { class: "col w-100" }, [
       buildElement("div", { class: "row" }, [
         buildElement("h3", { textContent: name.toUpperCase() }),
         buildElement("span", { textContent: muscleText }),
       ]),
       buildElement("div", { class: "row" }, [
-        buildElement("span", { textContent: "sets x reps" }),
-      ]),
-      buildElement("div", { class: "row" }, [
         buildElement("p", { textContent: description }),
       ]),
     ]),
   ]);
+}
+
+function convertMuscleDataToText(muscles) {
+  if (typeof muscles[0] === "string") return `${muscles[0]}/${muscles[1]}`;
+  return muscles.length === 2
+    ? `(${muscleObjReverse[muscles[0]]}/${muscleObjReverse[muscles[1]]})`
+    : muscles.length === 1
+    ? `(${muscleObjReverse[muscles[0]]})`
+    : null;
 }
 
 function buildElement(tag, attr, children) {
