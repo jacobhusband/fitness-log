@@ -1,23 +1,24 @@
-const $body = document.querySelector("body");
-const $searchField = document.querySelector("form.search");
-const $createForm = document.querySelector("form.create");
-const $cancelButton = $createForm.querySelector("button.cancel");
-const $searchContentUl = document.querySelector("ul.search.content");
+const $body = document.querySelector('body');
+const $searchField = document.querySelector('form.search');
+const $createForm = document.querySelector('form.create');
+const $cancelButton = $createForm.querySelector('button.cancel');
+const $searchContentUl = document.querySelector('ul.search.content');
 const $viewSearch = $searchContentUl.parentElement;
-const $searchContentButtons = document.querySelector(".buttons.search");
-const $calendarModal = document.querySelector(".modal.calendar");
-const $calendarForm = $calendarModal.querySelector("form.calendar");
-const $selectedWorkoutAddButton = document.querySelector("button.add.workout");
-const $muscleSearchOptions = $searchField.querySelector("select");
-const $viewHome = document.querySelector(".home.view");
-const $viewCreate = document.querySelector(".create.view");
-const $viewSaved = document.querySelector(".saved.view");
-const $savedContentUl = $viewSaved.querySelector("ul.saved.content");
+const $searchContentButtons = document.querySelector('.buttons.search');
+const $calendarModal = document.querySelector('.modal.calendar');
+const $calendarForm = $calendarModal.querySelector('form.calendar');
+const $selectedWorkoutAddButton = document.querySelector('button.add.workout');
+// const $selectedWorkoutResultsButton = document.querySelector("button.more")
+const $muscleSearchOptions = $searchField.querySelector('select');
+const $viewHome = document.querySelector('.home.view');
+const $viewCreate = document.querySelector('.create.view');
+const $viewSaved = document.querySelector('.saved.view');
+const $savedContentUl = $viewSaved.querySelector('ul.saved.content');
 
 const muscleObj = {
   biceps: 1,
   shoulders: 2,
-  "serratus anterior": 3,
+  'serratus anterior': 3,
   chest: 4,
   triceps: 5,
   abs: 6,
@@ -26,29 +27,29 @@ const muscleObj = {
   traps: 9,
   quads: 10,
   hamstrings: 11,
-  lats: "12,3",
-  legs: "10,11,8,7",
-  arms: "1,5,2",
+  lats: '12,3',
+  legs: '10,11,8,7',
+  arms: '1,5,2',
   obliques: 14,
-  soleus: 15,
+  soleus: 15
 };
 
 const muscleObjReverse = {
-  1: "Biceps",
-  2: "Shoulders",
-  3: "Serratus Anterior",
-  4: "Chest",
-  5: "Triceps",
-  6: "Abs",
-  7: "Calves",
-  8: "Glutes",
-  9: "Traps",
-  10: "Quads",
-  11: "Hamstrings",
-  12: "Lats",
-  13: "Brachialis",
-  14: "Obliques",
-  15: "Soleus",
+  1: 'Biceps',
+  2: 'Shoulders',
+  3: 'Serratus Anterior',
+  4: 'Chest',
+  5: 'Triceps',
+  6: 'Abs',
+  7: 'Calves',
+  8: 'Glutes',
+  9: 'Traps',
+  10: 'Quads',
+  11: 'Hamstrings',
+  12: 'Lats',
+  13: 'Brachialis',
+  14: 'Obliques',
+  15: 'Soleus'
 };
 
 const months = {
@@ -63,7 +64,7 @@ const months = {
   Sep: 9,
   Oct: 10,
   Nov: 11,
-  Dec: 12,
+  Dec: 12
 };
 
 const workoutInfo = {};
@@ -71,15 +72,15 @@ let selectedWorkouts = {};
 let selectedDate = null;
 let nextFetch = null;
 
-$searchField.addEventListener("submit", handleSearchFieldSubmit);
-$createForm.addEventListener("submit", createWorkout);
-$calendarForm.addEventListener("click", handleCalendarCancelClick);
-$calendarForm.addEventListener("submit", handleCalendarFormSubmit);
-$searchContentUl.addEventListener("click", selectWorkout);
-$savedContentUl.addEventListener("click", selectWorkout);
-$searchContentButtons.addEventListener("click", modifySearchItems);
-$cancelButton.addEventListener("click", cancelWorkoutCreation);
-window.addEventListener("hashchange", makePageSwaps);
+$searchField.addEventListener('submit', handleSearchFieldSubmit);
+$createForm.addEventListener('submit', createWorkout);
+$calendarForm.addEventListener('click', handleCalendarCancelClick);
+$calendarForm.addEventListener('submit', handleCalendarFormSubmit);
+$searchContentUl.addEventListener('click', selectWorkout);
+$savedContentUl.addEventListener('click', selectWorkout);
+$searchContentButtons.addEventListener('click', modifySearchItems);
+$cancelButton.addEventListener('click', cancelWorkoutCreation);
+window.addEventListener('hashchange', makePageSwaps);
 
 initializePage();
 buildHomepage();
@@ -87,25 +88,25 @@ buildHomepage();
 function initializePage() {
   showViewFromDataObject();
 
-  if (data.view === "search") showSearchView();
-  else if (data.view === "home") showHomeView();
-  else if (data.view === "create") {
+  if (data.view === 'search') showSearchView();
+  else if (data.view === 'home') showHomeView();
+  else if (data.view === 'create') {
     showCreateView();
     hideSearchField();
-  } else if (data.view === "saved") showSavedView();
+  } else if (data.view === 'saved') showSavedView();
 }
 
 function makePageSwaps(event) {
   hideAllViews();
-  if (window.location.hash === "#home") {
+  if (window.location.hash === '#home') {
     showHomeView();
-  } else if (window.location.hash === "#create") {
+  } else if (window.location.hash === '#create') {
     showCreateView();
     hideSearchField();
-  } else if (window.location.hash === "#search") {
+  } else if (window.location.hash === '#search') {
     showSearchView();
     focusSearchField();
-  } else if (window.location.hash === "#saved") {
+  } else if (window.location.hash === '#saved') {
     showSavedView();
   }
 }
@@ -125,9 +126,9 @@ function showViewFromDataObject() {
 }
 
 function showSavedView() {
-  $body.dataset.view = "saved";
-  data.view = "saved";
-  $viewSaved.classList.remove("hidden");
+  $body.dataset.view = 'saved';
+  data.view = 'saved';
+  $viewSaved.classList.remove('hidden');
 }
 
 function focusSearchField() {
@@ -135,33 +136,33 @@ function focusSearchField() {
 }
 
 function showSearchView() {
-  $body.dataset.view = "search";
-  data.view = "search";
-  $viewSearch.classList.remove("hidden");
+  $body.dataset.view = 'search';
+  data.view = 'search';
+  $viewSearch.classList.remove('hidden');
 }
 
 function showCreateView() {
-  $body.dataset.view = "create";
-  data.view = "create";
-  $viewCreate.classList.remove("hidden");
+  $body.dataset.view = 'create';
+  data.view = 'create';
+  $viewCreate.classList.remove('hidden');
 }
 
 function hideSearchField() {
-  $searchField.classList.add("hidden");
+  $searchField.classList.add('hidden');
 }
 
 function showHomeView() {
-  $body.dataset.view = "home";
-  data.view = "home";
-  $viewHome.classList.remove("hidden");
+  $body.dataset.view = 'home';
+  data.view = 'home';
+  $viewHome.classList.remove('hidden');
 }
 
 function hideAllViews() {
-  $viewSearch.classList.add("hidden");
-  $viewHome.classList.add("hidden");
-  $viewCreate.classList.add("hidden");
-  $viewSaved.classList.add("hidden");
-  $searchField.classList.remove("hidden");
+  $viewSearch.classList.add('hidden');
+  $viewHome.classList.add('hidden');
+  $viewCreate.classList.add('hidden');
+  $viewSaved.classList.add('hidden');
+  $searchField.classList.remove('hidden');
 }
 
 function cancelWorkoutCreation(event) {
@@ -170,11 +171,11 @@ function cancelWorkoutCreation(event) {
 }
 
 function hashToSavedView() {
-  window.location.hash = "#saved";
+  window.location.hash = '#saved';
 }
 
 function hashToHomeView() {
-  window.location.hash = "#home";
+  window.location.hash = '#home';
 }
 
 function saveWorkoutInfo(workoutObj) {
@@ -191,7 +192,7 @@ function getWorkoutFormInfo(event) {
     reps: reps.value,
     sets: sets.value,
     muscles,
-    id: data.nextCreatedId,
+    id: data.nextCreatedId
   };
 }
 
@@ -207,9 +208,9 @@ function addLiToUl(ul, li) {
 function createDateUl(date, insert = false) {
   let inserted = false;
   const arr = [];
-  const ul = createUl("search content col", date);
+  const ul = createUl('search content col', date);
   for (const workout in data.exercises[date]) {
-    if (workout === "date") continue;
+    if (workout === 'date') continue;
     arr.push(data.exercises[date][workout]);
   }
   saveWorkoutsGloballyAndAddLisToUl(arr, ul);
@@ -232,9 +233,9 @@ function createDateUl(date, insert = false) {
 }
 
 function createUl(className, id) {
-  return buildElement("ul", {
+  return buildElement('ul', {
     class: className,
-    "dataset-id": id,
+    'dataset-id': id
   });
 }
 
@@ -243,8 +244,8 @@ function addUlToView(ul, $viewHome) {
 }
 
 function buildSeparator(text) {
-  return buildElement("div", { class: "separator" }, [
-    buildElement("h2", { class: "separator-text", textContent: text }),
+  return buildElement('div', { class: 'separator' }, [
+    buildElement('h2', { class: 'separator-text', textContent: text })
   ]);
 }
 
@@ -252,16 +253,16 @@ function getSeparatorText(workoutTime) {
   const today = Math.trunc(new Date().getTime() / 86400000);
   const future = Math.trunc(
     new Date(`${workoutTime[2]}-${workoutTime[1]}-${workoutTime[0]}T00:00:00`) /
-      86400000
+    86400000
   );
   if (future - today < 0) return null;
-  else if (future - today === 0) return "Today";
-  else if (future - today === 1) return "Tomorrow";
+  else if (future - today === 0) return 'Today';
+  else if (future - today === 1) return 'Tomorrow';
   else return `In ${future - today} days`;
 }
 
 function handleCalendarCancelClick(event) {
-  if (event.target.className === "submit") return;
+  if (event.target.className === 'submit') return;
   hideCalendarModal();
   removeSelectedDate();
 }
@@ -287,7 +288,7 @@ function removeSelectedDate() {
 }
 
 function hideCalendarModal() {
-  $calendarModal.classList.add("hidden");
+  $calendarModal.classList.add('hidden');
 }
 
 function addWorkoutsToNewUl(date) {
@@ -300,13 +301,11 @@ function addWorkoutsToExistingUl(date) {
   const placeholder = data.exercises[date];
   mergeSelectedWorkoutsWithDataObjectWorkouts(date);
   clearSelectedWorkouts();
-  for (const key in data.exercises[date])
-    addNewSelectedWorkouts(placeholder, key);
+  for (const key in data.exercises[date]) { addNewSelectedWorkouts(placeholder, key, date); }
 }
 
-function addNewSelectedWorkouts(placeholder, key) {
-  if (!placeholder[key])
-    addLiToUl(getHomeViewUlWithDate(date), buildLi(data.exercises[date][key]));
+function addNewSelectedWorkouts(placeholder, key, date) {
+  if (!placeholder[key]) { addLiToUl(getHomeViewUlWithDate(date), buildLi(data.exercises[date][key])); }
 }
 
 function clearSelectedWorkouts() {
@@ -328,11 +327,11 @@ function saveDateInSelectedWorkout(year, month, day) {
 function convertSelectedDateToStandardDate() {
   const month =
     selectedDate[1].toString().length === 1
-      ? "0" + selectedDate[1].toString()
+      ? '0' + selectedDate[1].toString()
       : selectedDate[1].toString();
   const day =
     selectedDate[0].toString().length === 1
-      ? "0" + selectedDate[0].toString()
+      ? '0' + selectedDate[0].toString()
       : selectedDate[0].toString();
   const date = Number(`${selectedDate[2]}${month}${day}`);
   const year = selectedDate[2].toString();
@@ -344,38 +343,38 @@ function getHomeViewUlWithDate(date) {
 }
 
 function modifySearchItems(event) {
-  if (event.target.matches(".add")) {
+  if (event.target.matches('.add')) {
     addWorkouts();
-  } else if (event.target.matches(".more")) {
+  } else if (event.target.matches('.more')) {
     getWorkouts(nextFetch);
   }
 }
 
 function addWorkouts() {
-  $calendarModal.classList.remove("hidden");
+  $calendarModal.classList.remove('hidden');
 
   /* eslint-disable-next-line */
   let myCalendar = new VanillaCalendar({
-    selector: "#myCalendar",
+    selector: '#myCalendar',
     pastDates: false,
     availableWeekDays: [
-      { day: "monday" },
-      { day: "tuesday" },
-      { day: "wednesday" },
-      { day: "thursday" },
-      { day: "friday" },
-      { day: "saturday" },
-      { day: "sunday" },
+      { day: 'monday' },
+      { day: 'tuesday' },
+      { day: 'wednesday' },
+      { day: 'thursday' },
+      { day: 'friday' },
+      { day: 'saturday' },
+      { day: 'sunday' }
     ],
-    onSelect: (data) => {
-      const date = data.date.split(" ");
+    onSelect: data => {
+      const date = data.date.split(' ');
       selectedDate = [Number(date[2]), months[date[1]], Number(date[3])];
-    },
+    }
   });
 }
 
 function selectWorkout(event) {
-  const li = event.target.closest("li");
+  const li = event.target.closest('li');
   const id = li?.dataset.id;
   if (!id) return;
   if (selectedWorkouts[id]) {
@@ -390,16 +389,16 @@ function selectWorkout(event) {
 
 function hideOrShowWorkoutButton() {
   !Object.keys(selectedWorkouts).length
-    ? $selectedWorkoutAddButton.classList.add("hidden")
-    : $selectedWorkoutAddButton.classList.remove("hidden");
+    ? $selectedWorkoutAddButton.classList.add('hidden')
+    : $selectedWorkoutAddButton.classList.remove('hidden');
 }
 
 function makeBorderGreen(li) {
-  li.style.border = "1px solid green";
+  li.style.border = '1px solid green';
 }
 
 function makeBorderMatchBackground(li) {
-  li.style.border = "1px solid #0e0e0e";
+  li.style.border = '1px solid #0e0e0e';
 }
 
 function addSelectedWorkout(id, li) {
@@ -412,25 +411,24 @@ function removeSelectedWorkout(id) {
 
 function handleSearchFieldSubmit(event) {
   event.preventDefault();
-  while ($searchContentUl.lastElementChild)
-    $searchContentUl.lastElementChild.remove();
+  while ($searchContentUl.lastElementChild) { $searchContentUl.lastElementChild.remove(); }
   const input = event.target.elements.search.value;
-  url = `https://wger.de/api/v2/exercise/?language=2&limit=5&muscles=${muscleObj[input]}`;
+  const url = `https://wger.de/api/v2/exercise/?language=2&limit=5&muscles=${muscleObj[input]}`;
   getWorkouts(url);
 }
 
 function getWorkouts(url) {
   let newData;
 
-  fetch("https://lfz-cors.herokuapp.com/?url=" + encodeURIComponent(url), {
-    method: "GET",
-    mode: "cors",
+  fetch('https://lfz-cors.herokuapp.com/?url=' + encodeURIComponent(url), {
+    method: 'GET',
+    mode: 'cors',
     headers: {
-      "Content-Type": "application/json",
-    },
+      'Content-Type': 'application/json'
+    }
   })
-    .then((result) => result.json())
-    .then((data) => {
+    .then(result => result.json())
+    .then(data => {
       nextFetch = data.next;
       newData = cleanData(data);
       saveWorkoutsGloballyAndAddLisToUl(newData, $searchContentUl);
@@ -438,15 +436,15 @@ function getWorkouts(url) {
       hashToSearchView();
       showAddWorkoutsToScheduleButtons();
     })
-    .catch((err) => console.error(err));
+    .catch(err => console.error(err));
 }
 
 function hashToSearchView() {
-  window.location.hash = "search";
+  window.location.hash = 'search';
 }
 
 function showAddWorkoutsToScheduleButtons() {
-  $searchContentButtons.classList.remove("hidden");
+  $searchContentButtons.classList.remove('hidden');
 }
 
 function getImages(results) {
@@ -455,15 +453,15 @@ function getImages(results) {
     if (!data.storedImages[obj.id]) {
       const url = `https://imsea.herokuapp.com/api/1?q=person_doing_${obj.name}_gym_workout`;
 
-      fetch("https://lfz-cors.herokuapp.com/?url=" + encodeURIComponent(url), {
-        method: "GET",
-        mode: "cors",
+      fetch('https://lfz-cors.herokuapp.com/?url=' + encodeURIComponent(url), {
+        method: 'GET',
+        mode: 'cors',
         headers: {
-          "Content-Type": "application/json",
-        },
+          'Content-Type': 'application/json'
+        }
       })
-        .then((result) => result.json())
-        .then((images) => {
+        .then(result => result.json())
+        .then(images => {
           data.storedImages[obj.id] = images.results[0];
           swapSpinner(images.results[0], obj.id);
         })
@@ -483,26 +481,26 @@ function getBackupImages(obj) {
   fetch(
     `https://bing-image-search1.p.rapidapi.com/images/search?q=person_doing_${obj.name}_gym_workout`,
     {
-      method: "GET",
+      method: 'GET',
       headers: {
-        "Content-Type": "application/json",
-        "X-RapidAPI-Key": "7554e57ef3msh1833d2c439a50a2p14b399jsnab00643335db",
-        "X-RapidAPI-Host": "bing-image-search1.p.rapidapi.com",
-      },
+        'Content-Type': 'application/json',
+        'X-RapidAPI-Key': '7554e57ef3msh1833d2c439a50a2p14b399jsnab00643335db',
+        'X-RapidAPI-Host': 'bing-image-search1.p.rapidapi.com'
+      }
     }
   )
-    .then((result) => result.json())
-    .then((images) => {
+    .then(result => result.json())
+    .then(images => {
       if (!images.value) {
-        swapSpinner("images/image-not-found.webp", obj.id);
+        swapSpinner('images/image-not-found.webp', obj.id);
         return;
       }
       const image = images.value[0].contentUrl;
       data.storedImages[obj.id] = image;
       swapSpinner(image, obj.id);
     })
-    .catch((err) => {
-      swapSpinner("images/image-not-found.webp", obj.id);
+    .catch(err => {
+      swapSpinner('images/image-not-found.webp', obj.id);
       console.error(err);
     });
 }
@@ -510,15 +508,15 @@ function getBackupImages(obj) {
 function cleanData(data) {
   const results = [];
   const flag = {};
-  data.results.forEach((result) => {
+  data.results.forEach(result => {
     if (!flag[result.id]) {
       flag[result.id] = true;
       result.description = result.description
-        .replace(/<\/?(?:p|ol|li|ul|em|strong)[^>]*>/g, "")
-        .split("-")
-        .join("")
-        .replaceAll("\n", ". ")
-        .replaceAll("..", ".");
+        .replace(/<\/?(?:p|ol|li|ul|em|strong)[^>]*>/g, '')
+        .split('-')
+        .join('')
+        .replaceAll('\n', '. ')
+        .replaceAll('..', '.');
       results.push(result);
     }
   });
@@ -526,32 +524,36 @@ function cleanData(data) {
 }
 
 function saveWorkoutsGloballyAndAddLisToUl(data, ul) {
-  data.forEach((obj) => {
+  data.forEach(obj => {
     const content = createContentObject(obj);
-    saveContentInWorkoutGlobalObject();
+    saveContentInWorkoutGlobalObject(content);
     addLiToUl(ul, buildLi(content));
   });
 }
 
-function saveContentInWorkoutGlobalObject() {
+function saveContentInWorkoutGlobalObject(content) {
   workoutInfo[content.id] = content;
 }
 
 function createContentObject(obj) {
   const muscles =
-    obj.muscles.length === 1
+    (obj.muscles.length === 1 &&
+      obj.muscles_secondary &&
+      obj.muscles_secondary.length)
       ? [obj.muscles[0], obj.muscles_secondary[0]]
-      : [obj.muscles[0], obj.muscles[1]];
-  const muscleArr = muscles.filter((x) => x !== undefined);
+      : (obj.muscles.length === 1 && !obj.muscles_secondary)
+          ? [obj.muscles[0]]
+          : [obj.muscles[0], obj.muscles[1]];
+  const muscleArr = muscles.filter(x => x !== undefined);
   const desc =
-    obj.description === "" || obj.description.length < 10
-      ? "No description received..."
+    obj.description === '' || obj.description.length < 10
+      ? 'No description received...'
       : obj.description;
-  return (content = {
+  return ({
     id: obj.id,
     description: desc,
     name: obj.name,
-    muscles: muscleArr,
+    muscles: muscleArr
   });
 }
 
@@ -559,61 +561,61 @@ function buildLi(exerciseObj) {
   const { id, name, description, muscles } = exerciseObj;
   const muscleText = convertMuscleDataToText(muscles);
 
-  return buildElement("li", { class: "search-item row", "dataset-id": id }, [
-    buildElement("div", { class: "col" }, [
+  return buildElement('li', { class: 'search-item row', 'dataset-id': id }, [
+    buildElement('div', { class: 'col' }, [
       data.storedImages[id]
-        ? buildElement("img", { src: data.storedImages[id] })
-        : createSpinner(id),
+        ? buildElement('img', { src: data.storedImages[id] })
+        : createSpinner(id)
     ]),
-    buildElement("div", { class: "col w-100" }, [
-      buildElement("div", { class: "row" }, [
-        buildElement("h3", { textContent: name.toUpperCase() }),
-        buildElement("span", { textContent: muscleText }),
+    buildElement('div', { class: 'col w-100' }, [
+      buildElement('div', { class: 'row' }, [
+        buildElement('h3', { textContent: name.toUpperCase() }),
+        buildElement('span', { textContent: muscleText })
       ]),
-      buildElement("div", { class: "row" }, [
-        buildElement("p", { textContent: description }),
-      ]),
-    ]),
+      buildElement('div', { class: 'row' }, [
+        buildElement('p', { textContent: description })
+      ])
+    ])
   ]);
 }
 
 function convertMuscleDataToText(muscles) {
-  if (typeof muscles[0] === "string") return `${muscles[0]}/${muscles[1]}`;
+  if (typeof muscles[0] === 'string') return `${muscles[0]}/${muscles[1]}`;
   return muscles.length === 2
     ? `(${muscleObjReverse[muscles[0]]}/${muscleObjReverse[muscles[1]]})`
     : muscles.length === 1
-    ? `(${muscleObjReverse[muscles[0]]})`
-    : null;
+      ? `(${muscleObjReverse[muscles[0]]})`
+      : null;
 }
 
 function buildElement(tag, attr, children) {
   const el = document.createElement(tag);
   for (var key in attr) {
-    key === "textContent"
+    key === 'textContent'
       ? (el.textContent = attr[key])
-      : key.includes("dataset")
-      ? (el.dataset[key.split("-")[1]] = attr[key])
-      : el.setAttribute(key, attr[key]);
+      : key.includes('dataset')
+        ? (el.dataset[key.split('-')[1]] = attr[key])
+        : el.setAttribute(key, attr[key]);
   }
-  if (children) children.forEach((child) => child && el.appendChild(child));
+  if (children) children.forEach(child => child && el.appendChild(child));
   return el;
 }
 
 function createSpinner(id) {
-  return buildElement("div", { class: "lds-ring", "dataset-id": id }, [
-    buildElement("div", {}),
-    buildElement("div", {}),
-    buildElement("div", {}),
-    buildElement("div", {}),
+  return buildElement('div', { class: 'lds-ring', 'dataset-id': id }, [
+    buildElement('div', {}),
+    buildElement('div', {}),
+    buildElement('div', {}),
+    buildElement('div', {})
   ]);
 }
 
 function swapSpinner(img, id) {
-  const image = img || "/images/image-not-found.webp";
+  const image = img || '/images/image-not-found.webp';
   const spinner = document.querySelector(`.lds-ring[data-id="${id}"]`);
   const papa = spinner?.parentElement;
   if (papa) {
     spinner.remove();
-    papa.appendChild(buildElement("img", { src: image }));
+    papa.appendChild(buildElement('img', { src: image }));
   }
 }

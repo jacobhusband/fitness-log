@@ -107,7 +107,7 @@ form.create button {
   font-size: 1rem;
 }
 
-.search .modal {
+.modal {
   position: fixed;
   top: 0;
   right: 0;
@@ -118,7 +118,7 @@ form.create button {
   justify-content: center;
 }
 
-.search .modal .workout-date {
+.modal .workout-date {
   background-color: #0e0e0e;
   padding: 1rem;
   text-align: center;
@@ -220,7 +220,8 @@ nav {
 
   .home,
   .search,
-  .create {
+  .create,
+  .saved {
     margin-right: 3rem;
   }
 
@@ -236,12 +237,22 @@ nav {
     margin-right: 3rem;
   }
 
+  .search.view > ul.search,
+  .home.view > ul.search:last-child {
+    margin-bottom: 5rem;
+  }
+
   .buttons {
+    position: fixed;
+    bottom: 0;
     gap: 1rem;
     justify-content: space-between;
-    margin-right: 3rem;
-    margin-bottom: 1rem;
-    margin-left: 0;
+    padding-right: 6rem;
+    padding-left: 8rem;
+    padding-bottom: 0.5rem;
+    padding-top: 0.5rem;
+    background-color: #171717;
+    margin: 0;
   }
 
   .buttons button {

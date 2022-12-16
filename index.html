@@ -69,74 +69,76 @@
         <button type="submit">Submit</button>
       </form>
     </header>
-    <main class="row">
-      <nav class="col">
-        <a href="#home">Home</a>
-        <a href="#create">Create</a>
-        <a href="#saved">Saved</a>
-        <a href="#search">Search</a>
-      </nav>
-      <div class="search view w-100 flex-col hidden">
-        <ul class="search content col">
-          <li style="color: white; text-align: center">No search made...</li>
-        </ul>
-        <div class="modal calendar row hidden">
-          <div class="workout-date">
-            <h2>Choose a workout date</h2>
-            <div id="myCalendar" class="vanilla-calendar"></div>
-            <form class="buttons calendar">
-              <button type="submit" class="submit">Submit</button>
+    <main>
+      <div class="row">
+        <nav class="col">
+          <a href="#home">Home</a>
+          <a href="#create">Create</a>
+          <a href="#saved">Saved</a>
+          <a href="#search">Search</a>
+        </nav>
+        <div class="search view w-100 flex-col hidden">
+          <ul class="search content col">
+            <li style="color: white; text-align: center">No search made...</li>
+          </ul>
+        </div>
+        <div class="home view w-100 flex-col hidden"></div>
+        <div class="saved view w-100 flex-col hidden">
+          <ul class="saved content col"></ul>
+        </div>
+        <div class="create view w-100 flex-col hidden">
+          <form class="create w-100">
+            <div>
+              <label for="title">TITLE</label>
+              <input type="text" name="title" required />
+            </div>
+            <div>
+              <label for="mg1">MUSCLE GROUP 1</label>
+              <input type="text" name="mg1" required />
+            </div>
+            <div>
+              <label for="mg2">MUSCLE GROUP 2</label>
+              <input type="text" name="mg2" required />
+            </div>
+            <div>
+              <label for="reps">REPS</label>
+              <input type="text" name="reps" />
+            </div>
+            <div>
+              <label for="sets">SETS</label>
+              <input type="text" name="sets" />
+            </div>
+            <div>
+              <label for="description">DESCRIPTION</label>
+              <textarea
+                class="w-100"
+                name="description"
+                rows="10"
+                required
+              ></textarea>
+            </div>
+            <div>
+              <button class="submit">Submit</button>
               <button class="cancel">Cancel</button>
-            </form>
-          </div>
+            </div>
+          </form>
         </div>
       </div>
-      <div class="home view w-100 flex-col hidden"></div>
-      <div class="saved view w-100 flex-col hidden">
-        <ul class="saved content col"></ul>
+      <div class="buttons w-100 search row hidden">
+        <button class="more">More Results</button>
+        <button class="add workout hidden">Add Selected Workouts</button>
       </div>
-      <div class="create view w-100 flex-col hidden">
-        <form class="create w-100">
-          <div>
-            <label for="title">TITLE</label>
-            <input type="text" name="title" required />
-          </div>
-          <div>
-            <label for="mg1">MUSCLE GROUP 1</label>
-            <input type="text" name="mg1" required />
-          </div>
-          <div>
-            <label for="mg2">MUSCLE GROUP 2</label>
-            <input type="text" name="mg2" required />
-          </div>
-          <div>
-            <label for="reps">REPS</label>
-            <input type="text" name="reps" />
-          </div>
-          <div>
-            <label for="sets">SETS</label>
-            <input type="text" name="sets" />
-          </div>
-          <div>
-            <label for="description">DESCRIPTION</label>
-            <textarea
-              class="w-100"
-              name="description"
-              rows="10"
-              required
-            ></textarea>
-          </div>
-          <div>
-            <button class="submit">Submit</button>
+      <div class="modal calendar row hidden">
+        <div class="workout-date">
+          <h2>Choose a workout date</h2>
+          <div id="myCalendar" class="vanilla-calendar"></div>
+          <form class="buttons calendar">
+            <button type="submit" class="submit">Submit</button>
             <button class="cancel">Cancel</button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </main>
-    <div class="buttons search row hidden">
-      <button class="more">More Results</button>
-      <button class="add workout hidden">Add Selected Workouts</button>
-    </div>
     <script src="js/data.js"></script>
     <script src="js/main.js"></script>
   </body>
