@@ -171,6 +171,10 @@ function hashToSavedView() {
   window.location.hash = "#saved";
 }
 
+function hashToHomeView() {
+  window.location.hash = "#home";
+}
+
 function saveWorkoutInfo(workoutObj) {
   data.nextCreatedId--;
   data.created.push(workoutObj);
@@ -203,7 +207,7 @@ function createSavedUl(info) {
     class: "saved content col",
     "dataset-id": info.id,
   });
-  buildUl(info, ul, true);
+  buildUl(info, ul);
   $viewSaved.appendChild(ul);
 }
 
@@ -218,7 +222,7 @@ function createDateUl(date, insert = false) {
     if (workout === "date") continue;
     arr.push(data.exercises[date][workout]);
   }
-  buildUl(arr, ul, true);
+  buildUl(arr, ul);
   ul.insertBefore(
     buildSeparator(getSeparatorText(data.exercises[date].date)),
     ul.firstChild
@@ -256,8 +260,9 @@ function getSeparatorText(workoutTime) {
 }
 
 function handleCalendarCancelClick(event) {
-  $calendarModal.classList.add("hidden");
-  selectedDate = null;
+  if (event.target.className === "submit") return;
+  hideCalendarModal();
+  removeSelectedDate();
 }
 
 function handleCalendarFormSubmit(event) {
@@ -267,23 +272,30 @@ function handleCalendarFormSubmit(event) {
   const [year, month, day, date] = convertSelectedDateToStandardDate();
   saveDateInSelectedWorkout(year, month, day);
   if (data.exercises[date]) {
-    addWorkoutsToExistingUl();
+    addWorkoutsToExistingUl(date);
   } else {
-    addWorkoutsToNewUl();
+    addWorkoutsToNewUl(date);
   }
-  $calendarModal.classList.add("hidden");
-  $viewHome.classList.remove("hidden");
-  selectedDate = null;
-  window.location.hash = "home";
+  hideCalendarModal();
+  hashToHomeView();
+  removeSelectedDate();
 }
 
-function addWorkoutsToNewUl() {
+function removeSelectedDate() {
+  selectedDate = null;
+}
+
+function hideCalendarModal() {
+  $calendarModal.classList.add("hidden");
+}
+
+function addWorkoutsToNewUl(date) {
   data.exercises[date] = selectedWorkouts;
   clearSelectedWorkouts();
   createDateUl(date, true);
 }
 
-function addWorkoutsToExistingUl() {
+function addWorkoutsToExistingUl(date) {
   const placeholder = data.exercises[date];
   mergeSelectedWorkoutsWithDataObjectWorkouts(date);
   clearSelectedWorkouts();
@@ -354,7 +366,7 @@ function addWorkouts() {
       { day: "saturday" },
       { day: "sunday" },
     ],
-    onSelect: (data, elem) => {
+    onSelect: (data) => {
       const date = data.date.split(" ");
       selectedDate = [Number(date[2]), months[date[1]], Number(date[3])];
     },
@@ -504,25 +516,33 @@ function cleanData(data) {
   return results;
 }
 
-function buildUl(data, ul, home = false) {
+function buildUl(data, ul) {
   data.forEach((obj) => {
-    const muscles =
-      obj.muscles.length === 1
-        ? [obj.muscles[0], obj.muscles_secondary[0]]
-        : [obj.muscles[0], obj.muscles[1]];
-    const muscleArr = muscles.filter((x) => x !== undefined);
-    const desc =
-      obj.description === "" || obj.description.length < 10
-        ? "No description received..."
-        : obj.description;
-    const content = {
-      id: obj.id,
-      description: desc,
-      name: obj.name,
-      muscles: muscleArr,
-    };
-    workoutInfo[content.id] = content;
-    ul.appendChild(buildLi(content));
+    const content = createContentObject(obj);
+    saveContentInWorkoutGlobalObject();
+    addLiToUl(ul, buildLi(content));
+  });
+}
+
+function saveContentInWorkoutGlobalObject() {
+  workoutInfo[content.id] = content;
+}
+
+function createContentObject(obj) {
+  const muscles =
+    obj.muscles.length === 1
+      ? [obj.muscles[0], obj.muscles_secondary[0]]
+      : [obj.muscles[0], obj.muscles[1]];
+  const muscleArr = muscles.filter((x) => x !== undefined);
+  const desc =
+    obj.description === "" || obj.description.length < 10
+      ? "No description received..."
+      : obj.description;
+  return (content = {
+    id: obj.id,
+    description: desc,
+    name: obj.name,
+    muscles: muscleArr,
   });
 }
 
