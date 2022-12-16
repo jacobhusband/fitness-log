@@ -92,11 +92,6 @@ function initializePage() {
   } else if (data.view === 'saved') showSavedView();
 }
 
-function showViewFromDataObject() {
-  window.location.hash = `#${data.view}`;
-  $body.dataset.view = data.view;
-}
-
 function makePageSwaps(event) {
   hideAllViews();
   if (window.location.hash === '#home') {
@@ -110,6 +105,20 @@ function makePageSwaps(event) {
   } else if (window.location.hash === '#saved') {
     showSavedView();
   }
+}
+
+function createWorkout(event) {
+  event.preventDefault();
+  const workoutObj = getWorkoutFormInfo(event);
+  getImages([{ id: workoutObj.id, name: workoutObj.name }]);
+  $viewSaved.appendChild(buildLi(workoutObj));
+  saveWorkoutInfo(workoutObj);
+  hashToSavedView();
+}
+
+function showViewFromDataObject() {
+  window.location.hash = `#${data.view}`;
+  $body.dataset.view = data.view;
 }
 
 function showSavedView() {
@@ -157,15 +166,6 @@ function cancelWorkoutCreation(event) {
   window.history.go(-1);
 }
 
-function createWorkout(event) {
-  event.preventDefault();
-  const workoutObj = getWorkoutFormInfo(event);
-  getImages([{ id: workoutObj.id, name: workoutObj.name }]);
-  $viewSaved.appendChild(buildLi(workoutObj));
-  saveWorkoutInfo(workoutObj);
-  hashToSavedView();
-}
-
 function hashToSavedView() {
   window.location.hash = '#saved';
 }
@@ -186,10 +186,8 @@ function buildHomepage() {
   createSavedUl(data.created);
 }
 
-function addToUl(date, exercise) {
-  const li = buildLi(exercise, true);
-  const ul = $viewHome.querySelector(`[data-id="${date}"]`);
-  ul.appendChild(li);
+function addLiToUl(ul, li) {
+  return ul.appendChild(li);
 }
 
 function createSavedUl(info) {
@@ -268,7 +266,12 @@ function saveWorkouts(event) {
       data.exercises[date] = Object.assign({}, data.exercises[date], selectedWorkouts);
       selectedWorkouts = {};
       for (const key in data.exercises[date]) {
-        if (!placeholder[key]) addToUl(date, data.exercises[date][key]);
+        if (!placeholder[key]) {
+          addLiToUl(
+            getHomeViewUlWithDate(date),
+            buildLi(data.exercises[date][key])
+          );
+        }
       }
     } else {
       data.exercises[date] = selectedWorkouts;
@@ -280,6 +283,10 @@ function saveWorkouts(event) {
     selectedDate = null;
     window.location.hash = 'home';
   }
+}
+
+function getHomeViewUlWithDate(date) {
+  return $viewHome.querySelector(`[data-id="${date}"]`);
 }
 
 function modifySearchItems(event) {
@@ -438,32 +445,19 @@ function buildUl(data, ul, home = false) {
       muscles: muscleArr
     };
     workoutInfo[content.id] = content;
-    ul.appendChild(buildLi(content, home));
+    ul.appendChild(buildLi(content));
   });
 }
 
-function buildLi(info, home = false) {
-  const { id, name, description, muscles } = info;
-  const image = (home) && data.storedImages[id];
-  let muscleText;
-
-  if (typeof muscles[0] === 'string') {
-    muscleText = `${muscles[0]}/${muscles[1]}`;
-  } else {
-    muscleText = (muscles.length === 2)
-      ? `(${muscleObjReverse[muscles[0]]}/${muscleObjReverse[muscles[1]]})`
-      : (muscles.length === 1)
-          ? `(${muscleObjReverse[muscles[0]]})`
-          : null;
-  }
-
-  const spinner = (!home)
-    ? createSpinner(id)
-    : buildElement('img', { src: image });
+function buildLi(exerciseObj) {
+  const { id, name, description, muscles } = exerciseObj;
+  const muscleText = convertMuscleDataToText(muscles);
 
   return buildElement('li', { class: 'search-item row', 'dataset-id': id }, [
     buildElement('div', { class: 'col' }, [
-      spinner
+      (data.storedImages[id])
+        ? buildElement('img', { src: data.storedImages[id] })
+        : createSpinner(id)
     ]),
     buildElement('div', { class: 'col' }, [
       buildElement('div', { class: 'row' }, [
@@ -478,6 +472,15 @@ function buildLi(info, home = false) {
       ])
     ])
   ]);
+}
+
+function convertMuscleDataToText(muscles) {
+  if (typeof muscles[0] === 'string') return `${muscles[0]}/${muscles[1]}`;
+  return (muscles.length === 2)
+    ? `(${muscleObjReverse[muscles[0]]}/${muscleObjReverse[muscles[1]]})`
+    : (muscles.length === 1)
+        ? `(${muscleObjReverse[muscles[0]]})`
+        : null;
 }
 
 function buildElement(tag, attr, children) {
