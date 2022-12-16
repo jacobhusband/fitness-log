@@ -80,10 +80,6 @@
         <ul class="search content col">
           <li style="color: white; text-align: center">No search made...</li>
         </ul>
-        <div class="buttons search row hidden">
-          <button class="more">More Results</button>
-          <button class="add workout hidden">Add Selected Workouts</button>
-        </div>
         <div class="modal calendar row hidden">
           <div class="workout-date">
             <h2>Choose a workout date</h2>
@@ -96,7 +92,9 @@
         </div>
       </div>
       <div class="home view w-100 flex-col hidden"></div>
-      <div class="saved view w-100 flex-col hidden"></div>
+      <div class="saved view w-100 flex-col hidden">
+        <ul class="saved content col"></ul>
+      </div>
       <div class="create view w-100 flex-col hidden">
         <form class="create w-100">
           <div>
@@ -135,6 +133,10 @@
         </form>
       </div>
     </main>
+    <div class="buttons search row hidden">
+      <button class="more">More Results</button>
+      <button class="add workout hidden">Add Selected Workouts</button>
+    </div>
     <script src="js/data.js"></script>
     <script src="js/main.js"></script>
   </body>

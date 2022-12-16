@@ -12,6 +12,7 @@ const $muscleSearchOptions = $searchField.querySelector("select");
 const $viewHome = document.querySelector(".home.view");
 const $viewCreate = document.querySelector(".create.view");
 const $viewSaved = document.querySelector(".saved.view");
+const $savedContentUl = $viewSaved.querySelector("ul.saved.content");
 
 const muscleObj = {
   biceps: 1,
@@ -75,6 +76,7 @@ $createForm.addEventListener("submit", createWorkout);
 $calendarForm.addEventListener("click", handleCalendarCancelClick);
 $calendarForm.addEventListener("submit", handleCalendarFormSubmit);
 $searchContentUl.addEventListener("click", selectWorkout);
+$savedContentUl.addEventListener("click", selectWorkout);
 $searchContentButtons.addEventListener("click", modifySearchItems);
 $cancelButton.addEventListener("click", cancelWorkoutCreation);
 window.addEventListener("hashchange", makePageSwaps);
@@ -195,34 +197,22 @@ function getWorkoutFormInfo(event) {
 
 function buildHomepage() {
   for (const date in data.exercises) createDateUl(date);
-  createSavedUl(data.created);
+  saveWorkoutsGloballyAndAddLisToUl(data.created, $savedContentUl);
 }
 
 function addLiToUl(ul, li) {
   return ul.appendChild(li);
 }
 
-function createSavedUl(info) {
-  const ul = buildElement("ul", {
-    class: "saved content col",
-    "dataset-id": info.id,
-  });
-  buildUl(info, ul);
-  $viewSaved.appendChild(ul);
-}
-
 function createDateUl(date, insert = false) {
   let inserted = false;
   const arr = [];
-  const ul = buildElement("ul", {
-    class: "search content col",
-    "dataset-id": date,
-  });
+  const ul = createUl("search content col", date);
   for (const workout in data.exercises[date]) {
     if (workout === "date") continue;
     arr.push(data.exercises[date][workout]);
   }
-  buildUl(arr, ul);
+  saveWorkoutsGloballyAndAddLisToUl(arr, ul);
   ul.insertBefore(
     buildSeparator(getSeparatorText(data.exercises[date].date)),
     ul.firstChild
@@ -235,10 +225,21 @@ function createDateUl(date, insert = false) {
         break;
       }
     }
-    if (!inserted) $viewHome.appendChild(ul);
+    if (!inserted) addUlToView(ul, $viewHome);
   } else {
-    $viewHome.appendChild(ul);
+    addUlToView(ul, $viewHome);
   }
+}
+
+function createUl(className, id) {
+  return buildElement("ul", {
+    class: className,
+    "dataset-id": id,
+  });
+}
+
+function addUlToView(ul, $viewHome) {
+  $viewHome.appendChild(ul);
 }
 
 function buildSeparator(text) {
@@ -432,12 +433,20 @@ function getWorkouts(url) {
     .then((data) => {
       nextFetch = data.next;
       newData = cleanData(data);
-      buildUl(newData, $searchContentUl);
+      saveWorkoutsGloballyAndAddLisToUl(newData, $searchContentUl);
       getImages(newData);
-      window.location.hash = "search";
-      $searchContentButtons.classList.remove("hidden");
+      hashToSearchView();
+      showAddWorkoutsToScheduleButtons();
     })
     .catch((err) => console.error(err));
+}
+
+function hashToSearchView() {
+  window.location.hash = "search";
+}
+
+function showAddWorkoutsToScheduleButtons() {
+  $searchContentButtons.classList.remove("hidden");
 }
 
 function getImages(results) {
@@ -516,7 +525,7 @@ function cleanData(data) {
   return results;
 }
 
-function buildUl(data, ul) {
+function saveWorkoutsGloballyAndAddLisToUl(data, ul) {
   data.forEach((obj) => {
     const content = createContentObject(obj);
     saveContentInWorkoutGlobalObject();
