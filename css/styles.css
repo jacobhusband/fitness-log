@@ -64,6 +64,7 @@ header .icons {
   text-decoration-line: underline !important;
   text-decoration-color: red !important;
   text-decoration-style: solid !important;
+  text-decoration-thickness: 2px !important;
   -webkit-text-decoration-thickness: 2px !important;
 }
 
@@ -123,6 +124,10 @@ form.create button {
   padding: 1rem;
   text-align: center;
   border-radius: 0.5rem;
+}
+
+.sets-and-reps > p {
+  margin-top: 0;
 }
 
 ul {

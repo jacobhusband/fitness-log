@@ -69,7 +69,7 @@ const months = {
 
 const workoutInfo = {};
 let selectedWorkoutListItems = {};
-const selectedWorkoutInfo = {};
+let selectedWorkoutInfo = {};
 let selectedDate = null;
 let nextFetch = null;
 
@@ -78,7 +78,7 @@ $createForm.addEventListener('submit', createWorkout);
 $calendarForm.addEventListener('click', handleCalendarCancelClick);
 $calendarForm.addEventListener('submit', handleCalendarFormSubmit);
 $searchContentUl.addEventListener('click', selectWorkout);
-$savedContentUl.addEventListener('click', handleSavedContentClick);
+$viewSaved.addEventListener('click', handleSavedContentClick);
 $searchContentButtons.addEventListener('click', modifySearchItems);
 $cancelButton.addEventListener('click', cancelWorkoutCreation);
 window.addEventListener('hashchange', makePageSwaps);
@@ -101,7 +101,7 @@ function makePageSwaps(event) {
   hideAllViews();
   removeSearchContent();
   removeStyleFromSelectedWorkoutListItems();
-  clearselectedWorkoutListItems();
+  clearSelectedWorkouts();
   hideButtonsToAddWorkoutOrGetMoreResults();
   if (window.location.hash === '#home') {
     showHomeView();
@@ -126,7 +126,7 @@ function createWorkout(event) {
 }
 
 function removeStyleFromSelectedWorkoutListItems() {
-  for (const key in selectedWorkoutListItems) selectedWorkoutListItems[key].style = '';
+  for (const key in selectedWorkoutListItems) { selectedWorkoutListItems[key].style = ''; }
 }
 
 function showViewFromDataObject() {
@@ -190,6 +190,7 @@ function hashToHomeView() {
 function saveWorkoutInfo(workoutObj) {
   data.nextCreatedId--;
   data.created.push(workoutObj);
+  workoutInfo[workoutObj.id] = workoutObj;
 }
 
 function getWorkoutFormInfo(event) {
@@ -206,7 +207,10 @@ function getWorkoutFormInfo(event) {
 }
 
 function buildHomepage() {
-  for (const date in data.exercises) createDateUl(date);
+  for (const date in data.exercises) {
+    const ul = createDateUl(date);
+    addUlToView(ul, $viewHome);
+  }
   saveWorkoutsGloballyAndAddLisToUl(data.created, $savedContentUl);
 }
 
@@ -214,31 +218,40 @@ function addLiToUl(ul, li) {
   return ul.appendChild(li);
 }
 
-function createDateUl(date, insert = false) {
-  let inserted = false;
-  const arr = [];
+function createDateUl(date) {
   const ul = createUl('search content col', date);
-  for (const workout in data.exercises[date]) {
-    if (workout === 'date') continue;
-    arr.push(data.exercises[date][workout]);
-  }
+  const arr = getWorkoutsExcludingDateKey(date);
   saveWorkoutsGloballyAndAddLisToUl(arr, ul);
+  insertDateSeparator(ul, date);
+  return ul;
+}
+
+function insertUlInOrderOfOccuring(ul, view) {
+  let inserted = false;
+  for (let i = 0; i < view.children.length; i++) {
+    if (Number(view.children[i].dataset.id) > Number(ul.dataset.id)) {
+      view.insertBefore(ul, view.children[i]);
+      inserted = true;
+      break;
+    }
+  }
+  if (!inserted) addUlToView(ul, $viewHome);
+}
+
+function insertDateSeparator(ul, date) {
   ul.insertBefore(
     buildSeparator(getSeparatorText(data.exercises[date].date)),
     ul.firstChild
   );
-  if (insert) {
-    for (let i = 0; i < $viewHome.children.length; i++) {
-      if (Number($viewHome.children[i].dataset.id) > Number(ul.dataset.id)) {
-        $viewHome.insertBefore(ul, $viewHome.children[i]);
-        inserted = true;
-        break;
-      }
-    }
-    if (!inserted) addUlToView(ul, $viewHome);
-  } else {
-    addUlToView(ul, $viewHome);
+}
+
+function getWorkoutsExcludingDateKey(date) {
+  const arr = [];
+  for (const workout in data.exercises[date]) {
+    if (workout === 'date') continue;
+    arr.push(data.exercises[date][workout]);
   }
+  return arr;
 }
 
 function createUl(className, id) {
@@ -248,8 +261,8 @@ function createUl(className, id) {
   });
 }
 
-function addUlToView(ul, $viewHome) {
-  $viewHome.appendChild(ul);
+function addUlToView(ul, view) {
+  view.appendChild(ul);
 }
 
 function buildSeparator(text) {
@@ -279,11 +292,13 @@ function handleCalendarCancelClick(event) {
 function handleCalendarFormSubmit(event) {
   event.preventDefault();
   if (!selectedDate) return;
-  for (const key in selectedWorkoutListItems) { selectedWorkoutInfo[key] = workoutInfo[key]; }
+  for (const key in selectedWorkoutListItems) {
+    selectedWorkoutInfo[key] = workoutInfo[key];
+  }
   removeStyleFromSelectedWorkoutListItems();
   const [year, month, day, date] = convertSelectedDateToStandardDate();
   saveDateInSelectedWorkoutInfo(year, month, day);
-  (data.exercises[date])
+  data.exercises[date]
     ? addWorkoutsToExistingUl(date)
     : addWorkoutsToNewUl(date);
   hideCalendarModal();
@@ -301,21 +316,27 @@ function hideCalendarModal() {
 
 function addWorkoutsToNewUl(date) {
   data.exercises[date] = selectedWorkoutInfo;
-  createDateUl(date, true);
+  const ul = createDateUl(date);
+  insertUlInOrderOfOccuring(ul, $viewHome);
 }
 
 function addWorkoutsToExistingUl(date) {
   const placeholder = data.exercises[date];
   mergeSelectedWorkoutListItemsWithDataObjectWorkouts(date);
-  for (const key in data.exercises[date]) { addNewSelectedWorkoutListItems(placeholder, key, date); }
+  for (const key in data.exercises[date]) {
+    addNewSelectedWorkoutListItems(placeholder, key, date);
+  }
 }
 
 function addNewSelectedWorkoutListItems(placeholder, key, date) {
-  if (!placeholder[key]) { addLiToUl(getHomeViewUlWithDate(date), buildLi(data.exercises[date][key])); }
+  if (!placeholder[key]) {
+    addLiToUl(getHomeViewUlWithDate(date), buildLi(data.exercises[date][key]));
+  }
 }
 
-function clearselectedWorkoutListItems() {
+function clearSelectedWorkouts() {
   selectedWorkoutListItems = {};
+  selectedWorkoutInfo = {};
 }
 
 function mergeSelectedWorkoutListItemsWithDataObjectWorkouts(date) {
@@ -439,7 +460,9 @@ function handleSearchFieldSubmit(event) {
 }
 
 function removeSearchContent() {
-  while ($searchContentUl.lastElementChild) { $searchContentUl.lastElementChild.remove(); }
+  while ($searchContentUl.lastElementChild) {
+    $searchContentUl.lastElementChild.remove();
+  }
 }
 
 function getWorkouts(url) {
@@ -566,28 +589,30 @@ function saveContentInWorkoutGlobalObject(content) {
 
 function createContentObject(obj) {
   const muscles =
-    (obj.muscles.length === 1 &&
+    obj.muscles.length === 1 &&
       obj.muscles_secondary &&
-      obj.muscles_secondary.length)
+      obj.muscles_secondary.length
       ? [obj.muscles[0], obj.muscles_secondary[0]]
-      : (obj.muscles.length === 1 && !obj.muscles_secondary)
-          ? [obj.muscles[0]]
-          : [obj.muscles[0], obj.muscles[1]];
+      : obj.muscles.length === 1 && !obj.muscles_secondary
+        ? [obj.muscles[0]]
+        : [obj.muscles[0], obj.muscles[1]];
   const muscleArr = muscles.filter(x => x !== undefined);
   const desc =
     obj.description === '' || obj.description.length < 10
       ? 'No description received...'
       : obj.description;
-  return ({
+  return {
     id: obj.id,
     description: desc,
     name: obj.name,
-    muscles: muscleArr
-  });
+    muscles: muscleArr,
+    reps: obj.reps,
+    sets: obj.sets
+  };
 }
 
 function buildLi(exerciseObj) {
-  const { id, name, description, muscles } = exerciseObj;
+  const { id, name, description, muscles, sets, reps } = exerciseObj;
   const muscleText = convertMuscleDataToText(muscles);
 
   return buildElement('li', { class: 'search-item row', 'dataset-id': id }, [
@@ -606,6 +631,7 @@ function buildLi(exerciseObj) {
         buildElement('h3', { textContent: name.toUpperCase() }),
         buildElement('span', { textContent: muscleText })
       ]),
+      sets && reps && createSetsAndReps(sets, reps),
       buildElement('div', { class: 'row' }, [
         buildElement('p', { textContent: description })
       ])
@@ -613,8 +639,14 @@ function buildLi(exerciseObj) {
   ]);
 }
 
+function createSetsAndReps(sets, reps) {
+  return buildElement('div', { class: 'row sets-and-reps' }, [
+    buildElement('p', { textContent: `sets ${sets} x reps ${reps}` })
+  ]);
+}
+
 function convertMuscleDataToText(muscles) {
-  if (typeof muscles[0] === 'string') return `${muscles[0]}/${muscles[1]}`;
+  if (typeof muscles[0] === 'string') return `(${muscles[0]}/${muscles[1]})`;
   return muscles.length === 2
     ? `(${muscleObjReverse[muscles[0]]}/${muscleObjReverse[muscles[1]]})`
     : muscles.length === 1
