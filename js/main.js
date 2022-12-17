@@ -207,7 +207,10 @@ function getWorkoutFormInfo(event) {
 }
 
 function buildHomepage() {
-  for (const date in data.exercises) createDateUl(date);
+  for (const date in data.exercises) {
+    const ul = createDateUl(date);
+    addUlToView(ul, $viewHome);
+  }
   saveWorkoutsGloballyAndAddLisToUl(data.created, $savedContentUl);
 }
 
@@ -216,30 +219,39 @@ function addLiToUl(ul, li) {
 }
 
 function createDateUl(date, insert = false) {
-  let inserted = false;
-  const arr = [];
   const ul = createUl("search content col", date);
-  for (const workout in data.exercises[date]) {
-    if (workout === "date") continue;
-    arr.push(data.exercises[date][workout]);
-  }
+  const arr = getWorkoutsExcludingDateKey(date);
   saveWorkoutsGloballyAndAddLisToUl(arr, ul);
+  insertDateSeparator(ul, date);
+  return ul;
+}
+
+function insertUlInOrderOfOccuring(ul, view) {
+  let inserted = false;
+  for (let i = 0; i < view.children.length; i++) {
+    if (Number(view.children[i].dataset.id) > Number(ul.dataset.id)) {
+      view.insertBefore(ul, view.children[i]);
+      inserted = true;
+      break;
+    }
+  }
+  if (!inserted) addUlToView(ul, $viewHome);
+}
+
+function insertDateSeparator(ul, date) {
   ul.insertBefore(
     buildSeparator(getSeparatorText(data.exercises[date].date)),
     ul.firstChild
   );
-  if (insert) {
-    for (let i = 0; i < $viewHome.children.length; i++) {
-      if (Number($viewHome.children[i].dataset.id) > Number(ul.dataset.id)) {
-        $viewHome.insertBefore(ul, $viewHome.children[i]);
-        inserted = true;
-        break;
-      }
-    }
-    if (!inserted) addUlToView(ul, $viewHome);
-  } else {
-    addUlToView(ul, $viewHome);
+}
+
+function getWorkoutsExcludingDateKey(date) {
+  const arr = [];
+  for (const workout in data.exercises[date]) {
+    if (workout === "date") continue;
+    arr.push(data.exercises[date][workout]);
   }
+  return arr;
 }
 
 function createUl(className, id) {
@@ -249,8 +261,8 @@ function createUl(className, id) {
   });
 }
 
-function addUlToView(ul, $viewHome) {
-  $viewHome.appendChild(ul);
+function addUlToView(ul, view) {
+  view.appendChild(ul);
 }
 
 function buildSeparator(text) {
@@ -304,7 +316,8 @@ function hideCalendarModal() {
 
 function addWorkoutsToNewUl(date) {
   data.exercises[date] = selectedWorkoutInfo;
-  createDateUl(date, true);
+  const ul = createDateUl(date);
+  insertUlInOrderOfOccuring(ul, $viewHome);
 }
 
 function addWorkoutsToExistingUl(date) {
