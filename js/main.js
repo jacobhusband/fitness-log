@@ -596,7 +596,12 @@ function buildLi(exerciseObj) {
         ? buildElement('img', { src: data.storedImages[id] })
         : createSpinner(id)
     ]),
-    buildElement('div', { class: 'col w-100' }, [
+    buildElement('div', { class: 'col w-100 position-relative' }, [
+      buildElement('div', { class: 'row position-absolute buttons' }, [
+        buildElement('button', { 'dataset-id': id }, [
+          buildElement('i', { class: '' })
+        ])
+      ]),
       buildElement('div', { class: 'row' }, [
         buildElement('h3', { textContent: name.toUpperCase() }),
         buildElement('span', { textContent: muscleText })
