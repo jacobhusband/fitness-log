@@ -125,6 +125,10 @@ form.create button {
   border-radius: 0.5rem;
 }
 
+.sets-and-reps > p {
+  margin-top: 0;
+}
+
 ul {
   margin-bottom: 1rem;
 }

@@ -78,7 +78,7 @@ $createForm.addEventListener("submit", createWorkout);
 $calendarForm.addEventListener("click", handleCalendarCancelClick);
 $calendarForm.addEventListener("submit", handleCalendarFormSubmit);
 $searchContentUl.addEventListener("click", selectWorkout);
-$savedContentUl.addEventListener("click", handleSavedContentClick);
+$viewSaved.addEventListener("click", handleSavedContentClick);
 $searchContentButtons.addEventListener("click", modifySearchItems);
 $cancelButton.addEventListener("click", cancelWorkoutCreation);
 window.addEventListener("hashchange", makePageSwaps);
@@ -191,6 +191,7 @@ function hashToHomeView() {
 function saveWorkoutInfo(workoutObj) {
   data.nextCreatedId--;
   data.created.push(workoutObj);
+  workoutInfo[workoutObj.id] = workoutObj;
 }
 
 function getWorkoutFormInfo(event) {
@@ -218,7 +219,7 @@ function addLiToUl(ul, li) {
   return ul.appendChild(li);
 }
 
-function createDateUl(date, insert = false) {
+function createDateUl(date) {
   const ul = createUl("search content col", date);
   const arr = getWorkoutsExcludingDateKey(date);
   saveWorkoutsGloballyAndAddLisToUl(arr, ul);
@@ -606,11 +607,13 @@ function createContentObject(obj) {
     description: desc,
     name: obj.name,
     muscles: muscleArr,
+    reps: obj.reps,
+    sets: obj.sets,
   };
 }
 
 function buildLi(exerciseObj) {
-  const { id, name, description, muscles } = exerciseObj;
+  const { id, name, description, muscles, sets, reps } = exerciseObj;
   const muscleText = convertMuscleDataToText(muscles);
 
   return buildElement("li", { class: "search-item row", "dataset-id": id }, [
@@ -624,6 +627,7 @@ function buildLi(exerciseObj) {
         buildElement("h3", { textContent: name.toUpperCase() }),
         buildElement("span", { textContent: muscleText }),
       ]),
+      sets && reps && createSetsAndReps(sets, reps),
       buildElement("div", { class: "row" }, [
         buildElement("p", { textContent: description }),
       ]),
@@ -631,8 +635,14 @@ function buildLi(exerciseObj) {
   ]);
 }
 
+function createSetsAndReps(sets, reps) {
+  return buildElement("div", { class: "row sets-and-reps" }, [
+    buildElement("p", { textContent: `sets ${sets} x reps ${reps}` }),
+  ]);
+}
+
 function convertMuscleDataToText(muscles) {
-  if (typeof muscles[0] === "string") return `${muscles[0]}/${muscles[1]}`;
+  if (typeof muscles[0] === "string") return `(${muscles[0]}/${muscles[1]})`;
   return muscles.length === 2
     ? `(${muscleObjReverse[muscles[0]]}/${muscleObjReverse[muscles[1]]})`
     : muscles.length === 1
