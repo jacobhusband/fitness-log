@@ -64,6 +64,7 @@ header .icons {
   text-decoration-line: underline !important;
   text-decoration-color: red !important;
   text-decoration-style: solid !important;
+  text-decoration-thickness: 2px !important;
   -webkit-text-decoration-thickness: 2px !important;
 }
 
