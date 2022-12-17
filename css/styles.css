@@ -195,6 +195,10 @@ li.search-item .buttons button {
   height: 30px;
 }
 
+[data-view="search"] .search-item .buttons {
+  display: none;
+}
+
 li.search-item .buttons button.x-mark {
   background-color: red;
   transform: scale(1);

@@ -120,7 +120,7 @@ function createWorkout(event) {
   event.preventDefault();
   const workoutObj = getWorkoutFormInfo(event);
   getImages([{ id: workoutObj.id, name: workoutObj.name }]);
-  $viewSaved.appendChild(buildLi(workoutObj));
+  $savedContentUl.appendChild(buildLi(workoutObj));
   saveWorkoutInfo(workoutObj);
   hashToSavedView();
 }
@@ -421,12 +421,22 @@ function selectWorkout(event) {
   if (selectedWorkoutListItems[id]) {
     removeSelectedWorkout(id);
     makeBorderMatchBackground(li);
+    hideListItemButtons(li);
   } else {
     addSelectedWorkout(id, li);
     makeBorderGreen(li);
+    showListItemButtons(li);
   }
   hideOrShowWorkoutButton();
   showMoreResultsButton();
+}
+
+function showListItemButtons(li) {
+  li.querySelector('.buttons').classList.remove('hidden');
+}
+
+function hideListItemButtons(li) {
+  li.querySelector('.buttons').classList.add('hidden');
 }
 
 function hideOrShowWorkoutButton() {
@@ -622,7 +632,7 @@ function buildLi(exerciseObj) {
         : createSpinner(id)
     ]),
     buildElement('div', { class: 'col w-100 position-relative' }, [
-      buildElement('div', { class: 'row position-absolute buttons' }, [
+      buildElement('div', { class: 'row position-absolute buttons hidden' }, [
         buildElement('button', { 'dataset-id': id, class: 'x-mark' }, [
           buildElement('i', { class: 'fa-solid fa-xmark' })
         ])
