@@ -51,7 +51,6 @@ select::-ms-expand {
   border-radius: 0.25rem;
 }
 
-.buttons button,
 form.search button {
   font-family: "Work Sans", sans-serif;
   padding: 0 1rem;

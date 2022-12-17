@@ -43,18 +43,6 @@ header .icons {
   gap: 1rem;
 }
 
-.buttons {
-  gap: 0.5rem;
-  justify-content: space-between;
-  margin: 0 1rem 1rem;
-}
-
-.buttons button {
-  padding: 0.75rem;
-  background-color: #0e0e0e;
-  text-decoration: underline;
-}
-
 [data-view="search"] i.fa-magnifying-glass,
 [data-view="create"] i.fa-plus,
 [data-view="home"] i.fa-home,
@@ -152,8 +140,15 @@ ul {
   color: black;
 }
 
-.workout-date .buttons {
+.workout-date .buttons.calendar {
   margin: 0;
+}
+
+.buttons.search button,
+.buttons.calendar button {
+  padding: 0.75rem;
+  background-color: #0e0e0e;
+  text-decoration: underline;
 }
 
 li.search-item {
@@ -186,6 +181,35 @@ li.search-item p {
 li.search-item .col:last-child {
   padding: 0.25rem;
   overflow-y: scroll;
+}
+
+li.search-item .buttons {
+  top: -30px;
+  right: 30px;
+}
+
+li.search-item .buttons button {
+  position: fixed;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+}
+
+li.search-item .buttons button.x-mark {
+  background-color: red;
+  transform: scale(1);
+}
+
+li.search-item .buttons button.x-mark i {
+  position: relative;
+  top: 1px;
+}
+
+.buttons.search,
+.workout-date .buttons.calendar {
+  gap: 0.5rem;
+  justify-content: space-between;
+  margin: 0 1rem 1rem;
 }
 
 nav {
@@ -268,7 +292,8 @@ nav {
     margin: 0;
   }
 
-  .buttons button {
+  .buttons.search button,
+  .buttons.caldendar button {
     padding: 0.75rem;
     font-size: 1rem;
     background-color: #1a1a1a;

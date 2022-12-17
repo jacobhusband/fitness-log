@@ -623,8 +623,8 @@ function buildLi(exerciseObj) {
     ]),
     buildElement('div', { class: 'col w-100 position-relative' }, [
       buildElement('div', { class: 'row position-absolute buttons' }, [
-        buildElement('button', { 'dataset-id': id }, [
-          buildElement('i', { class: '' })
+        buildElement('button', { 'dataset-id': id, class: 'x-mark' }, [
+          buildElement('i', { class: 'fa-solid fa-xmark' })
         ])
       ]),
       buildElement('div', { class: 'row' }, [
