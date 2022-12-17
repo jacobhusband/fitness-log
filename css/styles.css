@@ -242,7 +242,7 @@ nav {
     margin-bottom: 5rem;
   }
 
-  .buttons {
+  .buttons.search {
     position: fixed;
     bottom: 0;
     gap: 1rem;

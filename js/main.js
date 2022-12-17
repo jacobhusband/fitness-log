@@ -8,7 +8,7 @@ const $searchContentButtons = document.querySelector('.buttons.search');
 const $calendarModal = document.querySelector('.modal.calendar');
 const $calendarForm = $calendarModal.querySelector('form.calendar');
 const $selectedWorkoutAddButton = document.querySelector('button.add.workout');
-// const $selectedWorkoutResultsButton = document.querySelector("button.more")
+const $selectedWorkoutResultsButton = document.querySelector('button.more');
 const $muscleSearchOptions = $searchField.querySelector('select');
 const $viewHome = document.querySelector('.home.view');
 const $viewCreate = document.querySelector('.create.view');
@@ -68,7 +68,8 @@ const months = {
 };
 
 const workoutInfo = {};
-let selectedWorkouts = {};
+let selectedWorkoutListItems = {};
+const selectedWorkoutInfo = {};
 let selectedDate = null;
 let nextFetch = null;
 
@@ -77,7 +78,7 @@ $createForm.addEventListener('submit', createWorkout);
 $calendarForm.addEventListener('click', handleCalendarCancelClick);
 $calendarForm.addEventListener('submit', handleCalendarFormSubmit);
 $searchContentUl.addEventListener('click', selectWorkout);
-$savedContentUl.addEventListener('click', selectWorkout);
+$savedContentUl.addEventListener('click', handleSavedContentClick);
 $searchContentButtons.addEventListener('click', modifySearchItems);
 $cancelButton.addEventListener('click', cancelWorkoutCreation);
 window.addEventListener('hashchange', makePageSwaps);
@@ -98,6 +99,10 @@ function initializePage() {
 
 function makePageSwaps(event) {
   hideAllViews();
+  removeSearchContent();
+  removeStyleFromSelectedWorkoutListItems();
+  clearselectedWorkoutListItems();
+  hideButtonsToAddWorkoutOrGetMoreResults();
   if (window.location.hash === '#home') {
     showHomeView();
   } else if (window.location.hash === '#create') {
@@ -118,6 +123,10 @@ function createWorkout(event) {
   $viewSaved.appendChild(buildLi(workoutObj));
   saveWorkoutInfo(workoutObj);
   hashToSavedView();
+}
+
+function removeStyleFromSelectedWorkoutListItems() {
+  for (const key in selectedWorkoutListItems) selectedWorkoutListItems[key].style = '';
 }
 
 function showViewFromDataObject() {
@@ -252,7 +261,7 @@ function buildSeparator(text) {
 function getSeparatorText(workoutTime) {
   const today = Math.trunc(new Date().getTime() / 86400000);
   const future = Math.trunc(
-    new Date(`${workoutTime[2]}-${workoutTime[1]}-${workoutTime[0]}T00:00:00`) /
+    new Date(`${workoutTime[2]}-${workoutTime[1]}-${workoutTime[0]}T16:00:00`) /
     86400000
   );
   if (future - today < 0) return null;
@@ -270,14 +279,13 @@ function handleCalendarCancelClick(event) {
 function handleCalendarFormSubmit(event) {
   event.preventDefault();
   if (!selectedDate) return;
-  for (const key in selectedWorkouts) selectedWorkouts[key] = workoutInfo[key];
+  for (const key in selectedWorkoutListItems) { selectedWorkoutInfo[key] = workoutInfo[key]; }
+  removeStyleFromSelectedWorkoutListItems();
   const [year, month, day, date] = convertSelectedDateToStandardDate();
-  saveDateInSelectedWorkout(year, month, day);
-  if (data.exercises[date]) {
-    addWorkoutsToExistingUl(date);
-  } else {
-    addWorkoutsToNewUl(date);
-  }
+  saveDateInSelectedWorkoutInfo(year, month, day);
+  (data.exercises[date])
+    ? addWorkoutsToExistingUl(date)
+    : addWorkoutsToNewUl(date);
   hideCalendarModal();
   hashToHomeView();
   removeSelectedDate();
@@ -292,36 +300,34 @@ function hideCalendarModal() {
 }
 
 function addWorkoutsToNewUl(date) {
-  data.exercises[date] = selectedWorkouts;
-  clearSelectedWorkouts();
+  data.exercises[date] = selectedWorkoutInfo;
   createDateUl(date, true);
 }
 
 function addWorkoutsToExistingUl(date) {
   const placeholder = data.exercises[date];
-  mergeSelectedWorkoutsWithDataObjectWorkouts(date);
-  clearSelectedWorkouts();
-  for (const key in data.exercises[date]) { addNewSelectedWorkouts(placeholder, key, date); }
+  mergeSelectedWorkoutListItemsWithDataObjectWorkouts(date);
+  for (const key in data.exercises[date]) { addNewSelectedWorkoutListItems(placeholder, key, date); }
 }
 
-function addNewSelectedWorkouts(placeholder, key, date) {
+function addNewSelectedWorkoutListItems(placeholder, key, date) {
   if (!placeholder[key]) { addLiToUl(getHomeViewUlWithDate(date), buildLi(data.exercises[date][key])); }
 }
 
-function clearSelectedWorkouts() {
-  selectedWorkouts = {};
+function clearselectedWorkoutListItems() {
+  selectedWorkoutListItems = {};
 }
 
-function mergeSelectedWorkoutsWithDataObjectWorkouts(date) {
+function mergeSelectedWorkoutListItemsWithDataObjectWorkouts(date) {
   data.exercises[date] = Object.assign(
     {},
     data.exercises[date],
-    selectedWorkouts
+    selectedWorkoutInfo
   );
 }
 
-function saveDateInSelectedWorkout(year, month, day) {
-  selectedWorkouts.date = [day, month, year];
+function saveDateInSelectedWorkoutInfo(year, month, day) {
+  selectedWorkoutInfo.date = [day, month, year];
 }
 
 function convertSelectedDateToStandardDate() {
@@ -373,11 +379,25 @@ function addWorkouts() {
   });
 }
 
+function handleSavedContentClick(event) {
+  selectWorkout(event);
+  showButtonsToAddWorkoutOrGetMoreResults();
+  hideMoreResultsButton();
+}
+
+function hideMoreResultsButton() {
+  $selectedWorkoutResultsButton.classList.add('hidden');
+}
+
+function showMoreResultsButton() {
+  $selectedWorkoutResultsButton.classList.remove('hidden');
+}
+
 function selectWorkout(event) {
   const li = event.target.closest('li');
   const id = li?.dataset.id;
   if (!id) return;
-  if (selectedWorkouts[id]) {
+  if (selectedWorkoutListItems[id]) {
     removeSelectedWorkout(id);
     makeBorderMatchBackground(li);
   } else {
@@ -385,10 +405,11 @@ function selectWorkout(event) {
     makeBorderGreen(li);
   }
   hideOrShowWorkoutButton();
+  showMoreResultsButton();
 }
 
 function hideOrShowWorkoutButton() {
-  !Object.keys(selectedWorkouts).length
+  !Object.keys(selectedWorkoutListItems).length
     ? $selectedWorkoutAddButton.classList.add('hidden')
     : $selectedWorkoutAddButton.classList.remove('hidden');
 }
@@ -402,19 +423,23 @@ function makeBorderMatchBackground(li) {
 }
 
 function addSelectedWorkout(id, li) {
-  selectedWorkouts[id] = li;
+  selectedWorkoutListItems[id] = li;
 }
 
 function removeSelectedWorkout(id) {
-  delete selectedWorkouts[id];
+  delete selectedWorkoutListItems[id];
 }
 
 function handleSearchFieldSubmit(event) {
   event.preventDefault();
-  while ($searchContentUl.lastElementChild) { $searchContentUl.lastElementChild.remove(); }
+  removeSearchContent();
   const input = event.target.elements.search.value;
   const url = `https://wger.de/api/v2/exercise/?language=2&limit=5&muscles=${muscleObj[input]}`;
   getWorkouts(url);
+}
+
+function removeSearchContent() {
+  while ($searchContentUl.lastElementChild) { $searchContentUl.lastElementChild.remove(); }
 }
 
 function getWorkouts(url) {
@@ -434,7 +459,7 @@ function getWorkouts(url) {
       saveWorkoutsGloballyAndAddLisToUl(newData, $searchContentUl);
       getImages(newData);
       hashToSearchView();
-      showAddWorkoutsToScheduleButtons();
+      showButtonsToAddWorkoutOrGetMoreResults();
     })
     .catch(err => console.error(err));
 }
@@ -443,8 +468,12 @@ function hashToSearchView() {
   window.location.hash = 'search';
 }
 
-function showAddWorkoutsToScheduleButtons() {
+function showButtonsToAddWorkoutOrGetMoreResults() {
   $searchContentButtons.classList.remove('hidden');
+}
+
+function hideButtonsToAddWorkoutOrGetMoreResults() {
+  $searchContentButtons.classList.add('hidden');
 }
 
 function getImages(results) {
