@@ -118,10 +118,6 @@ form.create button {
   margin-top: 0;
 }
 
-ul {
-  margin-bottom: 1rem;
-}
-
 .saved.view {
   width: 100%;
 }
@@ -184,12 +180,12 @@ li.search-item .col:last-child {
 }
 
 li.search-item .buttons {
-  top: -30px;
-  right: 30px;
+  top: 0;
+  right: 10px;
+  opacity: 0.5;
 }
 
 li.search-item .buttons button {
-  position: fixed;
   border-radius: 50%;
   width: 30px;
   height: 30px;
@@ -270,7 +266,6 @@ nav {
   ul.saved {
     display: flex;
     flex-direction: column;
-    gap: 1.125rem;
     margin-right: 3rem;
   }
 
