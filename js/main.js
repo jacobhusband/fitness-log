@@ -427,8 +427,15 @@ function selectWorkout(event) {
     addSelectedWorkout(id, li);
     makeBorderGreen(li);
   }
+  hideOrShowModifyEntryButtons(id, li);
   hideOrShowWorkoutButton();
   showMoreResultsButton();
+}
+
+function hideOrShowModifyEntryButtons(id, li) {
+  if (selectedWorkoutListItems[id])
+    li.querySelector(".buttons").classList.remove("hidden");
+  else li.querySelector(".buttons").classList.add("hidden");
 }
 
 function hideOrShowWorkoutButton() {

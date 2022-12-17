@@ -177,18 +177,23 @@ li.search-item p {
 li.search-item .col:last-child {
   padding: 0.25rem;
   overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+li.search-item .col:last-child::-webkit-scrollbar {
+  display: none;
 }
 
 li.search-item .buttons {
   top: 0;
-  right: 10px;
+  right: 0;
   opacity: 0.5;
 }
 
 li.search-item .buttons button {
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
 }
 
 li.search-item .buttons button.x-mark {
@@ -199,6 +204,10 @@ li.search-item .buttons button.x-mark {
 li.search-item .buttons button.x-mark i {
   position: relative;
   top: 1px;
+}
+
+[data-view="search"] li.search-item .buttons {
+  display: none;
 }
 
 .buttons.search,
@@ -335,6 +344,11 @@ nav {
 
   li.search-item:hover {
     filter: brightness(120%);
+  }
+
+  li.search-item .buttons button {
+    width: 30px;
+    height: 30px;
   }
 
   nav {
