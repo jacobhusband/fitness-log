@@ -208,10 +208,19 @@ function getWorkoutFormInfo(event) {
 
 function buildHomepage() {
   for (const date in data.exercises) {
+    if (isDateBeforeToday(date)) {
+      delete data.exercises[date];
+      break;
+    }
     const ul = createDateUl(date);
     addUlToView(ul, $viewHome);
   }
   saveWorkoutsGloballyAndAddLisToUl(data.created, $savedContentUl);
+}
+
+function isDateBeforeToday(date) {
+  const d = new Date();
+  return Number(`${d.getFullYear()}${d.getMonth() + 1}${d.getDate()}`) > date;
 }
 
 function addLiToUl(ul, li) {

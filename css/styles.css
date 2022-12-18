@@ -184,7 +184,7 @@ li.search-item .col:last-child {
 }
 
 li.search-item .buttons {
-  top: -30px;
+  top: 0;
   right: 30px;
 }
 
@@ -344,6 +344,11 @@ nav {
 
   li.search-item:hover {
     filter: brightness(120%);
+  }
+
+  li.search-item .buttons {
+    top: -30px;
+    right: 30px;
   }
 
   nav {
