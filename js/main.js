@@ -7,6 +7,7 @@ const $viewSearch = $searchContentUl.parentElement;
 const $searchContentButtons = document.querySelector('.buttons.search');
 const $calendarModal = document.querySelector('.modal.calendar');
 const $calendarForm = $calendarModal.querySelector('form.calendar');
+const $deleteModal = document.querySelector('.modal.delete');
 const $selectedWorkoutAddButton = document.querySelector('button.add.workout');
 const $selectedWorkoutResultsButton = document.querySelector('button.more');
 const $muscleSearchOptions = $searchField.querySelector('select');
@@ -14,6 +15,8 @@ const $viewHome = document.querySelector('.home.view');
 const $viewCreate = document.querySelector('.create.view');
 const $viewSaved = document.querySelector('.saved.view');
 const $savedContentUl = $viewSaved.querySelector('ul.saved.content');
+
+const deleteModal = new DeleteModalController($deleteModal);
 
 const muscleObj = {
   biceps: 1,
@@ -79,6 +82,7 @@ $calendarForm.addEventListener('click', handleCalendarCancelClick);
 $calendarForm.addEventListener('submit', handleCalendarFormSubmit);
 $searchContentUl.addEventListener('click', selectWorkout);
 $viewSaved.addEventListener('click', handleSavedContentClick);
+$viewHome.addEventListener('click', handleHomeContentClick);
 $searchContentButtons.addEventListener('click', modifySearchItems);
 $cancelButton.addEventListener('click', cancelWorkoutCreation);
 window.addEventListener('hashchange', makePageSwaps);
@@ -101,6 +105,7 @@ function makePageSwaps(event) {
   hideAllViews();
   removeSearchContent();
   removeStyleFromSelectedWorkoutListItems();
+  hideButtonsFromSelectedWorkoutListItems();
   clearSelectedWorkouts();
   hideButtonsToAddWorkoutOrGetMoreResults();
   if (window.location.hash === '#home') {
@@ -125,9 +130,31 @@ function createWorkout(event) {
   hashToSavedView();
 }
 
+function handleHomeContentClick(event) {
+  selectWorkout(event)
+  checkIfDeleteIconClicked(event);
+}
+
+function checkIfDeleteIconClicked(event) {
+  const { className } = event.target;
+  if (className.includes('x-mark') || className.includes('xmark'))
+    setAndOpenDeleteModal(event);
+}
+
+function setAndOpenDeleteModal(event) {
+  deleteModal.show();
+  deleteModal.setTargetId(event.target.dataset.id)
+}
+
 function removeStyleFromSelectedWorkoutListItems() {
   for (const key in selectedWorkoutListItems) {
     selectedWorkoutListItems[key].style = '';
+  }
+}
+
+function hideButtonsFromSelectedWorkoutListItems() {
+  for (const key in selectedWorkoutListItems) {
+    selectedWorkoutListItems[key].querySelector('.buttons').classList.add('hidden')
   }
 }
 
@@ -230,7 +257,7 @@ function addLiToUl(ul, li) {
 }
 
 function createDateUl(date) {
-  const ul = createUl('search content col', date);
+  const ul = createUl('home content col', date);
   const arr = getWorkoutsExcludingDateKey(date);
   saveWorkoutsGloballyAndAddLisToUl(arr, ul);
   insertDateSeparator(ul, date);
@@ -415,6 +442,7 @@ function handleSavedContentClick(event) {
   selectWorkout(event);
   showButtonsToAddWorkoutOrGetMoreResults();
   hideMoreResultsButton();
+  checkIfDeleteIconClicked(event);
 }
 
 function hideMoreResultsButton() {
@@ -645,7 +673,7 @@ function buildLi(exerciseObj) {
     buildElement('div', { class: 'col w-100 position-relative' }, [
       buildElement('div', { class: 'row position-absolute buttons hidden' }, [
         buildElement('button', { 'dataset-id': id, class: 'x-mark' }, [
-          buildElement('i', { class: 'fa-solid fa-xmark' })
+          buildElement('i', { class: 'fa-solid fa-xmark', 'dataset-id': id })
         ])
       ]),
       buildElement('div', { class: 'row' }, [

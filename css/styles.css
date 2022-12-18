@@ -221,6 +221,40 @@ li.search-item .buttons button.x-mark i {
   margin: 0 1rem 1rem;
 }
 
+.modal.outer.delete {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal > .inner.delete {
+  width: 300px;
+  background-color: #0e0e0e;
+  text-align: center;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.modal > .inner.delete .buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.modal > .inner.delete .buttons button {
+  font-size: 1.15rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+}
+
+.modal > .inner.delete .buttons button.yes {
+  background-color: rgb(155, 0, 0);
+}
+
+.modal > .inner.delete .buttons button.no {
+  background-color: rgb(87, 85, 85);
+}
+
 nav {
   display: none;
 }
@@ -244,7 +278,7 @@ nav {
 }
 
 .hidden {
-  display: none;
+  display: none !important;
 }
 
 .w-100 {
