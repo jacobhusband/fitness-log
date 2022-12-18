@@ -126,7 +126,9 @@ function createWorkout(event) {
 }
 
 function removeStyleFromSelectedWorkoutListItems() {
-  for (const key in selectedWorkoutListItems) { selectedWorkoutListItems[key].style = ''; }
+  for (const key in selectedWorkoutListItems) {
+    selectedWorkoutListItems[key].style = '';
+  }
 }
 
 function showViewFromDataObject() {

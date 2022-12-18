@@ -118,10 +118,6 @@ form.create button {
   margin-top: 0;
 }
 
-ul {
-  margin-bottom: 1rem;
-}
-
 .saved.view {
   width: 100%;
 }
@@ -181,18 +177,23 @@ li.search-item p {
 li.search-item .col:last-child {
   padding: 0.25rem;
   overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+li.search-item .col:last-child::-webkit-scrollbar {
+  display: none;
 }
 
 li.search-item .buttons {
   top: 0;
-  right: 30px;
+  right: 0;
+  opacity: 0.5;
 }
 
 li.search-item .buttons button {
-  position: fixed;
   border-radius: 50%;
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
 }
 
 [data-view="search"] .search-item .buttons {
@@ -207,6 +208,10 @@ li.search-item .buttons button.x-mark {
 li.search-item .buttons button.x-mark i {
   position: relative;
   top: 1px;
+}
+
+[data-view="search"] li.search-item .buttons {
+  display: none;
 }
 
 .buttons.search,
@@ -274,7 +279,6 @@ nav {
   ul.saved {
     display: flex;
     flex-direction: column;
-    gap: 1.125rem;
     margin-right: 3rem;
   }
 
@@ -346,9 +350,9 @@ nav {
     filter: brightness(120%);
   }
 
-  li.search-item .buttons {
-    top: -30px;
-    right: 30px;
+  li.search-item .buttons button {
+    width: 30px;
+    height: 30px;
   }
 
   nav {
