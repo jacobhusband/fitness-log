@@ -15,6 +15,7 @@ const $viewHome = document.querySelector('.home.view');
 const $viewCreate = document.querySelector('.create.view');
 const $viewSaved = document.querySelector('.saved.view');
 const $savedContentUl = $viewSaved.querySelector('ul.saved.content');
+const $createWorkout = $viewSaved.querySelector('a.to-create');
 
 const deleteModal = new DeleteModalController($deleteModal);
 
@@ -128,6 +129,7 @@ function createWorkout(event) {
   $savedContentUl.appendChild(buildLi(workoutObj));
   saveWorkoutInfo(workoutObj);
   hashToSavedView();
+  $createForm.reset();
 }
 
 function handleHomeContentClick(event) {
@@ -159,6 +161,16 @@ function hideButtonsFromSelectedWorkoutListItems() {
   }
 }
 
+function checkToRemoveCreateWorkoutButton() {
+  if ($savedContentUl.children.length)
+    $createWorkout.classList.add('hidden')
+}
+
+function checkToAddCreateWorkoutButton() {
+  if (!$savedContentUl.children.length)
+    $createWorkout.classList.remove('hidden')
+}
+
 function showViewFromDataObject() {
   window.location.hash = `#${data.view}`;
   $body.dataset.view = data.view;
@@ -168,6 +180,8 @@ function showSavedView() {
   $body.dataset.view = 'saved';
   data.view = 'saved';
   $viewSaved.classList.remove('hidden');
+  checkToAddCreateWorkoutButton();
+  checkToRemoveCreateWorkoutButton();
 }
 
 function focusSearchField() {
@@ -178,6 +192,7 @@ function showSearchView() {
   $body.dataset.view = 'search';
   data.view = 'search';
   $viewSearch.classList.remove('hidden');
+  showNoSearchMade();
 }
 
 function showCreateView() {
@@ -246,6 +261,7 @@ function buildHomepage() {
     addUlToView(ul, $viewHome);
   }
   saveWorkoutsGloballyAndAddLisToUl(data.created, $savedContentUl);
+  checkToRemoveCreateWorkoutButton();
 }
 
 function isDateBeforeToday(date) {
@@ -518,6 +534,7 @@ function removeSearchContent() {
 function getWorkouts(url) {
   let newData;
   addSpinnerToView();
+  hideNoSearchMade();
   fetch('https://lfz-cors.herokuapp.com/?url=' + encodeURIComponent(url), {
     method: 'GET',
     mode: 'cors',
@@ -536,6 +553,14 @@ function getWorkouts(url) {
       removeSpinnerFromView();
     })
     .catch(err => console.error(err));
+}
+
+function hideNoSearchMade() {
+  $viewSearch.querySelector('.no-search').classList.add('hidden')
+}
+
+function showNoSearchMade() {
+  $viewSearch.querySelector('.no-search').classList.remove('hidden')
 }
 
 function addSpinnerToView() {
