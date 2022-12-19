@@ -144,6 +144,7 @@ function checkIfDeleteIconClicked(event) {
 function setAndOpenDeleteModal(event) {
   deleteModal.show();
   deleteModal.setTargetId(event.target.dataset.id)
+  deleteModal.setTargetDate(event.target.closest('ul').dataset.id)
 }
 
 function removeStyleFromSelectedWorkoutListItems() {
