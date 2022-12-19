@@ -147,6 +147,7 @@ function setAndOpenDeleteModal(event) {
   deleteModal.show();
   deleteModal.setTargetId(event.target.dataset.id)
   deleteModal.setTargetDate(event.target.closest('ul').dataset.id)
+  deleteModal.setCheckerFunction(checkToAddCreateWorkoutButton);
 }
 
 function removeStyleFromSelectedWorkoutListItems() {

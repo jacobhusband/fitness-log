@@ -3,6 +3,7 @@ class DeleteModalController {
     this.element = element;
     this.targetId = null;
     this.targetDate = null;
+    this.checkSavedViewEmpty = null;
     this.view = null;
     this.handleClick = this.handleClick.bind(this);
     this.removeExercise = this.removeExercise.bind(this);
@@ -31,6 +32,10 @@ class DeleteModalController {
     this.targetDate = date;
   }
 
+  setCheckerFunction(func) {
+    this.checkSavedViewEmpty = func;
+  }
+
   removeExercise() {
     const $view = document.querySelector(`[data-view=${data.view}]`);
     const $li = this.getListItems($view);
@@ -42,6 +47,7 @@ class DeleteModalController {
       this.removeSingleExerciseObject(this.targetDate, this.targetId);
     }
     this.hide();
+    this.checkSavedViewEmpty();
   }
 
   removeAllOccurencesInDataObject(id) {
