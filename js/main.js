@@ -517,7 +517,7 @@ function removeSearchContent() {
 
 function getWorkouts(url) {
   let newData;
-
+  addSpinnerToView();
   fetch('https://lfz-cors.herokuapp.com/?url=' + encodeURIComponent(url), {
     method: 'GET',
     mode: 'cors',
@@ -533,8 +533,17 @@ function getWorkouts(url) {
       getImages(newData);
       hashToSearchView();
       showButtonsToAddWorkoutOrGetMoreResults();
+      removeSpinnerFromView();
     })
     .catch(err => console.error(err));
+}
+
+function addSpinnerToView() {
+  $viewSearch.appendChild(createSpinner())
+}
+
+function removeSpinnerFromView() {
+  $viewSearch.removeChild($viewSearch.lastElementChild)
 }
 
 function hashToSearchView() {
