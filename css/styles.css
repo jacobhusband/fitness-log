@@ -218,7 +218,6 @@ li.search-item .buttons button.x-mark i {
 .workout-date .buttons.calendar {
   gap: 0.5rem;
   justify-content: space-between;
-  margin: 0 1rem 1rem;
 }
 
 .modal.outer.delete {
