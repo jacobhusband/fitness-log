@@ -2,7 +2,7 @@
 
 An application that allows users to search for workouts or create their own workouts. Those workouts can then be saved to days in the future that the user plans to do the workout. Information is provided for searched for workouts to inform the user how to do the exercise. A dynamic HTML, CSS, and JavaScript solo project.
 
-![LIVE SITE](https://jacobhusband.github.io/fitness-logger/#home)
+[LIVE SITE](https://jacobhusband.github.io/fitness-logger/#home)
 
 ## Demonstration
 

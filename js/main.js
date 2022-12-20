@@ -104,11 +104,9 @@ function initializePage() {
 
 function makePageSwaps(event) {
   hideAllViews();
-  removeSearchContent();
   removeStyleFromSelectedWorkoutListItems();
   hideButtonsFromSelectedWorkoutListItems();
   clearSelectedWorkouts();
-  hideButtonsToAddWorkoutOrGetMoreResults();
   if (window.location.hash === '#home') {
     showHomeView();
   } else if (window.location.hash === '#create') {
@@ -119,6 +117,10 @@ function makePageSwaps(event) {
     focusSearchField();
   } else if (window.location.hash === '#saved') {
     showSavedView();
+  }
+  if (window.location.hash !== '#search') {
+    removeSearchContent();
+    hideButtonsToAddWorkoutOrGetMoreResults();
   }
 }
 
@@ -561,7 +563,8 @@ function hideNoSearchMade() {
 }
 
 function showNoSearchMade() {
-  $viewSearch.querySelector('.no-search').classList.remove('hidden')
+  if ($viewSearch.firstElementChild.children.length === 0)
+    $viewSearch.querySelector('.no-search').classList.remove('hidden')
 }
 
 function addSpinnerToView() {
@@ -573,7 +576,7 @@ function removeSpinnerFromView() {
 }
 
 function hashToSearchView() {
-  window.location.hash = 'search';
+  window.location.hash = '#search';
 }
 
 function showButtonsToAddWorkoutOrGetMoreResults() {

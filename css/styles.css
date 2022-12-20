@@ -197,7 +197,7 @@ li.search-item .col:last-child::-webkit-scrollbar {
 li.search-item .buttons {
   top: 0;
   right: 0;
-  opacity: 0.5;
+  z-index: 1;
 }
 
 li.search-item .buttons button {
