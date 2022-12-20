@@ -160,13 +160,19 @@ li.search-item img {
 }
 
 .saved .create-workout {
-  margin: auto;
+  display: flex;
+  padding: 0 1rem;
 }
 
-.saved .create-workout button {
-  padding: 0.5rem 1rem;
+.saved .create-workout a {
+  width: 100%;
   border-radius: 0.5rem;
   font-size: 1rem;
+  text-decoration: none;
+  padding: 3rem 0;
+  text-align: center;
+  color: white;
+  background-color: #151515;
 }
 
 li.search-item h3 {
