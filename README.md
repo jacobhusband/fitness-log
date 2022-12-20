@@ -6,8 +6,7 @@ An application that allows users to search for workouts or create their own work
 
 ## Demonstration
 
-![Search]()
-![Create]()
+[Imgur](https://i.imgur.com/djk4oVG.gifv)
 
 ## Guide
 
