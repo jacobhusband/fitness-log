@@ -2,11 +2,28 @@
 
 An application that allows users to search for workouts or create their own workouts. Those workouts can then be saved to days in the future that the user plans to do the workout. Information is provided for searched for workouts to inform the user how to do the exercise. A dynamic HTML, CSS, and JavaScript solo project.
 
-[LIVE SITE](https://jacobhusband.github.io/fitness-logger/#home)
-
 ## Demonstration
 
-[Imgur](https://i.imgur.com/SA0lwCr.gifv)
+[LIVE SITE](https://jacobhusband.github.io/fitness-logger/#home)
+[IMGUR](https://i.imgur.com/SA0lwCr.gifv)
+
+## Technology
+
+- JavaScript
+- HTML
+- CSS
+- Git
+- WGER API [LINK] (https://wger.de/en/software/api)
+
+## Features
+
+• User can search for workouts
+• User can save workouts on date
+• User can view saved workouts
+• User can create workout
+• User can view created workouts
+• User can remove exercises
+• User can view workout information
 
 ## Guide
 
@@ -17,7 +34,3 @@ An application that allows users to search for workouts or create their own work
 5. Fill out the form on the create page and hit submit.
 6. Select the workout that was created on the saved page and hit add selected workouts.
 7. Choose the day to do the workout from the calendar.
-
-### Other Features
-
-- Delete any added workouts by clicking on the workout then clicking on the x icon.
