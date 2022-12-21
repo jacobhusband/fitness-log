@@ -4,8 +4,9 @@ An application that allows users to search for workouts or create their own work
 
 ## Demonstration
 
-	[LIVE SITE](https://jacobhusband.github.io/fitness-logger/#home)
-	[IMGUR](https://i.imgur.com/SA0lwCr.gifv)
+[LIVE](https://jacobhusband.github.io/fitness-logger/#home). 
+
+[IMGUR](https://i.imgur.com/SA0lwCr.gifv). 
 
 ## Technology
 
