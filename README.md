@@ -4,15 +4,16 @@ An application that allows users to search for workouts or create their own work
 
 ## Demonstration
 
-[LIVE](https://jacobhusband.github.io/fitness-log/) 
+[LINK TO SITE](https://jacobhusband.github.io/fitness-log/)   
+
 ![](https://github.com/jacobhusband/fitness-log/blob/main/Demonstration.gif)  
 
 ## Technology
 
-• JavaScript  
-• HTML  
-• CSS 
-• Git 
+• JavaScript    
+• HTML    
+• CSS     
+• Git     
 • WGER API [LINK] (https://wger.de/en/software/api) 
 
 ## Features
